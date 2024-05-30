@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EgoTournament", "EgoTournament.csproj", "{62FD1147-E0F8-4D6E-A1F0-3880C12FBA38}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EgoTournament.Tests", "..\EgoTournament.Tests\EgoTournament.Tests.csproj", "{1295F240-17E8-4E32-B588-8AB13FECC304}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{62FD1147-E0F8-4D6E-A1F0-3880C12FBA38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62FD1147-E0F8-4D6E-A1F0-3880C12FBA38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62FD1147-E0F8-4D6E-A1F0-3880C12FBA38}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{62FD1147-E0F8-4D6E-A1F0-3880C12FBA38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62FD1147-E0F8-4D6E-A1F0-3880C12FBA38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62FD1147-E0F8-4D6E-A1F0-3880C12FBA38}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{1295F240-17E8-4E32-B588-8AB13FECC304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1295F240-17E8-4E32-B588-8AB13FECC304}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1295F240-17E8-4E32-B588-8AB13FECC304}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1295F240-17E8-4E32-B588-8AB13FECC304}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DA09EA1F-6FAF-4993-93D3-FDFD583C39C2}
+	EndGlobalSection
+EndGlobal

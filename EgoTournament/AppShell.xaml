@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+	x:Class="EgoTournament.AppShell"
+	xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+	xmlns:views="clr-namespace:EgoTournament.Views"
+	xmlns:local="clr-namespace:EgoTournament">
+
+	<ShellContent
+		Shell.NavBarIsVisible="true"
+		Title="Main"
+		Icon="iconblank.png"
+		ContentTemplate="{DataTemplate views:MainPage}"
+		Route="MainPage" />
+	<ShellContent
+		Shell.NavBarIsVisible="true"
+		Title="Tournaments"
+		Icon="iconlistdetail.png"
+		ContentTemplate="{DataTemplate views:TournamentsPage}"
+		Route="TournamentsPage" />
+    <ShellContent
+		Shell.NavBarIsVisible="true"
+		Title="Login"
+		Icon="iconlistdetail.png"
+		ContentTemplate="{DataTemplate views:LoginPage}"
+		Route="LoginPage" />
+</Shell>

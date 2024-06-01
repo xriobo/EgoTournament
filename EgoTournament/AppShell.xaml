@@ -14,12 +14,12 @@
         Shell.FlyoutBehavior="Disabled"
         Shell.FlyoutItemIsVisible="False" />
 
-    <ShellContent
+    <!--<ShellContent
         Title="Login"
         ContentTemplate="{DataTemplate views:LoginPage}"
         Route="LoginPage"
         Shell.FlyoutBehavior="Disabled"
-        Shell.FlyoutItemIsVisible="False"/>
+        Shell.FlyoutItemIsVisible="False"/>-->
 
     <TabBar FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent
@@ -36,6 +36,11 @@
         Title="Profile"
         ContentTemplate="{DataTemplate views:ProfilePage}"
         Route="ProfilePage" />
+
+        <ShellContent
+        Title="SignUp"
+        ContentTemplate="{DataTemplate views:SignUpPage}"
+        Route="SignUpPage" />
     </TabBar>
 
 

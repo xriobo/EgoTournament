@@ -5,8 +5,12 @@
              Title="ListingPage">
     <VerticalStackLayout>
         <Label 
-            Text="Listing Page"
+            Text="Logado OK!"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
+        <Label
+        x:Name="UserEmail"
+        HorizontalOptions="CenterAndExpand"
+        VerticalOptions="CenterAndExpand" />
     </VerticalStackLayout>
 </ContentPage>

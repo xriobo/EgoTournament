@@ -1,23 +1,19 @@
-﻿namespace EgoTournament.Views;
+﻿using EgoTournament.Models;
+using EgoTournament.Services;
+
+namespace EgoTournament.Views;
 
 public partial class MainPage : ContentPage
 {
-    int count = 0;
-
     public MainPage()
     {
         InitializeComponent();
     }
 
-    private void OnCounterClicked(object sender, EventArgs e)
+    public MainPage(IFirebaseService firebaseService, CurrentUserStore currentUserStore)
     {
-        count++;
+        InitializeComponent();
 
-        if (count == 1)
-            ((Button)sender).Text = $"Clicked {count} time";
-        else
-            ((Button)sender).Text = $"Clicked {count} times";
-
-        SemanticScreenReader.Announce(((Button)sender).Text);
+        BindingContext = new LoginViewModel(Navigation, firebaseService, currentUserStore);
     }
 }

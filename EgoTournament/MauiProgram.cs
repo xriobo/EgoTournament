@@ -1,11 +1,19 @@
 ﻿using EgoTournament.Services;
+using EgoTournament.Services.Implementations;
+using Firebase.Auth.Providers;
+using Firebase.Auth.Repository;
+using Firebase.Auth;
 using Microsoft.Extensions.Logging;
+using EgoTournament.Models;
 
 namespace EgoTournament;
 
 public static class MauiProgram
 {
-	public static MauiApp CreateMauiApp()
+    private const string FirebaseApiKey = "AIzaSyBw0Iys7DlSwPMXmhRDOC7fR8uA45La1Lc";
+    private const string FirebaseAuthDomain = "egotournament1.firebaseapp.com";
+
+    public static MauiApp CreateMauiApp()
 	{
 		var builder = MauiApp.CreateBuilder();
 		builder
@@ -25,9 +33,27 @@ public static class MauiProgram
 #endif
 
         builder.Services.AddTransient<IAuthService, AuthService>();
+        builder.Services.AddTransient<IFirebaseService, FirebaseService>();
+        builder.Services.AddTransient<ListingPage>();
         builder.Services.AddTransient<LoadingPage>();
-        builder.Services.AddTransient<LoginPage>();
+        //builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<ProfilePage>();
+        builder.Services.AddTransient<SignUpPage>();
+
+        builder.Services.AddSingleton(SecureStorage.Default);
+        builder.Services.AddSingleton<IUserRepository, SecureStorageUserRepository>();
+        builder.Services.AddSingleton(services => new FirebaseAuthClient(new FirebaseAuthConfig()
+        {
+            ApiKey = FirebaseApiKey,
+            AuthDomain = FirebaseAuthDomain,
+            Providers = new FirebaseAuthProvider[]
+            {
+                    new EmailProvider(),
+                    new GoogleProvider(),
+            },
+            UserRepository = services.GetRequiredService<IUserRepository>()
+        }));
+        builder.Services.AddSingleton<CurrentUserStore>();
 
         return builder.Build();
     }

@@ -1,4 +1,4 @@
-﻿namespace EgoTournament.Services
+﻿namespace EgoTournament.Services.Implementations
 {
     public class AuthService : IAuthService
     {
@@ -7,13 +7,13 @@
         {
             await Task.Delay(2000);
 
-            var authState = Preferences.Default.Get<bool>(AuthStateKey, false);
+            var authState = Preferences.Default.Get(AuthStateKey, false);
 
             return authState;
         }
         public void Login()
         {
-            Preferences.Default.Set<bool>(AuthStateKey, true);
+            Preferences.Default.Set(AuthStateKey, true);
         }
         public void Logout()
         {

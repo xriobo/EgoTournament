@@ -1,23 +1,26 @@
-﻿namespace EgoTournament.Services.Implementations
+﻿using EgoTournament.Common;
+using EgoTournament.Models.Firebase;
+using Newtonsoft.Json;
+
+namespace EgoTournament.Services.Implementations
 {
     public class AuthService : IAuthService
     {
-        private const string AuthStateKey = "AuthState";
-        public async Task<bool> IsAuthenticatedAsync()
+        public async Task<FirebaseUserDto> GetCurrentAuthenticatedUserAsync()
         {
-            await Task.Delay(2000);
-
-            var authState = Preferences.Default.Get(AuthStateKey, false);
-
-            return authState;
+            var stringCurrentUser = await SecureStorage.GetAsync(Globals.CURRENT_USER);
+            return !string.IsNullOrEmpty(stringCurrentUser) ? JsonConvert.DeserializeObject<FirebaseUserDto>(stringCurrentUser) : null; ;
         }
-        public void Login()
-        {
-            Preferences.Default.Set(AuthStateKey, true);
-        }
+
         public void Logout()
         {
-            Preferences.Default.Remove(AuthStateKey);
+            SecureStorage.RemoveAll();
+        }
+
+        public async Task<bool> FirstIsAuthenticatedAsync()
+        {
+            await Task.Delay(500);
+            return !string.IsNullOrEmpty(await SecureStorage.GetAsync(Globals.CURRENT_USER));
         }
     }
 }

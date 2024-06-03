@@ -1,13 +1,11 @@
-using EgoTournament.Services;
-
 namespace EgoTournament.Views;
 
 public partial class SignUpPage : ContentPage
 {
-    public SignUpPage(IFirebaseService firebaseService)
+    public SignUpPage(SignUpViewModel signUpViewModel)
 	{
 		InitializeComponent();
 
-        BindingContext = new SignUpViewModel(Navigation, firebaseService);
+        BindingContext = signUpViewModel;
     }
 }

@@ -2,14 +2,74 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EgoTournament.Views.ProfilePage"
+             xmlns:local="clr-namespace:EgoTournament.Models.Behaviors"
              Title="ProfilePage">
-    <VerticalStackLayout Padding="25"
-                         Spacing="25">
-        <Label 
-            Text="Profile Page"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        <Button Text="Logout"
-                Clicked="Button_Clicked"/>
-    </VerticalStackLayout>
+    <Frame
+      Grid.Row="1"
+      BorderColor="#1C375C"
+      CornerRadius="50"
+      HasShadow="True"
+      HeightRequest="700">
+        <Grid
+          HorizontalOptions="FillAndExpand"
+          RowSpacing="20"
+          VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Label
+              Grid.Row="0"
+              Grid.Column="0"
+              HorizontalOptions="CenterAndExpand"
+              Text="Summoner Name"/>
+            <Entry
+              x:Name="entrySummoner"
+              Grid.Row="0"
+              Grid.Column="1"
+              HorizontalOptions="FillAndExpand"
+              Placeholder="SummonerName"
+              Text="{Binding SummonerName}"
+              VerticalOptions="FillAndExpand"
+               TextChanged="TextChanged_Event">
+                <Entry.Behaviors>
+                    <local:EntryValidationBehavior />
+                </Entry.Behaviors>
+            </Entry>
+            <Label x:Name="validationMessage" Grid.Row="1" Grid.Column="1"
+               TextColor="Red"
+               IsVisible="False" />
+            <Label
+                 Grid.Row="2"
+                 Grid.Column="0"
+                 Text="Role"
+                 VerticalOptions="Center" 
+                 HorizontalOptions="Center" />
+            <Picker Grid.Row="2" Grid.Column="1"
+                    x:Name="rolePicker"
+                    Title="Select a role"
+                    ItemsSource="{Binding RoleValues}"
+                    TextColor="LightGrey">
+            </Picker>
+            <Button 
+                 Grid.Row="3"
+                 Grid.ColumnSpan="2"
+                 Text="Save"
+                 Clicked="Save_Clicked"/>
+            <Button 
+                 Grid.Row="4"
+                 Grid.ColumnSpan="2"
+                 Text="Logout"
+                 Clicked="Logout_Clicked"/>
+        </Grid>
+
+    </Frame>
+
 </ContentPage>

@@ -1,10 +1,12 @@
-﻿namespace EgoTournament.Services
+﻿using EgoTournament.Models.Firebase;
+
+namespace EgoTournament.Services
 {
     public interface IAuthService
     {
-        Task<bool> IsAuthenticatedAsync();
+        Task<FirebaseUserDto> GetCurrentAuthenticatedUserAsync();
 
-        void Login();
+        Task<bool> FirstIsAuthenticatedAsync();
 
         void Logout();
     }

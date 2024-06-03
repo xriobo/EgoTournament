@@ -7,14 +7,17 @@
     <Application.Resources>
         <ResourceDictionary>
 
-            <Color x:Key="PrimaryColor">#512bdf</Color>
-            <Color x:Key="SecondaryColor">White</Color>
+            <Color x:Key="PrimaryColor">#873A64</Color>
+            <Color x:Key="SecondaryColor">#A7AfB2</Color>
 
             <Style TargetType="Label">
                 <Setter Property="TextColor" Value="{DynamicResource PrimaryColor}" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
             </Style>
-
+            <Style TargetType="Entry">
+                <Setter Property="TextColor" Value="{DynamicResource SecondaryColor}" />
+                <Setter Property="FontFamily" Value="OpenSansRegular" />
+            </Style>
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="{DynamicResource SecondaryColor}" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />

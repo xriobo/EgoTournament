@@ -1,30 +1,34 @@
-﻿using EgoTournament.Services;
+﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Views;
+using EgoTournament.Models.Firebase;
+using EgoTournament.Services;
+using Firebase.Auth;
+using Newtonsoft.Json;
 
 namespace EgoTournament.ViewModels
 {
-    internal class SignUpViewModel : INotifyPropertyChanged
+    public class SignUpViewModel : INotifyPropertyChanged
     {
-        private readonly INavigation _navigation;
         private readonly IFirebaseService _firebaseService;
-        private string userEmail;
+        private string email;
         private string password;
-
+        public Command SignInBtn { get; }
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public SignUpViewModel(INavigation navigation, IFirebaseService firebaseService)
+        public SignUpViewModel(IFirebaseService firebaseService)
         {
-            this._navigation = navigation;
             this._firebaseService = firebaseService;
             SignUpUser = new Command(SignUpTappedAsync);
+            SignInBtn = new Command(SignInBtnTappedAsync);
         }
 
-        public string UserEmail
+        public string Email
         {
-            get => userEmail;
+            get => email;
             set
             {
-                userEmail = value;
-                RaisePropertyChanged("UserEmail");
+                email = value;
+                RaisePropertyChanged("Email");
             }
         }
 
@@ -44,18 +48,30 @@ namespace EgoTournament.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(v));
         }
 
-
         private async void SignUpTappedAsync(object obj)
         {
-            if (await _firebaseService.SignUp(UserEmail, Password))
+            try
             {
-                await Application.Current.MainPage.DisplayAlert("Success", "Successfully signed up!", "Ok");
-                await this._navigation.PopAsync();
+                UserCredential userCredential = await _firebaseService.SignUp(Email, Password);
+                await Shell.Current.DisplayAlert("Success", "Successfully signed up!", "Ok");
+                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
             }
-            else
+            catch (FirebaseAuthHttpException ex)
             {
-                await Application.Current.MainPage.DisplayAlert("Error", "Failed to sign up. Please try again later.", "Ok");
+                var fireBaseError = JsonConvert.DeserializeObject<FirebaseErrorDto>(ex.ResponseData);
+                var toast = Toast.Make(fireBaseError.Error.Message.Replace("_", " "), CommunityToolkit.Maui.Core.ToastDuration.Short);
+                await toast.Show();
             }
+            catch (Exception ex)
+            {
+                var toast = Toast.Make("Failed to sign up. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Short);
+                Console.WriteLine(ex.Message.ToString());
+            }
+        }
+
+        private async void SignInBtnTappedAsync(object obj)
+        {
+            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
     }
 }

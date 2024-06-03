@@ -1,22 +1,46 @@
-using Newtonsoft.Json;
+using CommunityToolkit.Maui.Alerts;
+using EgoTournament.Common;
+using EgoTournament.Models.Firebase;
+using EgoTournament.Services;
 using Firebase.Auth;
-using EgoTournament.Models;
+using Newtonsoft.Json;
 
 namespace EgoTournament.Views;
 
 public partial class ListingPage : ContentPage
 {
-    private readonly CurrentUserStore _currentUserStore;
+    private readonly IAuthService _authService;
 
-    public ListingPage(CurrentUserStore currentUserStore)
+    public ListingPage(IAuthService authService)
     {
-        this._currentUserStore = currentUserStore;
         InitializeComponent();
+        this._authService = authService;
         GetProfileInfo();
     }
 
-    private void GetProfileInfo()
+    private async void GetProfileInfo()
     {
-        UserEmail.Text = _currentUserStore.CurrentUser.Info.Email;
+        var stringCurrentUser = await SecureStorage.GetAsync(Globals.CURRENT_USER);
+        var currentUser = !string.IsNullOrEmpty(stringCurrentUser) ? JsonConvert.DeserializeObject<FirebaseUserDto>(stringCurrentUser) : null;
+        UserEmail.Text = currentUser?.Info?.Email;
+    }
+
+    protected async override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+
+        if (await _authService.GetCurrentAuthenticatedUserAsync() != null)
+        {
+            // User is logged in
+            // redirect to main page
+            await Shell.Current.GoToAsync($"//{nameof(ListingPage)}");
+        }
+        else
+        {
+            // User is not logged in 
+            // Redirect to LoginPage
+            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+            await Toast.Make("You should Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+        }
     }
 }

@@ -1,55 +1,56 @@
 ﻿using EgoTournament.Models;
 using Firebase.Auth;
+using System.Net.Http.Json;
+using System.Text;
+using System.Threading;
 
 namespace EgoTournament.Services.Implementations
 {
     internal class FirebaseService : IFirebaseService
     {
         private readonly FirebaseAuthClient _authClient;
-        private readonly CurrentUserStore _currentUserStore;
+        private readonly HttpClient _httpClient;
+        private const string DatabaseConnection = "https://egotournament1-default-rtdb.europe-west1.firebasedatabase.app";
 
-        public FirebaseService(FirebaseAuthClient authClient, CurrentUserStore currentUserStore)
+        public FirebaseService(FirebaseAuthClient authClient)
         {
             this._authClient = authClient;
-            this._currentUserStore = currentUserStore;
+            _httpClient = new HttpClient();
         }
 
-        public async Task<bool> SignIn(string email, string password)
+        public Task CreateTournament(TournamentDto tournament)
         {
-            try
-            {
-                UserCredential userCredential = await _authClient.SignInWithEmailAndPasswordAsync(
-                    email,
-                    password);
-
-                _currentUserStore.CurrentUser = userCredential.User;
-
-                await Shell.Current.GoToAsync("//Main");
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            throw new NotImplementedException();
         }
 
-        public async Task<bool> SignUp(string email, string password)
+        public async Task<bool> UserExists(string userUid)
         {
-            try
-            {
-                UserCredential userCredential = await _authClient.CreateUserWithEmailAndPasswordAsync(email, password);
+            var response = await _httpClient.GetAsync($"{DatabaseConnection}/users/{userUid}.json");
+            return response.IsSuccessStatusCode && await response.Content.ReadAsStringAsync() != "null";
+        }
 
-                _currentUserStore.CurrentUser = userCredential.User;
+        public async Task CreateUser(UserDto user)
+        {
+            var response = await _httpClient.PostAsJsonAsync($"{DatabaseConnection}/users/{user.Uid}.json", user);
+            response.EnsureSuccessStatusCode();
+        }
 
-                await Shell.Current.GoToAsync("//Main");
+        public async Task<string> GetUserByUid(string userUid)
+        {
+            var response = await _httpClient.GetAsync($"{DatabaseConnection}/users/{userUid}.json");
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadAsStringAsync();
+        }
 
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+
+        public async Task<UserCredential> SignIn(string email, string password)
+        {
+            return await _authClient.SignInWithEmailAndPasswordAsync(email, password);
+        }
+
+        public async Task<UserCredential> SignUp(string email, string password)
+        {
+            return await _authClient.CreateUserWithEmailAndPasswordAsync(email, password);
         }
     }
 }

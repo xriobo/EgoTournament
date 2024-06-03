@@ -16,7 +16,7 @@ public partial class LoadingPage : ContentPage
     {
         base.OnNavigatedTo(args);
 
-        if (await _authService.IsAuthenticatedAsync())
+        if (await _authService.FirstIsAuthenticatedAsync())
         {
             // User is logged in
             // redirect to main page

@@ -5,6 +5,11 @@ namespace EgoTournament.Models
 {
     public class UserDto
     {
+        public UserDto()
+        {
+            Tournaments = [];
+        }
+
         [JsonProperty("uid")]
         public string Uid { get; set; }
 

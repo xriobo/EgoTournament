@@ -1,8 +1,7 @@
 ﻿using EgoTournament.Models;
 using Firebase.Auth;
+using Newtonsoft.Json;
 using System.Net.Http.Json;
-using System.Text;
-using System.Threading;
 
 namespace EgoTournament.Services.Implementations
 {
@@ -11,6 +10,7 @@ namespace EgoTournament.Services.Implementations
         private readonly FirebaseAuthClient _authClient;
         private readonly HttpClient _httpClient;
         private const string DatabaseConnection = "https://egotournament1-default-rtdb.europe-west1.firebasedatabase.app";
+        private const string NullResponse = "null";
 
         public FirebaseService(FirebaseAuthClient authClient)
         {
@@ -23,25 +23,42 @@ namespace EgoTournament.Services.Implementations
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UserExists(string userUid)
-        {
-            var response = await _httpClient.GetAsync($"{DatabaseConnection}/users/{userUid}.json");
-            return response.IsSuccessStatusCode && await response.Content.ReadAsStringAsync() != "null";
-        }
-
         public async Task CreateUser(UserDto user)
         {
             var response = await _httpClient.PostAsJsonAsync($"{DatabaseConnection}/users/{user.Uid}.json", user);
             response.EnsureSuccessStatusCode();
         }
 
-        public async Task<string> GetUserByUid(string userUid)
+        public async Task<UserDto> GetUserByUid(string userUid)
         {
+            UserDto userDto = null;
             var response = await _httpClient.GetAsync($"{DatabaseConnection}/users/{userUid}.json");
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+            if (response.IsSuccessStatusCode && await response.Content.ReadAsStringAsync() != NullResponse)
+            {
+                userDto = JsonConvert.DeserializeObject<UserDto>(await response.Content.ReadAsStringAsync());
+            }
+
+            return userDto;
         }
 
+        public async Task<UserDto> PutUser(UserDto userDto)
+        {
+            UserDto userUpdated = null;
+            var response = await _httpClient.PutAsJsonAsync($"{DatabaseConnection}/users/{userDto.Uid}.json", userDto);
+            
+            if (response.IsSuccessStatusCode)
+            {
+                userUpdated = JsonConvert.DeserializeObject<UserDto>(await response.Content.ReadAsStringAsync());
+            }
+
+            return userUpdated;
+        }
+
+        public async Task DeleteUserAndUserCredential(string userUid)
+        {
+            var response = await _httpClient.DeleteAsync($"{DatabaseConnection}/users/{userUid}.json");
+            response.EnsureSuccessStatusCode();
+        }
 
         public async Task<UserCredential> SignIn(string email, string password)
         {

@@ -7,24 +7,31 @@
     <Application.Resources>
         <ResourceDictionary>
 
-            <Color x:Key="PrimaryColor">#873A64</Color>
-            <Color x:Key="SecondaryColor">#A7AfB2</Color>
+            <Color x:Key="PrimaryColor">#a87bc7</Color>
+            <Color x:Key="SecondaryColor">#1c2b67</Color>
+            <Color x:Key="ThirdColor">#A9A9A9</Color> 
 
             <Style TargetType="Label">
-                <Setter Property="TextColor" Value="{DynamicResource PrimaryColor}" />
+                <Setter Property="TextColor" Value="{DynamicResource SecondaryColor}" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
+                <Setter Property="FontAttributes" Value="Bold" />
             </Style>
             <Style TargetType="Entry">
+                <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="TextColor" Value="{DynamicResource SecondaryColor}" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
+                <Setter Property="BackgroundColor" Value="{DynamicResource ThirdColor}" />
             </Style>
             <Style TargetType="Button">
-                <Setter Property="TextColor" Value="{DynamicResource SecondaryColor}" />
+                <Setter Property="TextColor" Value="{DynamicResource ThirdColor}" />
+                <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
-                <Setter Property="BackgroundColor" Value="{DynamicResource PrimaryColor}" />
+                <Setter Property="BackgroundColor" Value="{DynamicResource SecondaryColor}" />
                 <Setter Property="Padding" Value="14,10" />
             </Style>
-
+            <Style TargetType="Frame">
+                <Setter Property="BackgroundColor" Value="#8c8c8c" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

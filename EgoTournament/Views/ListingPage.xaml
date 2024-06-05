@@ -12,5 +12,9 @@
         x:Name="UserEmail"
         HorizontalOptions="CenterAndExpand"
         VerticalOptions="CenterAndExpand" />
+        <Label
+        x:Name="SummonerName"
+        HorizontalOptions="CenterAndExpand"
+        VerticalOptions="CenterAndExpand" />
     </VerticalStackLayout>
 </ContentPage>

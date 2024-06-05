@@ -9,9 +9,11 @@ namespace EgoTournament.Services
 
         Task<UserCredential> SignUp(string email, string password);
 
-        Task<bool> UserExists(string userUid);
+        Task<UserDto> GetUserByUid(string userUid);
 
-        Task<string> GetUserByUid(string userUid);
+        Task<UserDto> PutUser(UserDto userDto);
+
+        Task DeleteUserAndUserCredential(string userUid);
 
         Task CreateUser(UserDto user);
 

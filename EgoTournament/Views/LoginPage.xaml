@@ -48,14 +48,12 @@
                         FontAttributes="Bold"
                         FontSize="24"
                         HorizontalOptions="CenterAndExpand"
-                        Text="Welcome Back!"
-                        TextColor="#1C375C" />
+                        Text="Welcome Back!"/>
                     <Label
                         Grid.Row="1"
                         Margin="0,-15,0,0"
                         HorizontalOptions="CenterAndExpand"
-                        Text="Sign in"
-                        TextColor="#1C375C" />
+                        Text="Sign in"/>
                     <Entry
                         Grid.Row="2"
                         Margin="0,20,0,0"
@@ -72,14 +70,12 @@
                         VerticalOptions="FillAndExpand" />
                     <Button
                         Grid.Row="4"
-                        BackgroundColor="#1C375C"
                         Command="{Binding SignInBtn}"
                         CornerRadius="20"
                         Text="Login" />
 
                     <Button
                         Grid.Row="5"
-                        BackgroundColor="#1C375C"
                         Command="{Binding SignUpBtn}"
                         CornerRadius="20"
                         Text="Sign Up" />

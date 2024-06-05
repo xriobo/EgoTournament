@@ -45,7 +45,7 @@ namespace EgoTournament.Models.Behaviors
             }
 
             // Actualizar el color del borde del Entry en función de la validez
-            entry.TextColor = IsValid ? Color.FromArgb("#A7AfB2") : Colors.Red;
+            entry.TextColor = IsValid ? Color.FromArgb("#1c2b67") : Colors.Red;
         }
     }
 }

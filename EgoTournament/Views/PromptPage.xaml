@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EgoTournament.Views.PromptPage">
+    <Grid Padding="40"
+          HorizontalOptions="FillAndExpand"
+          RowSpacing="20"
+          VerticalOptions="FillAndExpand">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="Enter your password to confirm:" Margin="0,0,0,10" HorizontalOptions="Center" TextColor="Red"/>
+        <Entry Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" x:Name="PromptEntry" WidthRequest="200" Margin="0,0,0,10" HorizontalOptions="CenterAndExpand" IsPassword="True"/>
+        <Button Grid.Row="2" Grid.Column="1" Text="Accept" Clicked="OnAcceptClicked" Margin="0,0,10,0"/>
+        <Button Grid.Row="2" Grid.Column="2" Text="Cancel" Clicked="OnCancelClicked"/>
+    </Grid>
+</ContentPage>

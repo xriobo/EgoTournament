@@ -31,7 +31,7 @@ public static class MauiProgram
         builder.Logging.AddDebug();
 #endif
 
-        builder.Services.AddTransient<IAuthService, AuthService>();
+        builder.Services.AddTransient<ICacheService, CacheService>();
         builder.Services.AddTransient<IFirebaseService, FirebaseService>();
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<ListingPage>();

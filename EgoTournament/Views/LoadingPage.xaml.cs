@@ -4,19 +4,19 @@ namespace EgoTournament.Views;
 
 public partial class LoadingPage : ContentPage
 {
-    private readonly IAuthService _authService;
+    private readonly ICacheService _cacheService;
 
-    public LoadingPage(IAuthService authService)
+    public LoadingPage(ICacheService cacheService)
     {
         InitializeComponent();
-        _authService = authService;
+        _cacheService = cacheService;
     }
 
     protected async override void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
 
-        if (await _authService.FirstIsAuthenticatedAsync())
+        if (await _cacheService.FirstIsAuthenticatedAsync())
         {
             // User is logged in
             // redirect to main page

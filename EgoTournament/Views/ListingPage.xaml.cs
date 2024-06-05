@@ -1,36 +1,26 @@
 using CommunityToolkit.Maui.Alerts;
-using EgoTournament.Common;
-using EgoTournament.Models.Firebase;
 using EgoTournament.Services;
-using Firebase.Auth;
-using Newtonsoft.Json;
 
 namespace EgoTournament.Views;
 
 public partial class ListingPage : ContentPage
 {
-    private readonly IAuthService _authService;
+    private readonly ICacheService _cacheService;
 
-    public ListingPage(IAuthService authService)
+    public ListingPage(ICacheService cacheService)
     {
         InitializeComponent();
-        this._authService = authService;
-        GetProfileInfo();
-    }
-
-    private async void GetProfileInfo()
-    {
-        var stringCurrentUser = await SecureStorage.GetAsync(Globals.CURRENT_USER);
-        var currentUser = !string.IsNullOrEmpty(stringCurrentUser) ? JsonConvert.DeserializeObject<FirebaseUserDto>(stringCurrentUser) : null;
-        UserEmail.Text = currentUser?.Info?.Email;
+        this._cacheService = cacheService;
     }
 
     protected async override void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
 
-        if (await _authService.GetCurrentAuthenticatedUserAsync() != null)
+        var currentUserCredential = await _cacheService.GetCurrentUserCredentialAsync();
+        if (currentUserCredential != null)
         {
+            GetProfileInfo();
             // User is logged in
             // redirect to main page
             await Shell.Current.GoToAsync($"//{nameof(ListingPage)}");
@@ -40,7 +30,14 @@ public partial class ListingPage : ContentPage
             // User is not logged in 
             // Redirect to LoginPage
             await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-            await Toast.Make("You should Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            await Toast.Make("You must Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         }
+    }
+
+    private async void GetProfileInfo()
+    {
+        var currentUser = await _cacheService.GetCurrentUserAsync();
+        UserEmail.Text = currentUser?.Email;
+        SummonerName.Text = currentUser?.SummonerName;
     }
 }

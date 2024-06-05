@@ -1,27 +1,27 @@
-﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Alerts;
 using EgoTournament.Services;
 
 namespace EgoTournament.Views;
 
-public partial class MainPage : ContentPage
+public partial class TournamentPage : ContentPage
 {
-    private readonly ICacheService _cacheService;
+    private readonly ICacheService _authService;
 
-    public MainPage(ICacheService cacheService)
+    public TournamentPage(ICacheService authService)
     {
         InitializeComponent();
-        this._cacheService = cacheService;
+        this._authService = authService;
     }
 
     protected async override void OnNavigatedTo(NavigatedToEventArgs args)
     {
         base.OnNavigatedTo(args);
 
-        if (await _cacheService.GetCurrentUserCredentialAsync() != null)
+        if (await _authService.GetCurrentUserCredentialAsync() != null)
         {
             // User is logged in
             // redirect to main page
-            await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+            await Shell.Current.GoToAsync($"//{nameof(ListingPage)}");
         }
         else
         {

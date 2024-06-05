@@ -52,19 +52,18 @@ namespace EgoTournament.ViewModels
         {
             try
             {
-                UserCredential userCredential = await _firebaseService.SignUp(Email, Password);
-                await Shell.Current.DisplayAlert("Success", "Successfully signed up!", "Ok");
+                await _firebaseService.SignUp(Email, Password);
                 await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+                await Toast.Make("Welcome! Sign in.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
             }
             catch (FirebaseAuthHttpException ex)
             {
                 var fireBaseError = JsonConvert.DeserializeObject<FirebaseErrorDto>(ex.ResponseData);
-                var toast = Toast.Make(fireBaseError.Error.Message.Replace("_", " "), CommunityToolkit.Maui.Core.ToastDuration.Short);
-                await toast.Show();
+                await Toast.Make(fireBaseError.Error.Message.Replace("_", " "), CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
             }
             catch (Exception ex)
             {
-                var toast = Toast.Make("Failed to sign up. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Short);
+                await Toast.Make("Failed to sign up. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                 Console.WriteLine(ex.Message.ToString());
             }
         }

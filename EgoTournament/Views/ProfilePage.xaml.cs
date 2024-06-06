@@ -1,4 +1,5 @@
 using CommunityToolkit.Maui.Alerts;
+using EgoTournament.Common;
 using EgoTournament.Models;
 using EgoTournament.Models.Behaviors;
 using EgoTournament.Models.Enums;
@@ -20,8 +21,6 @@ public partial class ProfilePage : ContentPage
     public List<string> RoleValues { get; } = Enum.GetNames(typeof(RoleType)).ToList();
 
     public string SummonerName { get; set; }
-
-    private const string ErrorSummonerNameValidation = "SummonerName must contain a hash symbol in the middle but no special characters. Lenght must be 5 or more.";
 
     public ProfilePage(ICacheService cacheService, IFirebaseService firebaseService)
     {
@@ -72,57 +71,57 @@ public partial class ProfilePage : ContentPage
         }
     }
 
-    private async void Logout_Clicked(object sender, EventArgs e)
-    {
-        _cacheService.Logout();
-        await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-        await Toast.Make("Goodbye!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-    }
-
     private async void Save_Clicked(object sender, EventArgs e)
     {
         try
         {
-            if (!enableSummonerName.IsChecked)
+            if (!string.IsNullOrEmpty(SummonerName))
             {
-                var role = Enum.Parse<RoleType>(rolePicker.SelectedItem.ToString(), true);
-                if (await Validations(entrySummoner.Behaviors.OfType<EntryValidationBehavior>().FirstOrDefault()))
+                if (!enableSummonerName.IsChecked)
                 {
-                    if (currentUser == null)
+                    var role = Enum.Parse<RoleType>(rolePicker.SelectedItem.ToString(), true);
+                    if (await Validations.SummonerName(entrySummoner.Behaviors.OfType<SummonerNameValidationBehavior>().FirstOrDefault(), SummonerName, validationMessage))
                     {
-                        currentUser = new UserDto()
+                        if (currentUser == null)
                         {
-                            Role = role,
-                            SummonerName = SummonerName,
-                            Uid = userCredentials.Uid,
-                            Email = userCredentials.Info.Email,
-                        };
+                            currentUser = new UserDto()
+                            {
+                                Role = role,
+                                SummonerName = SummonerName,
+                                Uid = userCredentials.Uid,
+                                Email = userCredentials.Info.Email,
+                            };
 
-                        await _firebaseService.CreateUser(currentUser);
+                            await _firebaseService.CreateUser(currentUser);
+                            await _cacheService.SetCurrentUserAsync(currentUser);
+                            LoadScreenData(currentUser);
+                        }
+                        else
+                        {
+                            await Toast.Make("Error: User already exists in the database..", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                        }
+                    }
+                }
+                else
+                {
+                    currentUser.SummonerName = SummonerName;
+                    if (await DisplayAlert("WARNING", "Do you confirm that you want to modify the summonerName?", "YES", "NO")
+                            && await _firebaseService.PutUser(currentUser) != null)
+                    {
                         await _cacheService.SetCurrentUserAsync(currentUser);
-                        LoadScreenData(currentUser);
+                        await Toast.Make("Updated successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                     }
                     else
                     {
-                        await Toast.Make("Error: User already exists in the database..", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                        currentUser = await _cacheService.GetCurrentUserAsync();
                     }
+
+                    LoadScreenData(currentUser);
                 }
             }
             else
             {
-                currentUser.SummonerName = SummonerName;
-                if (await DisplayAlert("WARNING", "Do you confirm that you want to modify the summonerName?", "YES", "NO")
-                        && await _firebaseService.PutUser(currentUser) != null)
-                {
-                    await _cacheService.SetCurrentUserAsync(currentUser);
-                    await Toast.Make("Updated successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                }
-                else
-                {
-                    currentUser = await _cacheService.GetCurrentUserAsync();
-                }
-
-                LoadScreenData(currentUser);
+                await Toast.Make("Insert a value.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
             }
         }
         catch (Exception ex)
@@ -132,21 +131,11 @@ public partial class ProfilePage : ContentPage
         }
     }
 
-    private async Task<bool> Validations(EntryValidationBehavior entryValidationBehavior)
+    private async void Logout_Clicked(object sender, EventArgs e)
     {
-        bool isValid = false;
-        if (entryValidationBehavior == null || !entryValidationBehavior.IsValid)
-        {
-            validationMessage.Text = ErrorSummonerNameValidation;
-            validationMessage.IsVisible = true;
-            await Toast.Make($"SummonerName invalid: {SummonerName}", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-        }
-        else
-        {
-            isValid = true;
-        }
-
-        return isValid;
+        _cacheService.Logout();
+        await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+        await Toast.Make("Goodbye!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
     }
 
     private void TextChanged_Event(object sender, TextChangedEventArgs e)

@@ -9,7 +9,10 @@
 
             <Color x:Key="PrimaryColor">#a87bc7</Color>
             <Color x:Key="SecondaryColor">#1c2b67</Color>
-            <Color x:Key="ThirdColor">#A9A9A9</Color> 
+            <Color x:Key="ThirdColor">#A9A9A9</Color>
+            <Color x:Key="FourthColor">#636061</Color>
+            <Color x:Key="FifthColor">#8c8c8c</Color>
+            <Color x:Key="FrameBorderColor">#1C375C</Color>
 
             <Style TargetType="Label">
                 <Setter Property="TextColor" Value="{DynamicResource SecondaryColor}" />
@@ -21,16 +24,23 @@
                 <Setter Property="TextColor" Value="{DynamicResource SecondaryColor}" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
                 <Setter Property="BackgroundColor" Value="{DynamicResource ThirdColor}" />
+                <Setter Property="PlaceholderColor" Value="{DynamicResource FourthColor}"/>
+                <Setter Property="Margin" Value="10,10,10,10"/>
             </Style>
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="{DynamicResource ThirdColor}" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
                 <Setter Property="BackgroundColor" Value="{DynamicResource SecondaryColor}" />
-                <Setter Property="Padding" Value="14,10" />
+                <Setter Property="Margin" Value="10,10,10,10"/>
+                <Setter Property="CornerRadius" Value="20" />
             </Style>
             <Style TargetType="Frame">
-                <Setter Property="BackgroundColor" Value="#8c8c8c" />
+                <Setter Property="BorderColor" Value="{DynamicResource FrameBorderColor}" />
+                <Setter Property="HasShadow" Value="true" />
+                <Setter Property="CornerRadius" Value="50" />
+                <Setter Property="Margin" Value="-20,0,-20,-40" />
+                <Setter Property="BackgroundColor" Value="{DynamicResource FifthColor}" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>

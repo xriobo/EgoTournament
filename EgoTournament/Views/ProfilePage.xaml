@@ -4,42 +4,54 @@
              x:Class="EgoTournament.Views.ProfilePage"
              xmlns:local="clr-namespace:EgoTournament.Models.Behaviors"
              Title="ProfilePage">
-    <Frame BorderColor="#1C375C" CornerRadius="50" HasShadow="True" HeightRequest="700">
-        <Grid
-          HorizontalOptions="FillAndExpand"
-          RowSpacing="20"
-          VerticalOptions="FillAndExpand">
+    <ContentPage.Content>
+        <Grid Padding="20"
+         BackgroundColor="#A9A9A9">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20*" />
+                <RowDefinition Height="80*" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Label Grid.Row="0" Grid.Column="0" HorizontalOptions="FillAndExpand" Text="Summoner Name"/>
-            <Entry x:Name="entrySummoner" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalOptions="FillAndExpand" Placeholder="SummonerName" 
-                Text="{Binding SummonerName}" VerticalOptions="FillAndExpand" TextChanged="TextChanged_Event">
-                <Entry.Behaviors>
-                    <local:EntryValidationBehavior />
-                </Entry.Behaviors>
-            </Entry>
-            <Label x:Name="validationMessage" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" TextColor="Red" IsVisible="False" HorizontalOptions="FillAndExpand"/>
-            <Label Grid.Row="2" Grid.Column="0" Text="Role" VerticalOptions="Center" HorizontalOptions="FillAndExpand" />
-            <Picker x:Name="rolePicker" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Title="Select a role"  TextColor="LightGrey" ItemsSource="{Binding RoleValues}" HorizontalOptions="FillAndExpand">
-            </Picker>
-            <Label x:Name="lblenableSummonerName" Grid.Row="3" Grid.Column="0" Text="Change SummonerName" VerticalOptions="Center"  HorizontalOptions="FillAndExpand" IsVisible="False"/>
-            <CheckBox x:Name="enableSummonerName" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" VerticalOptions="Center"  HorizontalOptions="FillAndExpand" CheckedChanged="OnCheckedChange" IsVisible="False"/>
-            <Button x:Name="saveBtn" Grid.Row="4" Grid.Column="1" Text="Save" Clicked="Save_Clicked"/>
-            <Button Grid.Row="5" Grid.Column="1" Text="Logout" Clicked="Logout_Clicked"/>
-            <Button Grid.Row="6" Grid.Column="2" Text="Delete Account" Clicked="DeleteAccount_Clicked" BackgroundColor="Transparent" BorderWidth="0" TextColor="DarkRed"/>
+            <Image
+                 Grid.Row="0"
+                 Margin="0,20"
+                 Aspect="AspectFit"
+                 Source="profile.png"
+                 HorizontalOptions="Center"
+                 VerticalOptions="Start"/>
+            <Frame Grid.Row="1">
+                <Grid HorizontalOptions="FillAndExpand" RowSpacing="20" VerticalOptions="FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Row="0" Grid.Column="0" HorizontalOptions="CenterAndExpand" Text="Summoner Name:"/>
+                    <Entry x:Name="entrySummoner" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalOptions="FillAndExpand" Placeholder="Summoner Name..." 
+                            Text="{Binding SummonerName}" VerticalOptions="Center" TextChanged="TextChanged_Event">
+                        <Entry.Behaviors>
+                            <local:SummonerNameValidationBehavior />
+                        </Entry.Behaviors>
+                    </Entry>
+                    <Label x:Name="validationMessage" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" TextColor="DarkRed" IsVisible="False" HorizontalOptions="FillAndExpand"/>
+                    <Label Grid.Row="2" Grid.Column="0" Text="Role" VerticalOptions="Center" HorizontalOptions="FillAndExpand" />
+                    <Picker x:Name="rolePicker" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Title="Select a role"  TextColor="LightGrey" ItemsSource="{Binding RoleValues}" HorizontalOptions="FillAndExpand">
+                    </Picker>
+                    <Label x:Name="lblenableSummonerName" Grid.Row="3" Grid.Column="0" Text="Change SummonerName" VerticalOptions="Center"  HorizontalOptions="FillAndExpand" IsVisible="False"/>
+                    <CheckBox x:Name="enableSummonerName" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" VerticalOptions="Center"  HorizontalOptions="FillAndExpand" CheckedChanged="OnCheckedChange" IsVisible="False"/>
+                    <Button x:Name="saveBtn" Grid.Row="4" Grid.Column="1" Text="Save" Clicked="Save_Clicked"/>
+                    <Button Grid.Row="5" Grid.Column="1" Text="Logout" Clicked="Logout_Clicked"/>
+                    <Button Grid.Row="6" Grid.Column="2" Text="Delete Account" Clicked="DeleteAccount_Clicked" BackgroundColor="Transparent" BorderWidth="0" TextColor="DarkRed"/>
+                </Grid>
+            </Frame>
         </Grid>
-    </Frame>
-
+    </ContentPage.Content>
 </ContentPage>

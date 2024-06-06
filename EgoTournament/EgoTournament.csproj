@@ -45,6 +45,10 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\egoqmainicon.png" />
+	  <None Remove="Resources\Images\login.png" />
+	  <None Remove="Resources\Images\profile.png" />
+	  <None Remove="Resources\Images\rules.png" />
+	  <None Remove="Resources\Images\trophy.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -60,6 +64,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\ListModalPage.xaml.cs">
+	    <DependentUpon>ListModalPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Views\SignUpPage.xaml.cs">
 	    <DependentUpon>SignUpPage.xaml</DependentUpon>
 	  </Compile>
@@ -73,6 +80,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\ListModalPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ProfilePage.xaml">

@@ -18,7 +18,7 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="Enter your password to confirm:" Margin="0,0,0,10" HorizontalOptions="Center" TextColor="Red"/>
-        <Entry Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" x:Name="PromptEntry" WidthRequest="200" Margin="0,0,0,10" HorizontalOptions="CenterAndExpand" IsPassword="True"/>
+        <Entry x:Name="PromptEntry" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" WidthRequest="200" Margin="0,0,0,10" HorizontalOptions="CenterAndExpand" IsPassword="True"/>
         <Button Grid.Row="2" Grid.Column="1" Text="Accept" Clicked="OnAcceptClicked" Margin="0,0,10,0"/>
         <Button Grid.Row="2" Grid.Column="2" Text="Cancel" Clicked="OnCancelClicked"/>
     </Grid>

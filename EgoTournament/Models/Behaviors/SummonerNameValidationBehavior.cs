@@ -1,11 +1,14 @@
-﻿using System.Text.RegularExpressions;
+﻿using EgoTournament.Common;
+using System.Text.RegularExpressions;
 
 namespace EgoTournament.Models.Behaviors
 {
-    public class EntryValidationBehavior : Behavior<Entry>
+    public class SummonerNameValidationBehavior : Behavior<Entry>
     {
         public static readonly BindableProperty IsValidProperty =
-            BindableProperty.Create(nameof(IsValid), typeof(bool), typeof(EntryValidationBehavior), false);
+            BindableProperty.Create(nameof(IsValid), typeof(bool), typeof(SummonerNameValidationBehavior), false);
+
+        private const string RegExPattern = @"^[a-zA-Z0-9]+#[a-zA-Z0-9]+$";
 
         public bool IsValid
         {
@@ -25,27 +28,23 @@ namespace EgoTournament.Models.Behaviors
             base.OnDetachingFrom(bindable);
         }
 
-        private void OnTextChanged(object sender, TextChangedEventArgs e)
+        private async void OnTextChanged(object sender, TextChangedEventArgs e)
         {
             var entry = sender as Entry;
 
-            // Validar que el texto no sea nulo o vacío
             IsValid = !string.IsNullOrWhiteSpace(entry.Text);
 
-            // Validar que el texto cumpla con ciertas normas (por ejemplo, longitud mínima)
-            if (IsValid && entry.Text.Length < 5)
+            if (IsValid && (entry.Text.Length < Globals.MIN_SUMMONERNAME_LENGTH || entry.Text.Length > Globals.MAX_SUMMONERNAME_LENGTH))
             {
                 IsValid = false;
             }
 
-            // Validar que el texto contenga solo letras, números y una sola almohadilla en medio
-            if (IsValid && !Regex.IsMatch(entry.Text, @"^[a-zA-Z0-9]+#[a-zA-Z0-9]+$"))
+            if (IsValid && !Regex.IsMatch(entry.Text, RegExPattern))
             {
                 IsValid = false;
             }
 
-            // Actualizar el color del borde del Entry en función de la validez
-            entry.TextColor = IsValid ? Color.FromArgb("#1c2b67") : Colors.Red;
+            entry.TextColor = IsValid ? Color.FromArgb(Globals.OK_VALIDATION_TEXT_COLOR) : Color.FromArgb(Globals.ERROR_VALIDATION_TEXT_COLOR);
         }
     }
 }

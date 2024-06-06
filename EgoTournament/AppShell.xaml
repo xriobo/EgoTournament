@@ -30,6 +30,11 @@
 
     <TabBar FlyoutDisplayOptions="AsMultipleItems">
         <ShellContent
+         Title="Create Tournament"
+         ContentTemplate="{DataTemplate views:TournamentPage}"
+         Route="TournamentPage" />
+        
+        <ShellContent
         Title="User Info"
         ContentTemplate="{DataTemplate views:MainPage}"
         Route="MainPage" />

@@ -18,11 +18,6 @@ namespace EgoTournament.Services.Implementations
             _httpClient = new HttpClient();
         }
 
-        public Task CreateTournament(TournamentDto tournament)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task CreateUser(UserDto user)
         {
             var response = await _httpClient.PostAsJsonAsync($"{DatabaseConnection}/users/{user.Uid}.json", user);

@@ -40,6 +40,7 @@ public partial class ListModalPage : ContentPage
             if (await Validations.SummonerName(ValueEntry.Behaviors.OfType<SummonerNameValidationBehavior>().FirstOrDefault(), ItemValue, validationMessage))
             {
                 Items.Add(_isSummonerList ? ItemValue.ToUpperInvariant() : ItemValue);
+                ValueEntry.Text = string.Empty;
             }
         }
     }

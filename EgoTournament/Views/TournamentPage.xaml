@@ -20,6 +20,8 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50*" />
@@ -28,18 +30,18 @@
 
                     <Grid Grid.Row="0" Grid.ColumnSpan="2">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50*" />
-                            <ColumnDefinition Width="50*" />
+                            <ColumnDefinition Width="30*" />
+                            <ColumnDefinition Width="70*" />
                         </Grid.ColumnDefinitions>
                         <Label  Grid.Column="0" Text="Tournament Name:" Padding="10" HorizontalOptions="Center"/>
                         <Entry  Grid.Column="1" Text="{Binding TournamentName}" Placeholder="Insert tournament name..." />
                     </Grid>
 
                     <Button Grid.Row="1" Grid.Column="0" Text="Edit Participants" Clicked="OnOpenSummonerModalButtonClicked" />
-                    <Label Grid.Row="1" Grid.Column="1" Text="{Binding SummonerEntries.Count, StringFormat='Number of Participants: {0}'}" FontSize="Small"  HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Label Grid.Row="1" Grid.Column="1" x:Name="summonerEntriesCountLabel" Text="Number of Participants: 0" FontSize="Small"  HorizontalOptions="Center" VerticalOptions="Center"/>
 
                     <Button Grid.Row="2" Grid.Column="0" Text="Edit Rules" Clicked="OnOpenRulesModalButtonClicked"/>
-                    <Label Grid.Row="2" Grid.Column="1" Text="{Binding RuleEntries.Count, StringFormat='Number of Rules: {0}'}" FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Label Grid.Row="2" Grid.Column="1" x:Name="ruleEntriesCountLabel" Text="Number of Rules: 0" FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center"/>
 
                     <Grid Grid.Row="3" Grid.Column="0">
                         <Grid.ColumnDefinitions>
@@ -50,7 +52,7 @@
                         <CheckBox Grid.Column="1" x:Name="HasRewardCheckBox" HorizontalOptions="Center"/>
                     </Grid>
                     
-                    <Button Grid.Row="4" Grid.ColumnSpan="2" Text="Create Tournament" Clicked="OnCreateTournamentClicked" />
+                    <Button Grid.Row="6" Grid.ColumnSpan="2" Text="Create Tournament" Clicked="OnCreateTournamentClicked" />
                 </Grid>
             </Frame>
         </Grid>

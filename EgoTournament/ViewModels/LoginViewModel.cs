@@ -10,10 +10,10 @@ namespace EgoTournament.ViewModels
     {
         private readonly IFirebaseService _firebaseService;
         private readonly ICacheService _cacheService;
-        private string email;
-        private string password;
+        private string email = string.Empty;
+        private string password = string.Empty;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public Command SignUpBtn { get; }
         public Command SignInBtn { get; }

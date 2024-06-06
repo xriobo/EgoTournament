@@ -40,6 +40,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ProfilePage>();
         builder.Services.AddTransient<SignUpPage>();
         builder.Services.AddTransient<TournamentPage>();
+        builder.Services.AddTransient<MainViewModel>();
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<SignUpViewModel>();
         builder.Services.AddSingleton(SecureStorage.Default);

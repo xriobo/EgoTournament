@@ -14,6 +14,6 @@
 
         public const int MAX_SUMMONERNAME_LENGTH = 30;
 
-        public static string SUMMONERNAME_VALIDATION_ERROR_MESSAGE = $"SummonerName must contain a hash symbol in the middle but no special characters. The length must be between {MIN_SUMMONERNAME_LENGTH} - {MAX_SUMMONERNAME_LENGTH}.";
+        public static string SUMMONERNAME_VALIDATION_ERROR_MESSAGE = $"SummonerName contains hash symbol in middle, letters and numbers. Length {MIN_SUMMONERNAME_LENGTH} to {MAX_SUMMONERNAME_LENGTH}. Sample: a12#a2w";
     }
 }

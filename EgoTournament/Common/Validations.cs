@@ -12,6 +12,7 @@ namespace EgoTournament.Common
             {
                 validationLabel.Text = Globals.SUMMONERNAME_VALIDATION_ERROR_MESSAGE;
                 validationLabel.IsVisible = true;
+                validationLabel.FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label));
                 await Toast.Make($"SummonerName invalid: {summonerName}", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
             }
             else

@@ -1,6 +1,9 @@
 using CommunityToolkit.Maui.Alerts;
 using EgoTournament.Models;
+using EgoTournament.Models.Firebase;
 using EgoTournament.Services;
+using Firebase.Auth;
+using Newtonsoft.Json;
 
 namespace EgoTournament.Views;
 
@@ -8,16 +11,25 @@ public partial class TournamentPage : ContentPage
 {
     private readonly ICacheService _cacheService;
 
+    private readonly IFirebaseService _firebaseService;
+
+    private const string RulesCountText = "Number of Rules ";
+
+    private const string ParticipantsCountText = "Number of Participants ";
+
     public ObservableCollection<string> SummonerEntries { get; set; } = new ObservableCollection<string>();
 
     public ObservableCollection<string> RuleEntries { get; set; } = new ObservableCollection<string>();
 
     public string TournamentName { get; set; }
 
-    public TournamentPage(ICacheService cacheService)
+    public TournamentPage(ICacheService cacheService, IFirebaseService firebaseService)
     {
         InitializeComponent();
         this._cacheService = cacheService;
+        this._firebaseService = firebaseService;
+        summonerEntriesCountLabel.Text = ParticipantsCountText + SummonerEntries.Count();
+        ruleEntriesCountLabel.Text = RulesCountText + RuleEntries.Count();
         BindingContext = this;
     }
 
@@ -42,12 +54,30 @@ public partial class TournamentPage : ContentPage
 
     private async void OnCreateTournamentClicked(object sender, EventArgs e)
     {
-        if (!string.IsNullOrEmpty(TournamentName) || (string.IsNullOrEmpty(TournamentName) && await DisplayAlert("Name is Empty.", "Do you want a random tournament name?", "OK", "Cancel")))
+        try
         {
-            TournamentName = TournamentName ?? Guid.NewGuid().ToString();
-            bool hasReward = HasRewardCheckBox.IsChecked;
-            TournamentDto tournament = new TournamentDto(TournamentName, RuleEntries.ToList(), SummonerEntries.ToList(), hasReward);
-            await DisplayAlert("Torneo Creado", $"Nombre: {tournament.Name}\nReglas: {string.Join(", ", tournament.Rules)}\nInvocadores: {string.Join(", ", tournament.SummonerNames)}\nRecompensa: {tournament.HasReward}", "OK");
+            if (!string.IsNullOrEmpty(TournamentName) || (string.IsNullOrEmpty(TournamentName) && await DisplayAlert("Name is Empty.", "Do you want a random tournament name?", "OK", "Cancel")))
+            {
+                TournamentName = TournamentName ?? Guid.NewGuid().ToString();
+                bool hasReward = HasRewardCheckBox.IsChecked;
+                TournamentDto tournament = new TournamentDto(TournamentName, RuleEntries.ToList(), SummonerEntries.ToList(), hasReward);
+                UserDto userWithNewTournament = await _cacheService.GetCurrentUserAsync();
+                userWithNewTournament.Tournaments.Add(tournament);
+                await _firebaseService.PutUser(userWithNewTournament);
+                await _cacheService.SetCurrentUserAsync(userWithNewTournament);
+                ClearInputScreen();
+                await Toast.Make($"Added tournament Successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+            }
+        }
+        catch (FirebaseAuthHttpException ex)
+        {
+            var fireBaseError = JsonConvert.DeserializeObject<FirebaseErrorDto>(ex.ResponseData);
+            await Toast.Make(fireBaseError.Error.Message.Replace("_", " "), CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+        }
+        catch (Exception)
+        {
+            await Toast.Make("Failed to create tournament. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
         }
     }
 
@@ -57,6 +87,7 @@ public partial class TournamentPage : ContentPage
         modalPage.ValuesUpdated += (sender, updatedItems) =>
         {
             SummonerEntries = updatedItems;
+            summonerEntriesCountLabel.Text = ParticipantsCountText + SummonerEntries.Count();
             BindingContext = this;
         };
 
@@ -69,9 +100,18 @@ public partial class TournamentPage : ContentPage
         modalPage.ValuesUpdated += (sender, updatedItems) =>
         {
             RuleEntries = updatedItems;
+            ruleEntriesCountLabel.Text = RulesCountText + RuleEntries.Count();
             BindingContext = this;
         };
 
         await Navigation.PushModalAsync(modalPage, true);
+    }
+
+    private void ClearInputScreen()
+    {
+        SummonerEntries.Clear();
+        RuleEntries.Clear();
+        TournamentName = string.Empty;
+        HasRewardCheckBox.IsChecked = false;
     }
 }

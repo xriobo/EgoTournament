@@ -46,7 +46,6 @@
                         Text="Sign in"/>
                     <Entry
                         Grid.Row="2"
-                        Margin="0,20,0,0"
                         HorizontalOptions="FillAndExpand"
                         Placeholder="Email"
                         Text="{Binding Email}"

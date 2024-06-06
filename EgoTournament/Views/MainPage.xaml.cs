@@ -1,16 +1,20 @@
 ﻿using CommunityToolkit.Maui.Alerts;
+using EgoTournament.Models;
 using EgoTournament.Services;
 
 namespace EgoTournament.Views;
 
 public partial class MainPage : ContentPage
 {
+    MainViewModel ViewModel;
     private readonly ICacheService _cacheService;
 
-    public MainPage(ICacheService cacheService)
+    public MainPage(MainViewModel mainViewModel, ICacheService cacheService)
     {
         InitializeComponent();
         this._cacheService = cacheService;
+        BindingContext = ViewModel = mainViewModel;
+        ViewModel.LoadData();
     }
 
     protected async override void OnNavigatedTo(NavigatedToEventArgs args)

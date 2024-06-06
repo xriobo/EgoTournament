@@ -16,7 +16,5 @@ namespace EgoTournament.Services
         Task DeleteUserAndUserCredential(string userUid);
 
         Task CreateUser(UserDto user);
-
-        Task CreateTournament(TournamentDto tournament);
     }
 }

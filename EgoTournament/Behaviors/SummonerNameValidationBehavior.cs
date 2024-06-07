@@ -1,12 +1,13 @@
-﻿using EgoTournament.Common;
+﻿using CommunityToolkit.Maui.Alerts;
+using EgoTournament.Common;
 using System.Text.RegularExpressions;
 
-namespace EgoTournament.Models.Behaviors
+namespace EgoTournament.Behaviors
 {
     public class SummonerNameValidationBehavior : Behavior<Entry>
     {
         public static readonly BindableProperty IsValidProperty =
-            BindableProperty.Create(nameof(IsValid), typeof(bool), typeof(SummonerNameValidationBehavior), false);
+                BindableProperty.Create(nameof(IsValid), typeof(bool), typeof(SummonerNameValidationBehavior), false);
 
         private const string RegExPattern = @"^[a-zA-Z0-9]+#[a-zA-Z0-9]+$";
 
@@ -18,20 +19,19 @@ namespace EgoTournament.Models.Behaviors
 
         protected override void OnAttachedTo(Entry bindable)
         {
-            bindable.TextChanged += OnTextChanged;
+            bindable.TextChanged += OnEntryTextChanged;
             base.OnAttachedTo(bindable);
         }
 
         protected override void OnDetachingFrom(Entry bindable)
         {
-            bindable.TextChanged -= OnTextChanged;
+            bindable.TextChanged -= OnEntryTextChanged;
             base.OnDetachingFrom(bindable);
         }
 
-        private async void OnTextChanged(object sender, TextChangedEventArgs e)
+        async void OnEntryTextChanged(object sender, TextChangedEventArgs e)
         {
             var entry = sender as Entry;
-
             IsValid = !string.IsNullOrWhiteSpace(entry.Text);
 
             if (IsValid && (entry.Text.Length < Globals.MIN_SUMMONERNAME_LENGTH || entry.Text.Length > Globals.MAX_SUMMONERNAME_LENGTH))

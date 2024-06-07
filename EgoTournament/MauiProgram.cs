@@ -30,9 +30,12 @@ public static class MauiProgram
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
-
+        // Services
         builder.Services.AddTransient<ICacheService, CacheService>();
         builder.Services.AddTransient<IFirebaseService, FirebaseService>();
+        builder.Services.AddSingleton<INavigationService, NavigationService>();
+
+        // Pages
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<ListingPage>();
         builder.Services.AddTransient<LoadingPage>();
@@ -40,9 +43,16 @@ public static class MauiProgram
         builder.Services.AddTransient<ProfilePage>();
         builder.Services.AddTransient<SignUpPage>();
         builder.Services.AddTransient<TournamentPage>();
+        builder.Services.AddTransient<PromptPage>();
+
+        // ViewModels
         builder.Services.AddTransient<MainViewModel>();
         builder.Services.AddTransient<LoginViewModel>();
         builder.Services.AddTransient<SignUpViewModel>();
+        builder.Services.AddTransient<PromptViewModel>();
+        builder.Services.AddTransient<ProfileViewModel>();
+
+        // Authentication
         builder.Services.AddSingleton(SecureStorage.Default);
         builder.Services.AddSingleton(services => new FirebaseAuthClient(new FirebaseAuthConfig()
         {
@@ -54,8 +64,6 @@ public static class MauiProgram
                     new GoogleProvider(),
             ],
         }));
-
-        builder.Services.AddSingleton(SecureStorage.Default);
 
         return builder.Build();
     }

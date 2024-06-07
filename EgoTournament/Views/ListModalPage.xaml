@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:EgoTournament.Models.Behaviors"
+             xmlns:local="clr-namespace:EgoTournament.Behaviors"
              x:Class="EgoTournament.Views.ListModalPage">
     <ContentPage.Content>
         <Grid Padding="20" BackgroundColor="#A9A9A9">
@@ -37,7 +37,8 @@
                     </Entry>
                     <Button Grid.Row="0" Grid.Column="1" Text="Add" Clicked="OnAddItemButtonClicked" 
                             HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" />
-                    <Label x:Name="validationMessage" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" TextColor="DarkRed" IsVisible="False" HorizontalOptions="FillAndExpand"/>
+                    <Label x:Name="validationMessage" FontSize="Small"
+                           Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" TextColor="DarkRed" IsVisible="False" HorizontalOptions="FillAndExpand"/>
                     <ScrollView Grid.Row="2" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2">
                         <CollectionView x:Name="EntriesCollectionView" ItemsSource="{Binding Items}">
                             <CollectionView.ItemTemplate>
@@ -51,7 +52,7 @@
                                             <ColumnDefinition Width="30*" />
                                         </Grid.ColumnDefinitions>
                                         <Label Grid.Column="0" Text="{Binding .}"  HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="0,0,0,0"/>
-                                        <Button Grid.Column="1" Text="REMOVE" Clicked="OnRemoveItemButtonClicked" BackgroundColor="Transparent" BorderWidth="0" TextColor="DarkRed" HorizontalOptions="StartAndExpand" VerticalOptions="Center" Margin="-3,0,0,0"/>
+                                        <Button Grid.Column="1" Text="Delete" Clicked="OnRemoveItemButtonClicked" BackgroundColor="Transparent" BorderWidth="1" TextColor="DarkRed" BorderColor="DarkRed" CornerRadius="20" HorizontalOptions="StartAndExpand" VerticalOptions="Center" Margin="-3,0,0,0"/>
                                     </Grid>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>

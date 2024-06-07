@@ -1,38 +1,28 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using EgoTournament.Models;
-using EgoTournament.Services;
-
-namespace EgoTournament.Views;
+﻿namespace EgoTournament.Views;
 
 public partial class MainPage : ContentPage
 {
-    MainViewModel ViewModel;
-    private readonly ICacheService _cacheService;
+    /// <summary>
+    /// The <see cref="MainViewModel"/>.
+    /// </summary>
+    private readonly MainViewModel _viewModel;
 
-    public MainPage(MainViewModel mainViewModel, ICacheService cacheService)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MainPage"/> class.
+    /// </summary>
+    /// <param name="mainViewModel">The <see cref="MainViewModel"/>.</param>
+    public MainPage(MainViewModel mainViewModel)
     {
         InitializeComponent();
-        this._cacheService = cacheService;
-        BindingContext = ViewModel = mainViewModel;
-        ViewModel.LoadData();
+        BindingContext = _viewModel = mainViewModel;
     }
 
-    protected async override void OnNavigatedTo(NavigatedToEventArgs args)
+    /// <summary>
+    /// When overridden in a derived class, allows application developers to customize behavior immediately prior to the page becoming visible.
+    /// </summary>
+    protected override async void OnAppearing()
     {
-        base.OnNavigatedTo(args);
-
-        if (await _cacheService.GetCurrentUserCredentialAsync() != null)
-        {
-            // User is logged in
-            // redirect to main page
-            await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
-        }
-        else
-        {
-            // User is not logged in 
-            // Redirect to LoginPage
-            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-            await Toast.Make("You must Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-        }
+        base.OnAppearing();
+        await _viewModel.OnNavigatedToAsync();
     }
 }

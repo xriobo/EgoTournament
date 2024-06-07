@@ -13,7 +13,8 @@
                     <ColumnDefinition Width="40*" />
                     <ColumnDefinition Width="20*" />
                     <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="20*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
                 </Grid.ColumnDefinitions>
                 <Label Grid.Row="0" Grid.Column="0"  Text="{Binding Name}"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
                 <Label Grid.Row="0" Grid.Column="1" Text="{Binding SummonerNames.Count, StringFormat='{0} Participants'}"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
@@ -22,7 +23,9 @@
                     <Label Text="Reward" FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center"/>
                     <CheckBox IsChecked="{Binding HasReward}" HorizontalOptions="Center" VerticalOptions="Center" IsEnabled="False"/>
                 </HorizontalStackLayout>
-                
+                <Button Grid.Row="0" Grid.Column="4" Text="Delete" Command="{Binding BindingContext.DeleteCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
+                        CommandParameter="{Binding .}" BackgroundColor="Transparent" BorderWidth="1" TextColor="DarkRed" BorderColor="DarkRed" CornerRadius="20"
+                        HorizontalOptions="StartAndExpand" VerticalOptions="Center" Margin="0,0,0,0" />
             </Grid>
         </DataTemplate>
     </ContentPage.Resources>

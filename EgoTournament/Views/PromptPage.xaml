@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
              x:Class="EgoTournament.Views.PromptPage">
     <Grid Padding="40"
           HorizontalOptions="FillAndExpand"
@@ -17,9 +18,17 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="Enter your password to confirm:" Margin="0,0,0,10" HorizontalOptions="Center" TextColor="Red"/>
-        <Entry x:Name="PromptEntry" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" WidthRequest="200" Margin="0,0,0,10" HorizontalOptions="CenterAndExpand" IsPassword="True"/>
-        <Button Grid.Row="2" Grid.Column="1" Text="Accept" Clicked="OnAcceptClicked" Margin="0,0,10,0"/>
-        <Button Grid.Row="2" Grid.Column="2" Text="Cancel" Clicked="OnCancelClicked"/>
+        <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="Enter your password to confirm:" HorizontalOptions="Center" TextColor="DarkRed"/>
+        <Entry x:Name="PromptEntry" Text="{Binding PromptEntry}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" WidthRequest="200" HorizontalOptions="CenterAndExpand" IsPassword="True"/>
+        <Button Grid.Row="2" Grid.Column="1" Text="Accept">
+            <Button.Behaviors>
+                <behaviors:EventToCommandBehavior EventName="Clicked" Command="{Binding AcceptCommand}" />
+            </Button.Behaviors>
+        </Button>
+        <Button Grid.Row="2" Grid.Column="2" Text="Cancel">
+            <Button.Behaviors>
+                <behaviors:EventToCommandBehavior EventName="Clicked" Command="{Binding CancelCommand}" />
+            </Button.Behaviors>
+        </Button>
     </Grid>
 </ContentPage>

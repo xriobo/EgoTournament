@@ -56,15 +56,15 @@ public partial class TournamentPage : ContentPage
     {
         try
         {
-            if (!string.IsNullOrEmpty(TournamentName) || (string.IsNullOrEmpty(TournamentName) && await DisplayAlert("Name is Empty.", "Do you want a random tournament name?", "OK", "Cancel")))
+            if (!string.IsNullOrEmpty(TournamentName) || (string.IsNullOrEmpty(TournamentName) && await Shell.Current.DisplayAlert("Name is Empty.", "Do you want a random tournament name?", "OK", "Cancel")))
             {
                 TournamentName = TournamentName ?? Guid.NewGuid().ToString();
-                bool hasReward = HasRewardCheckBox.IsChecked;
-                TournamentDto tournament = new TournamentDto(TournamentName, RuleEntries.ToList(), SummonerEntries.ToList(), hasReward);
-                UserDto userWithNewTournament = await _cacheService.GetCurrentUserAsync();
+                var hasReward = HasRewardCheckBox.IsChecked;
+                var tournament = new TournamentDto(TournamentName, RuleEntries.ToList(), SummonerEntries.ToList(), hasReward);
+                var userWithNewTournament = await _cacheService.GetCurrentUserAsync();
                 userWithNewTournament.Tournaments.Add(tournament);
-                await _firebaseService.PutUser(userWithNewTournament);
-                await _cacheService.SetCurrentUserAsync(userWithNewTournament);
+                var userUpdated = await _firebaseService.PutUser(userWithNewTournament);
+                await _cacheService.SetCurrentUserAsync(userUpdated);
                 ClearInputScreen();
                 await Toast.Make($"Added tournament Successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                 await Shell.Current.GoToAsync($"//{nameof(MainPage)}");

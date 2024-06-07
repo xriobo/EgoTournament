@@ -2,7 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EgoTournament.Views.ProfilePage"
-             xmlns:local="clr-namespace:EgoTournament.Models.Behaviors"
+             xmlns:local="clr-namespace:EgoTournament.Behaviors"
+             xmlns:vm="clr-namespace:EgoTournament.ViewModels"
+             x:DataType="vm:ProfileViewModel"
              Title="ProfilePage">
     <ContentPage.Content>
         <Grid Padding="20"
@@ -19,7 +21,7 @@
                  HorizontalOptions="Center"
                  VerticalOptions="Start"/>
             <Frame Grid.Row="1">
-                <Grid HorizontalOptions="FillAndExpand" RowSpacing="20" VerticalOptions="FillAndExpand">
+                <Grid RowSpacing="20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
@@ -34,22 +36,27 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" HorizontalOptions="CenterAndExpand" Text="Summoner Name:"/>
-                    <Entry x:Name="entrySummoner" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalOptions="FillAndExpand" Placeholder="Summoner Name..." 
-                            Text="{Binding SummonerName}" VerticalOptions="Center" TextChanged="TextChanged_Event">
+                    <Label Grid.Row="0" Grid.Column="0" Text="Summoner Name:"/>
+                    <Entry  Placeholder="Summoner Name..." IsEnabled="{Binding IsSummonerNameEntryEnable}" Text="{Binding SummonerNameEntryText}" TextChanged="summonerNameEntry_TextChanged"
+                           Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
                         <Entry.Behaviors>
                             <local:SummonerNameValidationBehavior />
                         </Entry.Behaviors>
                     </Entry>
-                    <Label x:Name="validationMessage" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" TextColor="DarkRed" IsVisible="False" HorizontalOptions="FillAndExpand"/>
-                    <Label Grid.Row="2" Grid.Column="0" Text="Role" VerticalOptions="Center" HorizontalOptions="FillAndExpand" />
-                    <Picker x:Name="rolePicker" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" Title="Select a role"  TextColor="LightGrey" ItemsSource="{Binding RoleValues}" HorizontalOptions="FillAndExpand">
+                    <Label Text="{Binding ValidationMessage}"  IsVisible="{Binding IsValidationMessageVisible}" FontSize="Small"
+                           Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" TextColor="DarkRed" />
+                    <Label Grid.Row="2" Grid.Column="0" Text="Role" />
+                    <Picker Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                           Title="Select a role" ItemsSource="{Binding RoleValues}" SelectedItem="{Binding SelectedItem}" IsEnabled="{Binding IsRolePickerEnable}">
                     </Picker>
-                    <Label x:Name="lblenableSummonerName" Grid.Row="3" Grid.Column="0" Text="Change SummonerName" VerticalOptions="Center"  HorizontalOptions="FillAndExpand" IsVisible="False"/>
-                    <CheckBox x:Name="enableSummonerName" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" VerticalOptions="Center"  HorizontalOptions="FillAndExpand" CheckedChanged="OnCheckedChange" IsVisible="False"/>
-                    <Button x:Name="saveBtn" Grid.Row="4" Grid.Column="1" Text="Save" Clicked="Save_Clicked"/>
-                    <Button Grid.Row="5" Grid.Column="1" Text="Logout" Clicked="Logout_Clicked"/>
-                    <Button Grid.Row="6" Grid.Column="2" Text="Delete Account" Clicked="DeleteAccount_Clicked" BackgroundColor="Transparent" BorderWidth="0" TextColor="DarkRed"/>
+                    <Label Grid.Row="3" Grid.Column="0" Text="Change SummonerName" IsVisible="{Binding IsLabelEnableEntryVisible}" />
+                    <CheckBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" VerticalOptions="Center"  CheckedChanged="CheckBox_CheckedChanged"
+                              IsEnabled="{Binding IsCheckBoxEnable}"  IsVisible="{Binding IsCheckBoxVisible}" IsChecked="{Binding ModifyNameChecked}"/>
+                    <Button Grid.Row="4" Grid.Column="1" Text="Save" Command="{Binding SaveCommand}" IsVisible="{Binding IsSaveButtonVisible}" />
+                    <Button Grid.Row="5" Grid.Column="1" Text="Logout" Command="{Binding LogoutCommand}" />
+                    <Button Grid.Row="6" Grid.Column="2" Text="Delete Account" BackgroundColor="Transparent" BorderWidth="0" TextColor="DarkRed" HorizontalOptions="Center"
+                            Command="{Binding DeleteAccountCommand}" />
+
                 </Grid>
             </Frame>
         </Grid>

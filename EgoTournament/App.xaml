@@ -13,11 +13,14 @@
             <Color x:Key="FourthColor">#636061</Color>
             <Color x:Key="FifthColor">#8c8c8c</Color>
             <Color x:Key="FrameBorderColor">#1C375C</Color>
+            <Color x:Key="RolePickerTextColor">#CFCFCF</Color>
 
             <Style TargetType="Label">
                 <Setter Property="TextColor" Value="{DynamicResource SecondaryColor}" />
                 <Setter Property="FontFamily" Value="OpenSansRegular" />
                 <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             </Style>
             <Style TargetType="Entry">
                 <Setter Property="FontAttributes" Value="Bold" />
@@ -26,6 +29,8 @@
                 <Setter Property="BackgroundColor" Value="{DynamicResource ThirdColor}" />
                 <Setter Property="PlaceholderColor" Value="{DynamicResource FourthColor}"/>
                 <Setter Property="Margin" Value="10,10,10,10"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
             </Style>
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="{DynamicResource ThirdColor}" />
@@ -41,6 +46,11 @@
                 <Setter Property="CornerRadius" Value="50" />
                 <Setter Property="Margin" Value="-20,0,-20,-40" />
                 <Setter Property="BackgroundColor" Value="{DynamicResource FifthColor}" />
+            </Style>
+            <Style TargetType="Picker">
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+                <Setter Property="TextColor" Value="{DynamicResource ThirdColor}" />
             </Style>
         </ResourceDictionary>
     </Application.Resources>

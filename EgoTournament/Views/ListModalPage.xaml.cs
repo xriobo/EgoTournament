@@ -1,6 +1,6 @@
 using CommunityToolkit.Maui.Alerts;
+using EgoTournament.Behaviors;
 using EgoTournament.Common;
-using EgoTournament.Models.Behaviors;
 
 namespace EgoTournament.Views;
 
@@ -37,10 +37,16 @@ public partial class ListModalPage : ContentPage
         }
         else
         {
-            if (await Validations.SummonerName(ValueEntry.Behaviors.OfType<SummonerNameValidationBehavior>().FirstOrDefault(), ItemValue, validationMessage))
+            if (Validations.SummonerName(ItemValue))
             {
                 Items.Add(_isSummonerList ? ItemValue.ToUpperInvariant() : ItemValue);
                 ValueEntry.Text = string.Empty;
+            }
+            else
+            {
+                validationMessage.Text = Globals.SUMMONERNAME_VALIDATION_ERROR_MESSAGE;
+                validationMessage.IsVisible = true;
+                await Toast.Make($"SummonerName invalid.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
             }
         }
     }

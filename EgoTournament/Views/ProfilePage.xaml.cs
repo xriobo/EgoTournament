@@ -1,174 +1,44 @@
-using CommunityToolkit.Maui.Alerts;
-using EgoTournament.Common;
-using EgoTournament.Models;
-using EgoTournament.Models.Behaviors;
-using EgoTournament.Models.Enums;
-using EgoTournament.Models.Firebase;
-using EgoTournament.Services;
-
 namespace EgoTournament.Views;
 
+/// <summary>
+/// The <see cref="ProfilePage"/>.
+/// </summary>
+/// <seealso cref="Microsoft.Maui.Controls.ContentPage" />
 public partial class ProfilePage : ContentPage
 {
-    private readonly ICacheService _cacheService;
+    /// <summary>
+    /// The <see cref="ProfileViewModel"/>.
+    /// </summary>
+    ProfileViewModel _viewModel;
 
-    private readonly IFirebaseService _firebaseService;
-
-    private FirebaseUserDto userCredentials;
-
-    private UserDto currentUser;
-
-    public List<string> RoleValues { get; } = Enum.GetNames(typeof(RoleType)).ToList();
-
-    public string SummonerName { get; set; }
-
-    public ProfilePage(ICacheService cacheService, IFirebaseService firebaseService)
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ProfilePage"/> class.
+    /// </summary>
+    /// <param name="viewModel">The <see cref="ProfileViewModel"/>.</param>
+    public ProfilePage(ProfileViewModel viewModel)
     {
-        _cacheService = cacheService;
-        _firebaseService = firebaseService;
         InitializeComponent();
-        BindingContext = this;
+        BindingContext = _viewModel = viewModel;
     }
 
-    protected async override void OnNavigatedTo(NavigatedToEventArgs args)
+    /// <summary>
+    /// When overridden in a derived class, allows application developers to customize behavior immediately prior to the page becoming visible.
+    /// </summary>
+    protected override async void OnAppearing()
     {
-        base.OnNavigatedTo(args);
-        userCredentials = await _cacheService.GetCurrentUserCredentialAsync();
-        if (userCredentials != null)
-        {
-            currentUser = await _cacheService.GetCurrentUserAsync();
-            LoadScreenData(currentUser);
-            await Shell.Current.GoToAsync($"//{nameof(ProfilePage)}");
-        }
-        else
-        {
-            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-            await Toast.Make("You must Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-        }
+        base.OnAppearing();
+        await _viewModel.OnNavigatedToAsync();
     }
 
-    private void LoadScreenData(UserDto user)
+    private void CheckBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
     {
-        if (user != null)
-        {
-            currentUser = user;
-            entrySummoner.Text = user.SummonerName;
-            entrySummoner.IsEnabled = false;
-            rolePicker.SelectedIndex = (int)user.Role;
-            rolePicker.IsEnabled = false;
-            saveBtn.IsVisible = false;
-            lblenableSummonerName.IsVisible = true;
-            enableSummonerName.IsVisible = true;
-            enableSummonerName.IsChecked = false;
-        }
-        else
-        {
-            rolePicker.SelectedIndex = (int)default(RoleType);
-            entrySummoner.Text = null;
-            entrySummoner.IsEnabled = true;
-            rolePicker.IsEnabled = true;
-            saveBtn.IsVisible = true;
-        }
+        var viewModel = (ProfileViewModel)BindingContext;
+        viewModel.CheckBoxChangedCommand.Execute(e.Value);
     }
 
-    private async void Save_Clicked(object sender, EventArgs e)
+    private void summonerNameEntry_TextChanged(object sender, TextChangedEventArgs e)
     {
-        try
-        {
-            if (!string.IsNullOrEmpty(SummonerName))
-            {
-                if (!enableSummonerName.IsChecked)
-                {
-                    var role = Enum.Parse<RoleType>(rolePicker.SelectedItem.ToString(), true);
-                    if (await Validations.SummonerName(entrySummoner.Behaviors.OfType<SummonerNameValidationBehavior>().FirstOrDefault(), SummonerName, validationMessage))
-                    {
-                        if (currentUser == null)
-                        {
-                            currentUser = new UserDto()
-                            {
-                                Role = role,
-                                SummonerName = SummonerName,
-                                Uid = userCredentials.Uid,
-                                Email = userCredentials.Info.Email,
-                            };
-
-                            await _firebaseService.CreateUser(currentUser);
-                            await _cacheService.SetCurrentUserAsync(currentUser);
-                            LoadScreenData(currentUser);
-                        }
-                        else
-                        {
-                            await Toast.Make("Error: User already exists in the database..", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                        }
-                    }
-                }
-                else
-                {
-                    currentUser.SummonerName = SummonerName;
-                    if (await DisplayAlert("WARNING", "Do you confirm that you want to modify the summonerName?", "YES", "NO")
-                            && await _firebaseService.PutUser(currentUser) != null)
-                    {
-                        await _cacheService.SetCurrentUserAsync(currentUser);
-                        await Toast.Make("Updated successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                    }
-                    else
-                    {
-                        currentUser = await _cacheService.GetCurrentUserAsync();
-                    }
-
-                    LoadScreenData(currentUser);
-                }
-            }
-            else
-            {
-                await Toast.Make("Insert a value.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-            }
-        }
-        catch (Exception ex)
-        {
-            await Toast.Make("Failed to load profile. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-            await Toast.Make(ex.Message, CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-        }
-    }
-
-    private async void Logout_Clicked(object sender, EventArgs e)
-    {
-        _cacheService.Logout();
-        await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-        await Toast.Make("Goodbye!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-    }
-
-    private void TextChanged_Event(object sender, TextChangedEventArgs e)
-    {
-        if (validationMessage.IsVisible)
-        {
-            validationMessage.IsVisible = false;
-        }
-    }
-
-    private async void OnCheckedChange(object sender, CheckedChangedEventArgs e)
-    {
-        if (e.Value && await AppShell.Current.DisplayAlert("WARNING", "If the summoner name is modified, the assigned tournaments will change to the new name.", "Ok", "Cancel"))
-        {
-            entrySummoner.IsEnabled = true;
-            saveBtn.IsVisible = true;
-        }
-        else
-        {
-            enableSummonerName.IsChecked = false;
-            entrySummoner.IsEnabled = false;
-            saveBtn.IsVisible = false;
-        }
-    }
-
-    private void DeleteAccount_Clicked(object sender, EventArgs e)
-    {
-        ShowPrompt(sender, e);
-    }
-
-    private async void ShowPrompt(object sender, EventArgs e)
-    {
-        var promptPage = new PromptPage(_cacheService, _firebaseService);
-        await Navigation.PushModalAsync(promptPage);
+        var viewModel = (ProfileViewModel)BindingContext;
+        viewModel.SummonerNameEntryTextChangedCommand.Execute(e.NewTextValue);
     }
 }

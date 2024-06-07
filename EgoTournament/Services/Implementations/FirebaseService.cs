@@ -1,7 +1,10 @@
 ﻿using EgoTournament.Models;
 using Firebase.Auth;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Net.Mime;
+using System.Text;
 
 namespace EgoTournament.Services.Implementations
 {

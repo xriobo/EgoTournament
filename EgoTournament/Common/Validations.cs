@@ -1,23 +1,23 @@
 ﻿using CommunityToolkit.Maui.Alerts;
-using EgoTournament.Models.Behaviors;
+using System.Text.RegularExpressions;
 
 namespace EgoTournament.Common
 {
     public static class Validations
     {
-        public static async Task<bool> SummonerName(SummonerNameValidationBehavior entryValidationBehavior, string summonerName, Label validationLabel)
+        private const string RegExPattern = @"^[a-zA-Z0-9]+#[a-zA-Z0-9]+$";
+
+        public static bool SummonerName(string summonerName)
         {
-            bool isValid = false;
-            if (entryValidationBehavior != null && !entryValidationBehavior.IsValid)
+            bool isValid = true;
+            if (isValid && (summonerName.Length < Globals.MIN_SUMMONERNAME_LENGTH || summonerName.Length > Globals.MAX_SUMMONERNAME_LENGTH))
             {
-                validationLabel.Text = Globals.SUMMONERNAME_VALIDATION_ERROR_MESSAGE;
-                validationLabel.IsVisible = true;
-                validationLabel.FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label));
-                await Toast.Make($"SummonerName invalid: {summonerName}", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                isValid = false;
             }
-            else
+
+            if (isValid && !Regex.IsMatch(summonerName, RegExPattern))
             {
-                isValid = true;
+                isValid = false;
             }
 
             return isValid;

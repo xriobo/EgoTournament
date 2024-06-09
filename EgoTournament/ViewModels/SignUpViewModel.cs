@@ -66,6 +66,11 @@ namespace EgoTournament.ViewModels
                 await Toast.Make("Failed to sign up. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                 Console.WriteLine(ex.Message.ToString());
             }
+            finally
+            {
+                Password = null;
+                Email = null;
+            }
         }
 
         private async void SignInBtnTappedAsync(object obj)

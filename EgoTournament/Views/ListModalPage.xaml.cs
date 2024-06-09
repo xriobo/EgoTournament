@@ -1,5 +1,4 @@
 using CommunityToolkit.Maui.Alerts;
-using EgoTournament.Behaviors;
 using EgoTournament.Common;
 
 namespace EgoTournament.Views;
@@ -37,16 +36,16 @@ public partial class ListModalPage : ContentPage
         }
         else
         {
-            if (Validations.SummonerName(ItemValue))
-            {
-                Items.Add(_isSummonerList ? ItemValue.ToUpperInvariant() : ItemValue);
-                ValueEntry.Text = string.Empty;
-            }
-            else
+            if (_isSummonerList && !Validations.SummonerName(ItemValue))
             {
                 validationMessage.Text = Globals.SUMMONERNAME_VALIDATION_ERROR_MESSAGE;
                 validationMessage.IsVisible = true;
                 await Toast.Make($"SummonerName invalid.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            }
+            else
+            {
+                Items.Add(_isSummonerList ? ItemValue.ToUpperInvariant() : ItemValue);
+                ValueEntry.Text = string.Empty;
             }
         }
     }
@@ -66,7 +65,7 @@ public partial class ListModalPage : ContentPage
     {
         ValuesUpdated?.Invoke(this, Items);
 
-        await Navigation.PopModalAsync(true);
+        await Shell.Current.Navigation.PopModalAsync(true);
     }
 
     private void TextChanged_Event(object sender, TextChangedEventArgs e)

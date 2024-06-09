@@ -41,11 +41,6 @@ namespace EgoTournament.ViewModels
         private readonly ICacheService _cacheService;
 
         /// <summary>
-        /// The navigation service.
-        /// </summary>
-        private readonly INavigationService _navigationService;
-
-        /// <summary>
         /// The method type.
         /// </summary>
         private readonly MethodType _methodType;
@@ -58,7 +53,6 @@ namespace EgoTournament.ViewModels
         /// <summary>
         /// The promptEntry binding.
         /// </summary>
-        [ObservableProperty]
         private string promptEntry;
 
         /// <summary>
@@ -66,19 +60,17 @@ namespace EgoTournament.ViewModels
         /// </summary>
         /// <param name="cacheService">The cache service.</param>
         /// <param name="firebaseService">The firebase service.</param>
-        /// <param name="navigationService">The navigation service.</param>
         /// <param name="methodType">The method type.</param>
         /// <param name="tournaments">List of <see cref="TournamentDto" /> without the tournament to be updated.</param>
-        public PromptViewModel(ICacheService cacheService, IFirebaseService firebaseService, INavigationService navigationService, MethodType methodType, List<TournamentDto> tournaments = null)
+        public PromptViewModel(ICacheService cacheService, IFirebaseService firebaseService, MethodType methodType, List<TournamentDto> tournaments = null)
         {
             _cacheService = cacheService;
             _firebaseService = firebaseService;
             _methodType = methodType;
-            _navigationService = navigationService;
             _tournaments = tournaments;
 
             AcceptCommand = new RelayCommand(OnAcceptClicked);
-            AcceptCommand = new RelayCommand(OnAcceptClicked);
+            CancelCommand = new RelayCommand(OnCancelClicked);
         }
 
         /// <summary>
@@ -112,12 +104,14 @@ namespace EgoTournament.ViewModels
             catch (FirebaseAuthHttpException ex)
             {
                 await Toast.Make(JsonConvert.DeserializeObject<FirebaseErrorDto>(ex.ResponseData).Error.Message.Replace("_", " "), CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                await _navigationService.PopModalAsync();
+
+                var navigation = App.Current.MainPage.Navigation;
+                await App.Current.MainPage.Navigation.PopModalAsync();
             }
             catch (Exception)
             {
                 await Toast.Make("Failed to load profile. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                await _navigationService.PopModalAsync();
+                await App.Current.MainPage.Navigation.PopModalAsync();
             }
         }
 
@@ -126,9 +120,9 @@ namespace EgoTournament.ViewModels
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnCancelClicked(object sender, EventArgs e)
+        private async void OnCancelClicked()
         {
-            await _navigationService.PopModalAsync();
+            await App.Current.MainPage.Navigation.PopModalAsync();
         }
 
         /// <summary>
@@ -141,7 +135,7 @@ namespace EgoTournament.ViewModels
             await userCredential.User.DeleteAsync();
             await Shell.Current.DisplayAlert("Removed", "The account has been successfully deleted.", "OK");
             _cacheService.Logout();
-            await _navigationService.PopModalAsync();
+            await App.Current.MainPage.Navigation.PopModalAsync();
             await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
 
@@ -168,7 +162,7 @@ namespace EgoTournament.ViewModels
                 }
 
 
-                await _navigationService.PopModalAsync();
+                await App.Current.MainPage.Navigation.PopModalAsync();
                 await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
             }
         }

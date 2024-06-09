@@ -1,4 +1,6 @@
-﻿namespace EgoTournament.Views;
+﻿using EgoTournament.Models;
+
+namespace EgoTournament.Views;
 
 public partial class MainPage : ContentPage
 {
@@ -23,6 +25,20 @@ public partial class MainPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        
         await _viewModel.OnNavigatedToAsync();
+    }
+
+    /// <summary>
+    /// Called when [selection changed].
+    /// </summary>
+    /// <param name="sender">The sender.</param>
+    /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
+    private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.CurrentSelection.FirstOrDefault() is TournamentDto selectedItem)
+        {
+            _viewModel?.TournamentSelectedCommand.Execute(selectedItem);
+        }
     }
 }

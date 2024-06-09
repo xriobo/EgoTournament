@@ -4,33 +4,14 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:EgoTournament.Models"
+    xmlns:vm="clr-namespace:EgoTournament.ViewModels"
     BackgroundColor="{DynamicResource SecondaryColor}"
     NavigationPage.HasNavigationBar="False">
-    <ContentPage.Resources>
-        <DataTemplate x:DataType="m:TournamentDto" x:Key="tournamentsTemplate">
-            <Grid  VerticalOptions="StartAndExpand" Margin="0,0,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="20*" />
-                    <ColumnDefinition Width="10*" />
-                    <ColumnDefinition Width="10*" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.Row="0" Grid.Column="0"  Text="{Binding Name}"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
-                <Label Grid.Row="0" Grid.Column="1" Text="{Binding SummonerNames.Count, StringFormat='{0} Participants'}"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
-                <Label Grid.Row="0" Grid.Column="2" Text="{Binding Rules.Count, StringFormat='{0} Rules'}"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
-                <HorizontalStackLayout Grid.Row="0" Grid.Column="3">
-                    <Label Text="Reward" FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center"/>
-                    <CheckBox IsChecked="{Binding HasReward}" HorizontalOptions="Center" VerticalOptions="Center" IsEnabled="False"/>
-                </HorizontalStackLayout>
-                <Button Grid.Row="0" Grid.Column="4" Text="Delete" Command="{Binding BindingContext.DeleteCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}" 
-                        CommandParameter="{Binding .}" BackgroundColor="Transparent" BorderWidth="1" TextColor="DarkRed" BorderColor="DarkRed" CornerRadius="20"
-                        HorizontalOptions="StartAndExpand" VerticalOptions="Center" Margin="0,0,0,0" />
-            </Grid>
-        </DataTemplate>
-    </ContentPage.Resources>
+    <ContentPage.BindingContext>
+        <vm:MainViewModel />
+    </ContentPage.BindingContext>
     <ContentPage.Content>
-        <Grid  BackgroundColor="#A9A9A9">
+        <Grid Padding="20" BackgroundColor="#A9A9A9">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20*" />
                 <RowDefinition Height="80*" />
@@ -38,14 +19,37 @@
             <Image Grid.Row="0" Aspect="AspectFit" Source="trophy.png" HorizontalOptions="Center" VerticalOptions="Start"/>
 
             <Frame Grid.Row="1">
-                <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshingCommand}">
-                    <ScrollView>
-                        <StackLayout>
-                            <CollectionView ItemsSource="{Binding Tournaments}"
-                                    ItemTemplate="{StaticResource tournamentsTemplate}"/>
-                        </StackLayout>
-                    </ScrollView>
-                </RefreshView>
+                <StackLayout>
+                    <CollectionView ItemsSource="{Binding Tournaments}"
+                    SelectionMode="Single"
+                    SelectionChanged="OnSelectionChanged">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="45*" />
+                                        <ColumnDefinition Width="20*" />
+                                        <ColumnDefinition Width="20*" />
+                                        <ColumnDefinition Width="10*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Column="0" Text="{Binding Name}" FontSize="12" HorizontalOptions="FillAndExpand"/>
+                                    <Label Grid.Column="1" FontSize="9" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="Participantes: {0}">
+                                                <Binding Path="SummonerNames.Count" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
+                                    <Button Grid.Column="2" Text="Update" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=UpdateCommand}" CommandParameter="{Binding .}"
+                                            FontSize="8" Margin="0,0,0,0" HorizontalOptions="EndAndExpand" VerticalOptions="Center"/>
+                                    <Button Grid.Column="3" Text="X" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding .}" 
+                                            BackgroundColor="Transparent"  FontSize="10" Margin="0,0,0,0" TextColor="DarkRed" HorizontalOptions="EndAndExpand" VerticalOptions="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <Button Text="Add" Command="{Binding AddCommand}" />
+                </StackLayout>
             </Frame>
         </Grid>
     </ContentPage.Content>

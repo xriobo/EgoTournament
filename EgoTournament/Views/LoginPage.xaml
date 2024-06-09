@@ -11,13 +11,7 @@
                 <RowDefinition Height="20*" />
                 <RowDefinition Height="80*" />
             </Grid.RowDefinitions>
-            <Image
-                    Grid.Row="0"
-                    Margin="0,20"
-                    Aspect="AspectFit"
-                    Source="login.png"
-                    HorizontalOptions="Center"
-                    VerticalOptions="Start"/>
+            <Image Grid.Row="0" Margin="0,20" Aspect="AspectFit" Source="login.png" HorizontalOptions="Center" VerticalOptions="Start" />
 
             <Frame Grid.Row="1">
                 <Grid
@@ -33,41 +27,12 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Label
-                        Grid.Row="0"
-                        FontAttributes="Bold"
-                        FontSize="24"
-                        HorizontalOptions="CenterAndExpand"
-                        Text="Welcome Back!"/>
-                    <Label
-                        Grid.Row="1"
-                        Margin="0,-15,0,0"
-                        HorizontalOptions="CenterAndExpand"
-                        Text="Sign in"/>
-                    <Entry
-                        Grid.Row="2"
-                        HorizontalOptions="FillAndExpand"
-                        Placeholder="Email"
-                        Text="{Binding Email}"
-                        VerticalOptions="FillAndExpand" />
-                    <Entry
-                        Grid.Row="3"
-                        HorizontalOptions="FillAndExpand"
-                        IsPassword="True"
-                        Placeholder="Password"
-                        Text="{Binding Password}"
-                        VerticalOptions="FillAndExpand" />
-                    <Button
-                        Grid.Row="4"
-                        Command="{Binding SignInBtn}"
-                        CornerRadius="20"
-                        Text="Login" />
-
-                    <Button
-                        Grid.Row="5"
-                        Command="{Binding SignUpBtn}"
-                        CornerRadius="20"
-                        Text="Sign Up" />
+                    <Label Grid.Row="0" FontSize="24" Text="Welcome Back!"/>
+                    <Label Grid.Row="1" Text="Sign in"/>
+                    <Entry Grid.Row="2" Placeholder="Email" Text="{Binding Email}"/>
+                    <Entry Grid.Row="3" IsPassword="True" Placeholder="Password" Text="{Binding Password}" />
+                    <Button Grid.Row="4" Command="{Binding SignInBtn}" Text="Login" />
+                    <Button Grid.Row="5" Command="{Binding SignUpBtn}" Text="Sign Up" />
                 </Grid>
             </Frame>
         </Grid>

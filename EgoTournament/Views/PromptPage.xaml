@@ -4,6 +4,7 @@
              xmlns:behaviors="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
              x:Class="EgoTournament.Views.PromptPage">
     <Grid Padding="40"
+          BackgroundColor="#A9A9A9"
           HorizontalOptions="FillAndExpand"
           RowSpacing="20"
           VerticalOptions="FillAndExpand">
@@ -13,19 +14,19 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="10*"/>
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Text="Enter your password to confirm:" HorizontalOptions="Center" TextColor="DarkRed"/>
-        <Entry x:Name="PromptEntry" Text="{Binding PromptEntry}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" WidthRequest="200" HorizontalOptions="CenterAndExpand" IsPassword="True"/>
-        <Button Grid.Row="2" Grid.Column="1" Text="Accept">
+        <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" Text="Enter your password to confirm:" HorizontalOptions="CenterAndExpand" TextColor="DarkRed" VerticalOptions="Center"/>
+        <Entry x:Name="PromptEntry" Text="{Binding PromptEntry}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" HorizontalOptions="FillAndExpand" VerticalOptions="Center" IsPassword="True" Margin="20,0,20,0"/>
+        <Button Grid.Row="2" Grid.Column="1" Text="Accept" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
             <Button.Behaviors>
                 <behaviors:EventToCommandBehavior EventName="Clicked" Command="{Binding AcceptCommand}" />
             </Button.Behaviors>
         </Button>
-        <Button Grid.Row="2" Grid.Column="2" Text="Cancel">
+        <Button Grid.Row="2" Grid.Column="2" Text="Cancel"  HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
             <Button.Behaviors>
                 <behaviors:EventToCommandBehavior EventName="Clicked" Command="{Binding CancelCommand}" />
             </Button.Behaviors>

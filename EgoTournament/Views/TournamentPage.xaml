@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:EgoTournament.Models.Behaviors"
+             xmlns:local="clr-namespace:EgoTournament.Behaviors"
+             xmlns:vm="clr-namespace:EgoTournament.ViewModels"
              x:Class="EgoTournament.Views.TournamentPage"
              Title="TournamentPage">
+    <ContentPage.BindingContext>
+        <vm:TournamentViewModel />
+    </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid Padding="20" BackgroundColor="#A9A9A9">
             <Grid.RowDefinitions>
                 <RowDefinition Height="20*" />
                 <RowDefinition Height="80*" />
             </Grid.RowDefinitions>
-            <Image Grid.Row="0" Margin="0,20" Aspect="AspectFit" Source="trophy.png" HorizontalOptions="Center" VerticalOptions="Start"/>
-
+            <Image Grid.Row="0" Aspect="AspectFit" Source="trophy.png" HorizontalOptions="Center" VerticalOptions="Start"/>
             <Frame Grid.Row="1">
                 <Grid HorizontalOptions="FillAndExpand" RowSpacing="20" VerticalOptions="FillAndExpand">
                     <Grid.RowDefinitions>
@@ -34,14 +37,15 @@
                             <ColumnDefinition Width="70*" />
                         </Grid.ColumnDefinitions>
                         <Label  Grid.Column="0" Text="Tournament Name:" Padding="10" HorizontalOptions="Center"/>
-                        <Entry  Grid.Column="1" Text="{Binding TournamentName}" Placeholder="Insert tournament name..." />
+                        <Entry  Grid.Column="1" Text="{Binding Tournament.Name}" Placeholder="Insert tournament name..." />
                     </Grid>
 
-                    <Button Grid.Row="1" Grid.Column="0" Text="Edit Participants" Clicked="OnOpenSummonerModalButtonClicked" />
-                    <Label Grid.Row="1" Grid.Column="1" x:Name="summonerEntriesCountLabel" Text="Number of Participants: 0" FontSize="Small"  HorizontalOptions="Center" VerticalOptions="Center"/>
-
-                    <Button Grid.Row="2" Grid.Column="0" Text="Edit Rules" Clicked="OnOpenRulesModalButtonClicked"/>
-                    <Label Grid.Row="2" Grid.Column="1" x:Name="ruleEntriesCountLabel" Text="Number of Rules: 0" FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center"/>
+                    <Button Grid.Row="1" Grid.Column="0" Text="Edit Participants" Command="{Binding ManageSummonersCommand}" />
+                    <!--<Label Grid.Row="1" Grid.Column="1" Text="{Binding Summoners.Count, StringFormat='Number of Participants: {0}'}" FontSize="Small"  HorizontalOptions="Center" VerticalOptions="Center" />-->
+                    <Label Grid.Row="1" Grid.Column="1" Text="Lista Summoners" FontSize="Small"  HorizontalOptions="Center" VerticalOptions="Center" />
+                    <Button Grid.Row="2" Grid.Column="0" Text="Edit Rules" Command="{Binding ManageRulesCommand}"/>
+                    <!--<Label Grid.Row="2" Grid.Column="1" Text="{Binding Rules.Count, StringFormat='Number of Rules: {0}'}" HorizontalOptions="Center" VerticalOptions="Center" />-->
+                    <Label Grid.Row="2" Grid.Column="1" Text="Lista Rules" HorizontalOptions="Center" VerticalOptions="Center" />
 
                     <Grid Grid.Row="3" Grid.Column="0">
                         <Grid.ColumnDefinitions>
@@ -49,10 +53,11 @@
                             <ColumnDefinition Width="30*" />
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Text="¿Rewards?" FontSize="Medium" VerticalOptions="Center" HorizontalOptions="Center" />
-                        <CheckBox Grid.Column="1" x:Name="HasRewardCheckBox" HorizontalOptions="Center"/>
+                        <CheckBox Grid.Column="1" x:Name="HasRewardCheckBox" HorizontalOptions="Center" IsChecked="{Binding Tournament.HasReward}"/>
                     </Grid>
-                    
-                    <Button Grid.Row="6" Grid.ColumnSpan="2" Text="Create Tournament" Clicked="OnCreateTournamentClicked" />
+
+                    <Button Grid.Row="5" Grid.ColumnSpan="2" x:Name="CancelButton" Text="Cancel" IsVisible="False" Command="{Binding CancelCommand}" />
+                    <Button Grid.Row="6" Grid.ColumnSpan="2" Text="Save Tournament" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TournamentViewModel}}, Path=SaveCommand}" CommandParameter="{Binding .}" />
                 </Grid>
             </Frame>
         </Grid>

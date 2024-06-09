@@ -6,57 +6,126 @@ using System.Windows.Input;
 
 namespace EgoTournament.ViewModels
 {
-    public partial class MainViewModel : BaseViewModel
+    public partial class MainViewModel : BindableObject
     {
         private readonly IFirebaseService _firebaseService;
         private readonly ICacheService _cacheService;
-        private readonly INavigationService _navigationService;
 
-        [ObservableProperty]
-        bool isRefreshing;
+        public IRelayCommand DeleteCommand { get; }
 
-        [ObservableProperty]
-        public ObservableCollection<TournamentDto> tournaments;
+        public IRelayCommand UpdateCommand { get; }
 
-        public ICommand DeleteCommand { get; }
+        public IRelayCommand TournamentSelectedCommand { get; }
 
-        public MainViewModel(ICacheService cacheService, IFirebaseService firebaseService, INavigationService navigationService)
+        public IRelayCommand RefreshingCommand { get; }
+
+        public IRelayCommand AddCommand { get; }
+
+        /// <summary>
+        /// The selected <see cref="TournamentDto"/>.
+        /// </summary>
+        private TournamentDto _selectedItem;
+
+        /// <summary>
+        /// The new item name.
+        /// </summary>
+        private string _newItemName;
+
+        /// <summary>
+        /// The is refreshing.
+        /// </summary>
+        private bool _isRefreshing;
+
+        public MainViewModel()
         {
-            this._firebaseService = firebaseService;
-            this._cacheService = cacheService;
-            this._navigationService = navigationService;
-            DeleteCommand = new Command<TournamentDto>(DeleteTournament);
+            this._firebaseService = App.Services.GetService<IFirebaseService>();
+            this._cacheService = App.Services.GetService<ICacheService>();
+            Tournaments = new ObservableCollection<TournamentDto>();
+            DeleteCommand = new AsyncRelayCommand<TournamentDto>(DeleteTournament);
+            UpdateCommand = new AsyncRelayCommand<TournamentDto>(UpdateTournament);
+            TournamentSelectedCommand = new AsyncRelayCommand<TournamentDto>(OnTournamentSelected);
+            RefreshingCommand = new AsyncRelayCommand(OnRefreshing);
+            AddCommand = new AsyncRelayCommand(AddTournament);
         }
 
-        public async Task<ObservableCollection<TournamentDto>> LoadData()
+        public async Task OnNavigatedToAsync()
         {
-            var cacheTournaments = new List<TournamentDto>();
-            var cacheUser = await _cacheService.GetCurrentUserAsync();
-            if (cacheUser != null)
+            if (await _cacheService.GetCurrentUserCredentialAsync() != null)
             {
-                cacheTournaments = cacheUser.Tournaments;
+                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+                Tournaments.Clear();
+                await LoadTournaments();
             }
-            return new ObservableCollection<TournamentDto>(cacheTournaments);
+            else
+            {
+                await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+                await Toast.Make("You must Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            }
         }
 
-        private async void DeleteTournament(TournamentDto tournament)
+        public async Task OnTournamentSelected(TournamentDto tournament)
         {
+            if (tournament == null)
+                return;
+
+            ////var navigationParameter = new Dictionary<string, object>
+            ////    {
+            ////        { "Tournament", tournament }
+            ////    };
+
+            ////await Shell.Current.GoToAsync(nameof(TournamentPage), navigationParameter);
+            await Toast.Make("CARGAR DATOS DEL TORNEO RIOT API.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+        }
+
+        private async Task LoadTournaments()
+        {
+            var cacheUser = await _cacheService.GetCurrentUserAsync();
+            if (cacheUser.Tournaments != null)
+            {
+                foreach (var tournament in cacheUser.Tournaments)
+                {
+                    Tournaments.Add(tournament);
+                }
+            }
+        }
+
+        private async Task DeleteTournament(TournamentDto tournament)
+        {
+            if (tournament == null)
+                return;
+
             if (Tournaments.Contains(tournament))
             {
                 Tournaments.Remove(tournament);
             }
 
-            await _navigationService.PushModalAsync(new PromptPage(_cacheService, _firebaseService, _navigationService, MethodType.Main, Tournaments.ToList()));
+            var navigation = App.Current.MainPage.Navigation;
+            await navigation.PushModalAsync(new PromptPage(_cacheService, _firebaseService, MethodType.Main, Tournaments.ToList()));
         }
 
-        [RelayCommand]
-        private void OnRefreshing()
+        private async Task UpdateTournament(TournamentDto tournament)
+        {
+            if (tournament == null)
+                return;
+
+            await Shell.Current.GoToAsync(nameof(TournamentPage), true, new Dictionary<string, object>
+                {
+                    { "Tournament", tournament }
+                });
+        }
+
+        private async Task AddTournament()
+        {
+            await Shell.Current.GoToAsync(nameof(TournamentPage));
+        }
+
+        private async Task OnRefreshing()
         {
             IsRefreshing = true;
 
             try
             {
-                Tournaments = LoadData().Result;
+                await LoadTournaments();
             }
             finally
             {
@@ -64,17 +133,25 @@ namespace EgoTournament.ViewModels
             }
         }
 
-        public async Task OnNavigatedToAsync()
+        public ObservableCollection<TournamentDto> Tournaments { get; set; }
+
+        public string NewItemName
         {
-            if (await _cacheService.GetCurrentUserCredentialAsync() != null)
+            get => _newItemName;
+            set
             {
-                Tournaments = await LoadData();
-                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+                _newItemName = value;
+                OnPropertyChanged();
             }
-            else
+        }
+
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set
             {
-                await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-                await Toast.Make("You must Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                _isRefreshing = value;
+                OnPropertyChanged();
             }
         }
     }

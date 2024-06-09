@@ -33,7 +33,6 @@ public static class MauiProgram
         // Services
         builder.Services.AddTransient<ICacheService, CacheService>();
         builder.Services.AddTransient<IFirebaseService, FirebaseService>();
-        builder.Services.AddSingleton<INavigationService, NavigationService>();
 
         // Pages
         builder.Services.AddTransient<MainPage>();
@@ -51,6 +50,7 @@ public static class MauiProgram
         builder.Services.AddTransient<SignUpViewModel>();
         builder.Services.AddTransient<PromptViewModel>();
         builder.Services.AddTransient<ProfileViewModel>();
+        builder.Services.AddTransient<TournamentViewModel>();
 
         // Authentication
         builder.Services.AddSingleton(SecureStorage.Default);

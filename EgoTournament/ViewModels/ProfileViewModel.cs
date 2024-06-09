@@ -26,11 +26,6 @@ namespace EgoTournament.ViewModels
         private readonly ICacheService _cacheService;
 
         /// <summary>
-        /// The navigation service.
-        /// </summary>
-        private readonly INavigationService _navigationService;
-
-        /// <summary>
         /// The user credentials.
         /// </summary>
         private FirebaseUserDto userCredentials;
@@ -101,11 +96,10 @@ namespace EgoTournament.ViewModels
         /// <param name="cacheService">The cache service.</param>
         /// <param name="firebaseService">The firebase service.</param>
         /// <param name="navigationService">The navigation service.</param>
-        public ProfileViewModel(ICacheService cacheService, IFirebaseService firebaseService, INavigationService navigationService)
+        public ProfileViewModel(ICacheService cacheService, IFirebaseService firebaseService)
         {
             _cacheService = cacheService;
             _firebaseService = firebaseService;
-            _navigationService = navigationService;
             LoadScreenData(currentUser);
             RoleValues = new ObservableCollection<string>(Enum.GetNames(typeof(RoleType)).ToList());
             SummonerNameEntryTextChangedCommand = new Command(OnSummonerNameTextChanged);
@@ -231,7 +225,8 @@ namespace EgoTournament.ViewModels
         /// </summary>
         private async void OnDeleteAccountClicked()
         {
-            await _navigationService.PushModalAsync(new PromptPage(_cacheService, _firebaseService, _navigationService, MethodType.Profile));
+            var navigation = App.Current.MainPage.Navigation;
+            await navigation.PushModalAsync(new PromptPage(_cacheService, _firebaseService, MethodType.Profile));
         }
 
         /// <summary>

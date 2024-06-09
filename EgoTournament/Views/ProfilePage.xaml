@@ -30,6 +30,7 @@
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -43,18 +44,20 @@
                             <local:SummonerNameValidationBehavior />
                         </Entry.Behaviors>
                     </Entry>
-                    <Label Text="{Binding ValidationMessage}"  IsVisible="{Binding IsValidationMessageVisible}" FontSize="Small"
-                           Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" TextColor="DarkRed" />
-                    <Label Grid.Row="2" Grid.Column="0" Text="Role" />
-                    <Picker Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                    <Label Text="Sign in with your account from account.riotgames.com and your Riot ID will appear at the top." FontSize="Body" Margin="10,-50,0,0" FontAttributes="None"
+                                             Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" TextColor="Black"/>
+                    <Label Text="{Binding ValidationMessage}"  IsVisible="{Binding IsValidationMessageVisible}" FontSize="Micro"
+                           Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" TextColor="DarkRed" />
+                    <Label Grid.Row="3" Grid.Column="0" Text="Role" />
+                    <Picker Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
                            Title="Select a role" ItemsSource="{Binding RoleValues}" SelectedItem="{Binding SelectedItem}" IsEnabled="{Binding IsRolePickerEnable}">
                     </Picker>
-                    <Label Grid.Row="3" Grid.Column="0" Text="Change SummonerName" IsVisible="{Binding IsLabelEnableEntryVisible}" />
-                    <CheckBox Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" VerticalOptions="Center"  CheckedChanged="CheckBox_CheckedChanged"
+                    <Label Grid.Row="4" Grid.Column="0" Text="Change SummonerName" IsVisible="{Binding IsLabelEnableEntryVisible}" />
+                    <CheckBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" VerticalOptions="Center"  CheckedChanged="CheckBox_CheckedChanged"
                               IsEnabled="{Binding IsCheckBoxEnable}"  IsVisible="{Binding IsCheckBoxVisible}" IsChecked="{Binding ModifyNameChecked}"/>
-                    <Button Grid.Row="4" Grid.Column="1" Text="Save" Command="{Binding SaveCommand}" IsVisible="{Binding IsSaveButtonVisible}" />
-                    <Button Grid.Row="5" Grid.Column="1" Text="Logout" Command="{Binding LogoutCommand}" />
-                    <Button Grid.Row="6" Grid.Column="2" Text="Delete Account" BackgroundColor="Transparent" BorderWidth="0" TextColor="DarkRed" HorizontalOptions="Center"
+                    <Button Grid.Row="5" Grid.Column="1" Text="Save" Command="{Binding SaveCommand}" IsVisible="{Binding IsSaveButtonVisible}" />
+                    <Button Grid.Row="6" Grid.Column="1" Text="Logout" Command="{Binding LogoutCommand}" />
+                    <Button Grid.Row="7" Grid.Column="2" Text="Delete Account" BackgroundColor="Transparent" BorderWidth="0" TextColor="DarkRed" HorizontalOptions="Center"
                             Command="{Binding DeleteAccountCommand}" />
 
                 </Grid>

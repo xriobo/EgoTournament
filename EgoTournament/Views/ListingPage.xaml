@@ -21,11 +21,7 @@
                 BorderColor="#1C375C"
                 CornerRadius="50"
                 HasShadow="True">
-            <Grid
-                    Padding="10,50,10,0"
-                    HorizontalOptions="FillAndExpand"
-                    RowSpacing="20"
-                    VerticalOptions="FillAndExpand">
+            <Grid Padding="10,50,10,0" HorizontalOptions="FillAndExpand" RowSpacing="20" VerticalOptions="FillAndExpand">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />

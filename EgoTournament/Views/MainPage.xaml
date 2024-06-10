@@ -4,11 +4,11 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:m="clr-namespace:EgoTournament.Models"
-    xmlns:vm="clr-namespace:EgoTournament.ViewModels"
+    xmlns:viewModels="clr-namespace:EgoTournament.ViewModels"
     BackgroundColor="{DynamicResource SecondaryColor}"
     NavigationPage.HasNavigationBar="False">
     <ContentPage.BindingContext>
-        <vm:MainViewModel />
+        <viewModels:MainViewModel />
     </ContentPage.BindingContext>
     <ContentPage.Content>
         <Grid Padding="20" BackgroundColor="#A9A9A9">
@@ -40,9 +40,9 @@
                                             </MultiBinding>
                                         </Label.Text>
                                     </Label>
-                                    <Button Grid.Column="2" Text="Update" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=UpdateCommand}" CommandParameter="{Binding .}"
+                                    <Button Grid.Column="2" Text="Update" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainViewModel}}, Path=UpdateCommand}" CommandParameter="{Binding .}"
                                             FontSize="8" Margin="0,0,0,0" HorizontalOptions="EndAndExpand" VerticalOptions="Center"/>
-                                    <Button Grid.Column="3" Text="X" Command="{Binding Source={RelativeSource AncestorType={x:Type vm:MainViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding .}" 
+                                    <Button Grid.Column="3" Text="X" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding .}" 
                                             BackgroundColor="Transparent"  FontSize="10" Margin="0,0,0,0" TextColor="DarkRed" HorizontalOptions="EndAndExpand" VerticalOptions="Center"/>
                                 </Grid>
                             </DataTemplate>

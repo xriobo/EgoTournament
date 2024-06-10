@@ -148,7 +148,15 @@ namespace EgoTournament.ViewModels
             try
             {
                 var entryText = SummonerNameEntryText;
-                if (!string.IsNullOrEmpty(entryText))
+                if (string.IsNullOrEmpty(entryText)) 
+                {
+                    await Toast.Make("Insert a value.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                }
+                else if (entryText.Equals(currentUser.SummonerName, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    await Toast.Make("Modify the name.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                }
+                else
                 {
                     if (!ModifyNameChecked)
                     {
@@ -197,10 +205,6 @@ namespace EgoTournament.ViewModels
 
                         LoadScreenData(currentUser);
                     }
-                }
-                else
-                {
-                    await Toast.Make("Insert a value.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                 }
             }
             catch (Exception ex)
@@ -274,6 +278,7 @@ namespace EgoTournament.ViewModels
                 IsSummonerNameEntryEnable = true;
                 IsRolePickerEnable = true;
                 IsSaveButtonVisible = true;
+                IsCheckBoxVisible = true;
             }
         }
 

@@ -43,6 +43,8 @@ public static class MauiProgram
         builder.Services.AddTransient<SignUpPage>();
         builder.Services.AddTransient<TournamentPage>();
         builder.Services.AddTransient<PromptPage>();
+        builder.Services.AddTransient<ManageListPage>();
+
 
         // ViewModels
         builder.Services.AddTransient<MainViewModel>();

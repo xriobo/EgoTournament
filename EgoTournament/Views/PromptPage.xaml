@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:EgoTournament.ViewModels"
              xmlns:behaviors="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
-             x:Class="EgoTournament.Views.PromptPage">
+             x:Class="EgoTournament.Views.PromptPage"
+             x:DataType="viewModels:PromptViewModel">
     <Grid Padding="40"
           BackgroundColor="#A9A9A9"
           HorizontalOptions="FillAndExpand"

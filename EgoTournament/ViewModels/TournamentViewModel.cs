@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using EgoTournament.Models;
+using EgoTournament.Models.Enums;
 using EgoTournament.Models.Firebase;
 using EgoTournament.Services;
 using Firebase.Auth;
@@ -7,14 +8,18 @@ using Newtonsoft.Json;
 
 namespace EgoTournament.ViewModels
 {
-    public partial class TournamentViewModel : BaseViewModel, INotifyPropertyChanged
+    public partial class TournamentViewModel : BaseViewModel, IQueryAttributable, INotifyPropertyChanged
     {
-        public TournamentDto Tournament { get; set; }
+        [ObservableProperty]
+        TournamentDto tournament;
+
         public IRelayCommand SaveCommand { get; }
         public IRelayCommand CancelCommand { get; }
         public IRelayCommand ManageSummonersCommand { get; }
         public IRelayCommand ManageRulesCommand { get; }
+
         public ObservableCollection<string> Rules { get; }
+
         public ObservableCollection<string> Summoners { get; }
 
         private readonly ICacheService _cacheService;
@@ -29,6 +34,10 @@ namespace EgoTournament.ViewModels
         {
             this._firebaseService = App.Services.GetService<IFirebaseService>();
             this._cacheService = App.Services.GetService<ICacheService>();
+
+            this.Rules = new ObservableCollection<string>();
+            this.Summoners = new ObservableCollection<string>();
+
             Tournament = new TournamentDto();
             SaveCommand = new AsyncRelayCommand<TournamentDto>(SaveTournament);
             CancelCommand = new AsyncRelayCommand(CancelClicked);
@@ -43,27 +52,37 @@ namespace EgoTournament.ViewModels
                 if (!string.IsNullOrEmpty(tournament.Name) && tournament.SummonerNames.Any())
                 {
                     var currentUser = await _cacheService.GetCurrentUserAsync();
+                    var oldTournament = currentUser.Tournaments.FirstOrDefault(x => x.Uid == Tournament.Uid);
 
-                    if (Tournament.Uid != Guid.Empty)
+                    bool existOldTournament = oldTournament != null;
+                    bool isNewTournament = tournament.Uid == Guid.Empty || !existOldTournament;
+                    bool areSameTournament = existOldTournament && AreSameTournaments(tournament, oldTournament);
+                    if (isNewTournament)
                     {
-                        if (!AreSameTournaments(Tournament, tournament))
-                        {
-                            tournament.HasReward = Tournament.HasReward;
-                            tournament.Rules = Tournament.Rules;
-                            tournament.SummonerNames = Tournament.SummonerNames;
-                            tournament.Name = Tournament.Name;
-                        }
+                        tournament.Uid = Guid.NewGuid();
+                        currentUser.Tournaments.Add(Tournament);
+                        await Toast.Make($"Added Tournament Successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                    }
+                    else if (!areSameTournament)
+                    {
+                        oldTournament.HasReward = Tournament.HasReward;
+                        oldTournament.Rules = Tournament.Rules;
+                        oldTournament.SummonerNames = Tournament.SummonerNames;
+                        oldTournament.Name = Tournament.Name;
+                        await Toast.Make($"Updated Tournament Successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                    }
+
+                    if (isNewTournament || !areSameTournament)
+                    {
+                        var userUpdated = await _firebaseService.PutUser(currentUser);
+                        await _cacheService.SetCurrentUserAsync(userUpdated);
                     }
                     else
                     {
-                        currentUser.Tournaments.Add(Tournament);
-                        await Toast.Make($"Added newTournament Successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                        await Toast.Make($"There are no changes.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                     }
 
-
-                    var userUpdated = await _firebaseService.PutUser(currentUser);
-                    await _cacheService.SetCurrentUserAsync(userUpdated);
-                    await Shell.Current.GoToAsync("..");
+                    await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
                 }
                 else
                 {
@@ -83,32 +102,22 @@ namespace EgoTournament.ViewModels
 
         private async Task OpenSummonersListModal()
         {
-            var modalPage = new ListModalPage(Summoners, "Participants", true);
-            modalPage.ValuesUpdated += (sender, updatedItems) =>
-            {
-                Summoners.Clear();
-                foreach (var summonerName in updatedItems)
+            if (tournament == null) return;
+            await Shell.Current.GoToAsync(nameof(ManageListPage), true, new Dictionary<string, object>
                 {
-                    Summoners.Add(summonerName);
-                }
-            };
-
-            await Shell.Current.Navigation.PushAsync(modalPage, true);
+                    { nameof(TournamentDto), tournament },
+                    { nameof(ListType), ListType.Summoners.ToString() }
+                });
         }
 
         private async Task OpenRulesListModal()
         {
-            var modalPage = new ListModalPage(Rules, "Rules");
-            modalPage.ValuesUpdated += (sender, updatedItems) =>
-            {
-                Rules.Clear();
-                foreach (var rule in updatedItems)
+            if (tournament == null) return;
+            await Shell.Current.GoToAsync(nameof(ManageListPage), true, new Dictionary<string, object>
                 {
-                    Rules.Add(rule);
-                }
-            };
-
-            await Shell.Current.Navigation.PushAsync(modalPage, true);
+                    { nameof(TournamentDto), tournament },
+                    { nameof(ListType), ListType.Rules.ToString() }
+                });
         }
 
         private bool AreSameTournaments(TournamentDto tournamentToUpdate, TournamentDto tournamentDto)
@@ -129,11 +138,34 @@ namespace EgoTournament.ViewModels
             await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
         }
 
-        public void Initialize(TournamentDto tournament)
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            Tournament = tournament;
-            //RulesText = string.Join(Environment.NewLine, Tournament.Rules);
-            //SummonerNamesText = string.Join(Environment.NewLine, Tournament.SummonerNames);
+            if (!query.Any()) return;
+            Tournament = query[nameof(TournamentDto)] as TournamentDto;
+            if (Tournament != null)
+            {
+                if (Tournament.SummonerNames.Any())
+                {
+                    foreach (var summonerName in Tournament.SummonerNames)
+                    {
+                        if (!string.IsNullOrEmpty(summonerName))
+                        {
+                            Summoners.Add(summonerName);
+                        }
+                    }
+                }
+
+                if (Tournament.Rules.Any())
+                {
+                    foreach (var rule in Tournament.Rules)
+                    {
+                        if (!string.IsNullOrEmpty(rule))
+                        {
+                            Rules.Add(rule);
+                        }
+                    }
+                }
+            }
         }
     }
 }

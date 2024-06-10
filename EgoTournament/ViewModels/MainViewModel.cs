@@ -40,7 +40,9 @@ namespace EgoTournament.ViewModels
         {
             this._firebaseService = App.Services.GetService<IFirebaseService>();
             this._cacheService = App.Services.GetService<ICacheService>();
+
             Tournaments = new ObservableCollection<TournamentDto>();
+
             DeleteCommand = new AsyncRelayCommand<TournamentDto>(DeleteTournament);
             UpdateCommand = new AsyncRelayCommand<TournamentDto>(UpdateTournament);
             TournamentSelectedCommand = new AsyncRelayCommand<TournamentDto>(OnTournamentSelected);
@@ -80,7 +82,7 @@ namespace EgoTournament.ViewModels
         private async Task LoadTournaments()
         {
             var cacheUser = await _cacheService.GetCurrentUserAsync();
-            if (cacheUser.Tournaments != null)
+            if (cacheUser?.Tournaments != null)
             {
                 foreach (var tournament in cacheUser.Tournaments)
                 {
@@ -110,7 +112,7 @@ namespace EgoTournament.ViewModels
 
             await Shell.Current.GoToAsync(nameof(TournamentPage), true, new Dictionary<string, object>
                 {
-                    { "Tournament", tournament }
+                    { nameof(TournamentDto), tournament }
                 });
         }
 

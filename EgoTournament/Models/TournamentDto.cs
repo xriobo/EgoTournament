@@ -1,6 +1,6 @@
 ﻿namespace EgoTournament.Models
 {
-    public class TournamentDto
+    public class TournamentDto : ObservableObject
     {
         public TournamentDto()
         {

@@ -64,8 +64,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Views\ListModalPage.xaml.cs">
-	    <DependentUpon>ListModalPage.xaml</DependentUpon>
+	  <Compile Update="Views\ManageListPage.xaml.cs">
+	    <DependentUpon>ManageListPage.xaml</DependentUpon>
 	  </Compile>
 	  <Compile Update="Views\SignUpPage.xaml.cs">
 	    <DependentUpon>SignUpPage.xaml</DependentUpon>
@@ -82,7 +82,7 @@
 	  <MauiXaml Update="Views\LoginPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\ListModalPage.xaml">
+	  <MauiXaml Update="Views\ManageListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ProfilePage.xaml">

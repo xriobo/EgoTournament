@@ -15,6 +15,12 @@ namespace EgoTournament.ViewModels
     public partial class PromptViewModel : BaseViewModel
     {
         /// <summary>
+        /// The PromptEntry binding.
+        /// </summary>
+        [ObservableProperty]
+        public string promptEntry;
+
+        /// <summary>
         /// Gets the accept command.
         /// </summary>
         /// <value>
@@ -51,11 +57,6 @@ namespace EgoTournament.ViewModels
         private readonly List<TournamentDto> _tournaments;
 
         /// <summary>
-        /// The promptEntry binding.
-        /// </summary>
-        private string promptEntry;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="PromptViewModel" /> class.
         /// </summary>
         /// <param name="cacheService">The cache service.</param>
@@ -82,10 +83,10 @@ namespace EgoTournament.ViewModels
         {
             try
             {
-                if (!string.IsNullOrEmpty(promptEntry))
+                if (!string.IsNullOrEmpty(PromptEntry))
                 {
                     var cacheUser = await _cacheService.GetCurrentUserCredentialAsync();
-                    var userCredential = await _firebaseService.SignIn(cacheUser.Info.Email, promptEntry);
+                    var userCredential = await _firebaseService.SignIn(cacheUser.Info.Email, PromptEntry);
                     switch (_methodType)
                     {
                         case MethodType.Profile:

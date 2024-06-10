@@ -22,6 +22,7 @@ namespace EgoTournament.ViewModels
         {
             this._firebaseService = firebaseService;
             this._cacheService = cacheService;
+
             SignUpBtn = new Command(SignUpBtnTappedAsync);
             SignInBtn = new Command(SignInBtnTappedAsync);
         }
@@ -51,6 +52,8 @@ namespace EgoTournament.ViewModels
                 this.SetCacheValues(await _firebaseService.SignIn(Email, Password));
                 var toast = Toast.Make("Welcome!", CommunityToolkit.Maui.Core.ToastDuration.Short);
                 await Shell.Current.GoToAsync($"//{nameof(ListingPage)}");
+                Email = null;
+                Password = null;
             }
             catch (FirebaseAuthHttpException ex)
             {

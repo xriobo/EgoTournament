@@ -32,11 +32,11 @@ namespace EgoTournament.ViewModels
 
         public TournamentViewModel()
         {
-            this._firebaseService = App.Services.GetService<IFirebaseService>();
-            this._cacheService = App.Services.GetService<ICacheService>();
+            _firebaseService = App.Services.GetService<IFirebaseService>();
+            _cacheService = App.Services.GetService<ICacheService>();
 
-            this.Rules = new ObservableCollection<string>();
-            this.Summoners = new ObservableCollection<string>();
+            Rules = new ObservableCollection<string>();
+            Summoners = new ObservableCollection<string>();
 
             Tournament = new TournamentDto();
             SaveCommand = new AsyncRelayCommand<TournamentDto>(SaveTournament);
@@ -102,20 +102,20 @@ namespace EgoTournament.ViewModels
 
         private async Task OpenSummonersListModal()
         {
-            if (tournament == null) return;
+            if (Tournament == null) return;
             await Shell.Current.GoToAsync(nameof(ManageListPage), true, new Dictionary<string, object>
                 {
-                    { nameof(TournamentDto), tournament },
+                    { nameof(TournamentDto), Tournament },
                     { nameof(ListType), ListType.Summoners.ToString() }
                 });
         }
 
         private async Task OpenRulesListModal()
         {
-            if (tournament == null) return;
+            if (Tournament == null) return;
             await Shell.Current.GoToAsync(nameof(ManageListPage), true, new Dictionary<string, object>
                 {
-                    { nameof(TournamentDto), tournament },
+                    { nameof(TournamentDto), Tournament },
                     { nameof(ListType), ListType.Rules.ToString() }
                 });
         }

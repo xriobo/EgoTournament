@@ -90,10 +90,10 @@ namespace EgoTournament.ViewModels
                     switch (_methodType)
                     {
                         case MethodType.Profile:
-                            this.DeleteProfile(userCredential);
+                            DeleteProfile(userCredential);
                             break;
                         case MethodType.Main:
-                            this.DeleteTournament(userCredential, _tournaments);
+                            DeleteTournament(userCredential, _tournaments);
                             break;
                     }
                 }

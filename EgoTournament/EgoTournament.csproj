@@ -45,14 +45,28 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Images\egoqmainicon.png" />
+	  <None Remove="Resources\Images\emblem_bronze.png" />
+	  <None Remove="Resources\Images\emblem_challenger.png" />
+	  <None Remove="Resources\Images\emblem_diamond.png" />
+	  <None Remove="Resources\Images\emblem_emerald.png" />
+	  <None Remove="Resources\Images\emblem_gold.png" />
+	  <None Remove="Resources\Images\emblem_grandmaster.png" />
+	  <None Remove="Resources\Images\emblem_iron.png" />
+	  <None Remove="Resources\Images\emblem_master.png" />
+	  <None Remove="Resources\Images\emblem_platinum.png" />
+	  <None Remove="Resources\Images\emblem_silver.png" />
+	  <None Remove="Resources\Images\emblem_wood.png" />
+	  <None Remove="Resources\Images\fire.png" />
+	  <None Remove="Resources\Images\ice.png" />
 	  <None Remove="Resources\Images\login.png" />
 	  <None Remove="Resources\Images\profile.png" />
 	  <None Remove="Resources\Images\rules.png" />
+	  <None Remove="Resources\Images\ruleswallpaper.jpg" />
 	  <None Remove="Resources\Images\trophy.png" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.1" />
 		<PackageReference Include="CommunityToolkit.MVVM" Version="8.2.2" />
 		<PackageReference Include="FirebaseAuthentication.net" Version="4.1.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.40" />
@@ -61,6 +75,8 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="SimpleToolkit.Core" Version="4.0.0" />
+		<PackageReference Include="SkiaSharp" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="2.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -89,6 +105,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\PromptPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SchedulePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SignUpPage.xaml">

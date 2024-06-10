@@ -10,7 +10,7 @@ public partial class ListingPage : ContentPage
     public ListingPage(ICacheService cacheService)
     {
         InitializeComponent();
-        this._cacheService = cacheService;
+        _cacheService = cacheService;
     }
 
     protected async override void OnNavigatedTo(NavigatedToEventArgs args)

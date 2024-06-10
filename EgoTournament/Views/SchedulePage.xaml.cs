@@ -1,8 +1,8 @@
 namespace EgoTournament.Views;
 
-public partial class TournamentPage : ContentPage
+public partial class SchedulePage : ContentPage
 {
-    public TournamentPage(TournamentViewModel viewModel)
+    public SchedulePage(ScheduleViewModel viewModel)
     {
         InitializeComponent();
         BindingContext = viewModel;

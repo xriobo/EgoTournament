@@ -17,7 +17,7 @@ namespace EgoTournament.ViewModels
 
         public SignUpViewModel(IFirebaseService firebaseService)
         {
-            this._firebaseService = firebaseService;
+            _firebaseService = firebaseService;
             SignUpUser = new Command(SignUpTappedAsync);
             SignInBtn = new Command(SignInBtnTappedAsync);
         }

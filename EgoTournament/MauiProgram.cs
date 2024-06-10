@@ -1,4 +1,5 @@
-﻿using EgoTournament.Services;
+﻿using EgoQ.Services;
+using EgoTournament.Services;
 using EgoTournament.Services.Implementations;
 using Firebase.Auth;
 using Firebase.Auth.Providers;
@@ -17,6 +18,7 @@ public static class MauiProgram
 		var builder = MauiApp.CreateBuilder();
 		builder
 			.UseMauiApp<App>()
+            .UseSkiaSharp()
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
 			{
@@ -33,6 +35,7 @@ public static class MauiProgram
         // Services
         builder.Services.AddTransient<ICacheService, CacheService>();
         builder.Services.AddTransient<IFirebaseService, FirebaseService>();
+        builder.Services.AddTransient<IRiotService, RiotService>();
 
         // Pages
         builder.Services.AddTransient<MainPage>();
@@ -44,6 +47,7 @@ public static class MauiProgram
         builder.Services.AddTransient<TournamentPage>();
         builder.Services.AddTransient<PromptPage>();
         builder.Services.AddTransient<ManageListPage>();
+        builder.Services.AddTransient<SchedulePage>();
 
 
         // ViewModels
@@ -53,6 +57,7 @@ public static class MauiProgram
         builder.Services.AddTransient<PromptViewModel>();
         builder.Services.AddTransient<ProfileViewModel>();
         builder.Services.AddTransient<TournamentViewModel>();
+        builder.Services.AddTransient<ScheduleViewModel>();
 
         // Authentication
         builder.Services.AddSingleton(SecureStorage.Default);

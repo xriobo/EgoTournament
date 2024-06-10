@@ -17,7 +17,7 @@ namespace EgoTournament.Services.Implementations
 
         public FirebaseService(FirebaseAuthClient authClient)
         {
-            this._authClient = authClient;
+            _authClient = authClient;
             _httpClient = new HttpClient();
         }
 

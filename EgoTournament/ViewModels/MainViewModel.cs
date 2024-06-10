@@ -17,36 +17,18 @@ namespace EgoTournament.ViewModels
 
         public IRelayCommand TournamentSelectedCommand { get; }
 
-        public IRelayCommand RefreshingCommand { get; }
-
         public IRelayCommand AddCommand { get; }
-
-        /// <summary>
-        /// The selected <see cref="TournamentDto"/>.
-        /// </summary>
-        private TournamentDto _selectedItem;
-
-        /// <summary>
-        /// The new item name.
-        /// </summary>
-        private string _newItemName;
-
-        /// <summary>
-        /// The is refreshing.
-        /// </summary>
-        private bool _isRefreshing;
 
         public MainViewModel()
         {
-            this._firebaseService = App.Services.GetService<IFirebaseService>();
-            this._cacheService = App.Services.GetService<ICacheService>();
+            _firebaseService = App.Services.GetService<IFirebaseService>();
+            _cacheService = App.Services.GetService<ICacheService>();
 
             Tournaments = new ObservableCollection<TournamentDto>();
 
             DeleteCommand = new AsyncRelayCommand<TournamentDto>(DeleteTournament);
             UpdateCommand = new AsyncRelayCommand<TournamentDto>(UpdateTournament);
             TournamentSelectedCommand = new AsyncRelayCommand<TournamentDto>(OnTournamentSelected);
-            RefreshingCommand = new AsyncRelayCommand(OnRefreshing);
             AddCommand = new AsyncRelayCommand(AddTournament);
         }
 
@@ -70,13 +52,10 @@ namespace EgoTournament.ViewModels
             if (tournament == null)
                 return;
 
-            ////var navigationParameter = new Dictionary<string, object>
-            ////    {
-            ////        { "Tournament", tournament }
-            ////    };
-
-            ////await Shell.Current.GoToAsync(nameof(TournamentPage), navigationParameter);
-            await Toast.Make("CARGAR DATOS DEL TORNEO RIOT API.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            await Shell.Current.GoToAsync(nameof(SchedulePage), true, new Dictionary<string, object>
+                {
+                    { nameof(TournamentDto), tournament }
+                });
         }
 
         private async Task LoadTournaments()
@@ -121,40 +100,6 @@ namespace EgoTournament.ViewModels
             await Shell.Current.GoToAsync(nameof(TournamentPage));
         }
 
-        private async Task OnRefreshing()
-        {
-            IsRefreshing = true;
-
-            try
-            {
-                await LoadTournaments();
-            }
-            finally
-            {
-                IsRefreshing = false;
-            }
-        }
-
         public ObservableCollection<TournamentDto> Tournaments { get; set; }
-
-        public string NewItemName
-        {
-            get => _newItemName;
-            set
-            {
-                _newItemName = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public bool IsRefreshing
-        {
-            get => _isRefreshing;
-            set
-            {
-                _isRefreshing = value;
-                OnPropertyChanged();
-            }
-        }
     }
 }

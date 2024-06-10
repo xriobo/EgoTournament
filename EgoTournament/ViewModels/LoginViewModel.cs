@@ -20,8 +20,8 @@ namespace EgoTournament.ViewModels
 
         public LoginViewModel(ICacheService cacheService, IFirebaseService firebaseService)
         {
-            this._firebaseService = firebaseService;
-            this._cacheService = cacheService;
+            _firebaseService = firebaseService;
+            _cacheService = cacheService;
 
             SignUpBtn = new Command(SignUpBtnTappedAsync);
             SignInBtn = new Command(SignInBtnTappedAsync);
@@ -49,7 +49,7 @@ namespace EgoTournament.ViewModels
         {
             try
             {
-                this.SetCacheValues(await _firebaseService.SignIn(Email, Password));
+                SetCacheValues(await _firebaseService.SignIn(Email, Password));
                 var toast = Toast.Make("Welcome!", CommunityToolkit.Maui.Core.ToastDuration.Short);
                 await Shell.Current.GoToAsync($"//{nameof(ListingPage)}");
                 Email = null;

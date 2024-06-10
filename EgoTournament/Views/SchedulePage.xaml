@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 xmlns:vm="clr-namespace:EgoTournament.ViewModels"
+             xmlns:m="clr-namespace:EgoTournament.Models.Riot"
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
+			 x:Class="EgoTournament.Views.SchedulePage"
+			 x:DataType="vm:ScheduleViewModel"
+             BackgroundImageSource="ruleswallpaper.jpg">
+    <ContentPage.Resources>
+        <DataTemplate x:DataType="m:SummonerDto" x:Key="summonerTemplate">
+            <Grid Margin="5"  VerticalOptions="StartAndExpand" HeightRequest="120" Padding="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="8*" />
+                    <ColumnDefinition Width="8*" />
+                    <ColumnDefinition Width="35*" />
+                    <ColumnDefinition Width="8*" />
+                    <ColumnDefinition Width="8*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="12*" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Row="0" Grid.Column="0" HorizontalOptions="StartAndExpand">
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.TierType}"
+                                                  Value="1">
+                            <Setter Property="Source" Value="emblem_wood.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.TierType}"
+                                                  Value="2">
+                            <Setter Property="Source" Value="emblem_iron.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.TierType}"
+                                                  Value="3">
+                            <Setter Property="Source" Value="emblem_bronze.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.TierType}"
+                                                  Value="4">
+                            <Setter Property="Source" Value="emblem_silver.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.TierType}"
+                                                  Value="5">
+                            <Setter Property="Source" Value="emblem_gold.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.TierType}"
+                                                  Value="6">
+                            <Setter Property="Source" Value="emblem_platinum.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                              Binding="{Binding RankSoloQ.TierType}"
+                              Value="7">
+                            <Setter Property="Source" Value="emblem_emerald.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.TierType}"
+                                                  Value="8">
+                            <Setter Property="Source" Value="emblem_diamond.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.TierType}"
+                                                  Value="9">
+                            <Setter Property="Source" Value="emblem_master.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.TierType}"
+                                                  Value="10">
+                            <Setter Property="Source" Value="emblem_grandmaster.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.TierType}"
+                                                  Value="11">
+                            <Setter Property="Source" Value="emblem_challenger.png" />
+                        </DataTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="0" Grid.Column="1" TextColor="White" Text="{Binding RankSoloQ.Rank}" TextDecorations="None"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="2" TextColor="White" Text="{Binding RankSoloQ.LeaguePoints}" FontAttributes="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="3" TextColor="White" Text="{Binding RankSoloQ.SummonerName}" FontAttributes="Bold"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="4" TextColor="White" Text="{Binding RankSoloQ.Wins}" TextDecorations="None"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="5" TextColor="White" Text="{Binding RankSoloQ.Losses}" TextDecorations="None"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="6" TextColor="White" Text="{Binding RankSoloQ.Winrate}" FontAttributes="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Image Grid.Row="0" Grid.Column="7" HorizontalOptions="End" VerticalOptions="Center">
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.HotStreak}"
+                                                  Value="true">
+                            <Setter Property="Source" Value="fire.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding RankSoloQ.HotStreak}"
+                                                  Value="false">
+                            <Setter Property="Source" Value="ice.png" />
+                        </DataTrigger>
+                    </Image.Triggers>
+                </Image>
+            </Grid>
+        </DataTemplate>
+    </ContentPage.Resources>
+    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshingCommand}">
+        <ScrollView>
+            <StackLayout>
+                <CollectionView ItemsSource="{Binding Summoners}"
+                        ItemTemplate="{StaticResource summonerTemplate}"/>
+            </StackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

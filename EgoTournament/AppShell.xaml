@@ -36,6 +36,11 @@
         Route="MainPage" />
 
         <ShellContent
+        Title="SchedulePage"
+        ContentTemplate="{DataTemplate views:SchedulePage}"
+        Route="SchedulePage" />
+
+        <ShellContent
         Title="Listing"
         ContentTemplate="{DataTemplate views:ListingPage}"
         Route="ListingPage" />

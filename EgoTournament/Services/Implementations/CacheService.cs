@@ -8,10 +8,10 @@ namespace EgoTournament.Services.Implementations
 {
     public class CacheService : ICacheService
     {
-        public async Task<FirebaseUserDto> GetCurrentUserCredentialAsync()
+        public async Task<FirebaseUserCredentialDto> GetCurrentUserCredentialAsync()
         {
             var jsonCurrentUserCredential = await SecureStorage.GetAsync(Globals.CURRENT_USER_CREDENTIAL);
-            return !string.IsNullOrEmpty(jsonCurrentUserCredential) ? JsonConvert.DeserializeObject<FirebaseUserDto>(jsonCurrentUserCredential) : null;
+            return !string.IsNullOrEmpty(jsonCurrentUserCredential) ? JsonConvert.DeserializeObject<FirebaseUserCredentialDto>(jsonCurrentUserCredential) : null;
         }
 
         public async Task<UserDto> GetCurrentUserAsync()

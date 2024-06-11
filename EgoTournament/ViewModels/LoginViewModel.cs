@@ -15,16 +15,16 @@ namespace EgoTournament.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public Command SignUpBtn { get; }
-        public Command SignInBtn { get; }
+        public IAsyncRelayCommand SignUpBtn { get; }
+        public IAsyncRelayCommand SignInBtn { get; }
 
         public LoginViewModel(ICacheService cacheService, IFirebaseService firebaseService)
         {
             _firebaseService = firebaseService;
             _cacheService = cacheService;
 
-            SignUpBtn = new Command(SignUpBtnTappedAsync);
-            SignInBtn = new Command(SignInBtnTappedAsync);
+            SignUpBtn = new AsyncRelayCommand(SignUpBtnTappedAsync);
+            SignInBtn = new AsyncRelayCommand(SignInBtnTappedAsync);
         }
 
         public string Email
@@ -45,15 +45,26 @@ namespace EgoTournament.ViewModels
             }
         }
 
-        private async void SignInBtnTappedAsync(object obj)
+        private async Task SignInBtnTappedAsync()
         {
             try
             {
-                SetCacheValues(await _firebaseService.SignIn(Email, Password));
-                var toast = Toast.Make("Welcome!", CommunityToolkit.Maui.Core.ToastDuration.Short);
-                await Shell.Current.GoToAsync($"//{nameof(ListingPage)}");
+                var userCredentials = await _firebaseService.SignInAsync(Email, Password);
+                await _cacheService.SetCurrentUserCredentialAsync(userCredentials.User);
+                var currentUser = await _firebaseService.GetUserByUidAsync(userCredentials.User.Uid);
                 Email = null;
                 Password = null;
+                await Toast.Make("Welcome!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                if (currentUser != null)
+                {
+                    await _cacheService.SetCurrentUserAsync(currentUser);
+                    await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlert("PROFILE", "Set up your profile to continue.", "OK");
+                    await Shell.Current.GoToAsync($"//{nameof(ProfilePage)}");
+                }       
             }
             catch (FirebaseAuthHttpException ex)
             {
@@ -66,7 +77,7 @@ namespace EgoTournament.ViewModels
             }
         }
 
-        private async void SignUpBtnTappedAsync(object obj)
+        private async Task SignUpBtnTappedAsync()
         {
             await Shell.Current.GoToAsync($"//{nameof(SignUpPage)}");
         }
@@ -76,10 +87,10 @@ namespace EgoTournament.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(v));
         }
 
-        private async void SetCacheValues(UserCredential userCredential)
+        private async Task SetCacheValues(UserCredential userCredential)
         {
             await _cacheService.SetCurrentUserCredentialAsync(userCredential.User);
-            var currentUser = await _firebaseService.GetUserByUid(userCredential.User.Uid);
+            var currentUser = await _firebaseService.GetUserByUidAsync(userCredential.User.Uid);
             if (currentUser != null)
             {
                 await _cacheService.SetCurrentUserAsync(currentUser);

@@ -52,7 +52,7 @@
                 <Setter Property="BackgroundColor" Value="{DynamicResource FifthColor}" />
             </Style>
             <Style TargetType="Picker">
-                <Setter Property="Margin" Value="10,-10,10,0"/>
+                <Setter Property="Margin" Value="0,0,10,0"/>
                 <Setter Property="VerticalOptions" Value="StartAndExpand"/>
                 <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
                 <Setter Property="BackgroundColor" Value="{DynamicResource SecondaryColor}" />

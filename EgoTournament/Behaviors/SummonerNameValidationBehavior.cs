@@ -29,7 +29,7 @@ namespace EgoTournament.Behaviors
             base.OnDetachingFrom(bindable);
         }
 
-        async void OnEntryTextChanged(object sender, TextChangedEventArgs e)
+        void OnEntryTextChanged(object sender, TextChangedEventArgs e)
         {
             var entry = sender as Entry;
             IsValid = !string.IsNullOrWhiteSpace(entry.Text);

@@ -1,5 +1,6 @@
 ﻿using EgoTournament.Models.Riot;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace EgoTournament.Services.Implementations
 {
@@ -22,7 +23,7 @@ namespace EgoTournament.Services.Implementations
                 }
                 catch (Exception ex)
                 {
-                    if (ex.InnerException.GetType() == typeof(AggregateException) && ex.Message.Trim().Contains(RiotConstants.NotFoundMessage.Trim()))
+                    if (ex.InnerException.GetType() == typeof(HttpRequestException) && ((HttpRequestException)ex.InnerException).StatusCode == System.Net.HttpStatusCode.NotFound)
                     {
                         return default(T);
                     }

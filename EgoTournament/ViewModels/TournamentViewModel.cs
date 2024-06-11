@@ -52,32 +52,23 @@ namespace EgoTournament.ViewModels
                 if (!string.IsNullOrEmpty(tournament.Name) && tournament.SummonerNames.Any())
                 {
                     var currentUser = await _cacheService.GetCurrentUserAsync();
-                    var oldTournament = currentUser.Tournaments.FirstOrDefault(x => x.Uid == Tournament.Uid);
-
-                    bool existOldTournament = oldTournament != null;
-                    bool isNewTournament = tournament.Uid == Guid.Empty || !existOldTournament;
-                    bool areSameTournament = existOldTournament && AreSameTournaments(tournament, oldTournament);
+                    var oldTournament = currentUser.Tournaments?.FirstOrDefault(x => x.Uid == Tournament.Uid);
+                    bool isNewTournament = tournament.Uid == Guid.Empty || oldTournament == null;
+                    bool arentSameTournament = oldTournament != null && AreSameTournaments(tournament, oldTournament);
                     if (isNewTournament)
                     {
-                        tournament.Uid = Guid.NewGuid();
-                        currentUser.Tournaments.Add(Tournament);
+                        await ManageNewTournament(tournament, currentUser);
+                        await _cacheService.SetCurrentUserAsync(currentUser);
                         await Toast.Make($"Added Tournament Successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                     }
-                    else if (!areSameTournament)
+                    else if (!arentSameTournament)
                     {
-                        oldTournament.HasReward = Tournament.HasReward;
-                        oldTournament.Rules = Tournament.Rules;
-                        oldTournament.SummonerNames = Tournament.SummonerNames;
-                        oldTournament.Name = Tournament.Name;
+                        await ManageUpdateTournament(oldTournament, tournament, currentUser);
+                        await _cacheService.SetCurrentUserAsync(currentUser);
                         await Toast.Make($"Updated Tournament Successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                     }
 
-                    if (isNewTournament || !areSameTournament)
-                    {
-                        var userUpdated = await _firebaseService.PutUser(currentUser);
-                        await _cacheService.SetCurrentUserAsync(userUpdated);
-                    }
-                    else
+                    if (!isNewTournament && arentSameTournament)
                     {
                         await Toast.Make($"There are no changes.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                     }
@@ -166,6 +157,35 @@ namespace EgoTournament.ViewModels
                     }
                 }
             }
+        }
+
+        private async Task ManageNewTournament(TournamentDto tournament, UserDto currentUser)
+        {
+            tournament.Uid = Guid.NewGuid();
+            tournament.OwnerId = currentUser.Uid;
+            if (currentUser.TournamentUids == null)
+            {
+                currentUser.TournamentUids = new List<string>();
+            }
+
+            currentUser.TournamentUids.Add(tournament.Uid.ToString());
+            if (currentUser.Tournaments == null)
+            {
+                currentUser.Tournaments = new List<TournamentDto>();
+            }
+
+            currentUser.Tournaments.Add(tournament);
+            var userUpdated = await _firebaseService.UpsertUserAsync(currentUser);
+            await _firebaseService.UpsertTournamentAsync(tournament);
+        }
+
+        private async Task ManageUpdateTournament(TournamentDto oldTournament, TournamentDto tournamentToUpdate, UserDto currentUser)
+        {
+            oldTournament.HasReward = tournamentToUpdate.HasReward;
+            oldTournament.Rules = tournamentToUpdate.Rules;
+            oldTournament.SummonerNames = tournamentToUpdate.SummonerNames;
+            oldTournament.Name = tournamentToUpdate.Name;
+            var tournamentUpdated = await _firebaseService.UpsertTournamentAsync(oldTournament);
         }
     }
 }

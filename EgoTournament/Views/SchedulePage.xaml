@@ -3,13 +3,12 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 xmlns:vm="clr-namespace:EgoTournament.ViewModels"
              xmlns:m="clr-namespace:EgoTournament.Models.Riot"
-             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
 			 x:Class="EgoTournament.Views.SchedulePage"
 			 x:DataType="vm:ScheduleViewModel"
              BackgroundImageSource="ruleswallpaper.jpg">
     <ContentPage.Resources>
         <DataTemplate x:DataType="m:SummonerDto" x:Key="summonerTemplate">
-            <Grid Margin="5"  VerticalOptions="StartAndExpand" HeightRequest="120" Padding="5">
+            <Grid VerticalOptions="StartAndExpand">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="10*" />
                     <ColumnDefinition Width="8*" />
@@ -102,12 +101,18 @@
             </Grid>
         </DataTemplate>
     </ContentPage.Resources>
-    <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshingCommand}">
-        <ScrollView>
-            <StackLayout>
-                <CollectionView ItemsSource="{Binding Summoners}"
+    <VerticalStackLayout>
+        <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshingCommand}">
+            <ScrollView>
+                <StackLayout>
+                    <CollectionView ItemsSource="{Binding Summoners}"
                         ItemTemplate="{StaticResource summonerTemplate}"/>
-            </StackLayout>
-        </ScrollView>
-    </RefreshView>
+                </StackLayout>
+            </ScrollView>
+        </RefreshView>
+        <HorizontalStackLayout>
+            <Button Text="Back" Command="{Binding BackCommand}" />
+            <Button Text="Rules" Command="{Binding ShowRulesCommand}" />
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
 </ContentPage>

@@ -8,6 +8,10 @@ namespace EgoTournament.ViewModels
     {
         public IRelayCommand RefreshingCommand { get; }
 
+        public IAsyncRelayCommand BackCommand { get; }
+
+        public IAsyncRelayCommand ShowRulesCommand { get; }
+
         private readonly IRiotService _riotService;
         private readonly ICacheService _cacheService;
 
@@ -25,12 +29,14 @@ namespace EgoTournament.ViewModels
 
         public ScheduleViewModel()
         {
-            Participants = new List<string>();
-
             _cacheService = App.Services.GetService<ICacheService>();
             _riotService = App.Services.GetService<IRiotService>();
+            Participants = new List<string>();
+            Summoners = new ObservableCollection<SummonerDto>();
 
             RefreshingCommand = new RelayCommand(Refreshing);
+            BackCommand = new AsyncRelayCommand(BackToMain);
+            ShowRulesCommand = new AsyncRelayCommand(ShowRules);
         }
 
         public void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -63,6 +69,10 @@ namespace EgoTournament.ViewModels
                 var summonersRiot = _riotService.GetSummonersByPuuid(puuidDtos);
                 summonerDtos = _riotService.SetParticipantRanks(summonersRiot).ToList();
                 summonerDtos = GetOrdererSummoners(summonerDtos);
+                foreach (var summonerDto in summonerDtos)
+                {
+                    Summoners.Add(summonerDto);
+                }
                 Summoners = new ObservableCollection<SummonerDto>(summonerDtos);
                 SummonerDtos = summonerDtos;
             }
@@ -89,6 +99,23 @@ namespace EgoTournament.ViewModels
             {
                 IsRefreshing = false;
             }
+        }
+
+        private async Task BackToMain()
+        {
+            Summoners.Clear();
+            await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+        }
+
+        private async Task ShowRules()
+        {
+            if (!Tournament.Rules.Any())
+                return;
+
+            await Shell.Current.GoToAsync(nameof(RulesPage), true, new Dictionary<string, object>
+                {
+                    { nameof(TournamentDto), Tournament }
+                });
         }
     }
 }

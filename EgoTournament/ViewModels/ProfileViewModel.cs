@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Maui.Alerts;
-using EgoTournament.Behaviors;
 using EgoTournament.Common;
 using EgoTournament.Models;
 using EgoTournament.Models.Enums;
@@ -26,9 +25,289 @@ namespace EgoTournament.ViewModels
         private readonly ICacheService _cacheService;
 
         /// <summary>
+        /// Gets the CheckBox changed command.
+        /// </summary>
+        /// <value>
+        /// The CheckBox changed command.
+        /// </value>
+        public ICommand CheckBoxChangedCommand { get; }
+
+        /// <summary>
+        /// Gets the summoner name entry text changed command.
+        /// </summary>
+        /// <value>
+        /// The summoner name entry text changed command.
+        /// </value>
+        public ICommand SummonerNameEntryTextChangedCommand { get; }
+
+        /// <summary>
+        /// Gets the save command.
+        /// </summary>
+        /// <value>
+        /// The save command.
+        /// </value>
+        public IAsyncRelayCommand SaveCommand { get; }
+
+        /// <summary>
+        /// Gets the logout command.
+        /// </summary>
+        /// <value>
+        /// The logout command.
+        /// </value>
+        public IAsyncRelayCommand LogoutCommand { get; }
+
+        /// <summary>
+        /// Gets the delete account command.
+        /// </summary>
+        /// <value>
+        /// The delete account command.
+        /// </value>
+        public IAsyncRelayCommand DeleteAccountCommand { get; }
+
+        /// <summary>
+        /// Gets or sets the summoner name entry text.
+        /// </summary>
+        /// <value>
+        /// The summoner name entry text.
+        /// </value>
+        public string SummonerNameEntryText
+        {
+            get { return _summonerNameEntryText; }
+            set
+            {
+                if (_summonerNameEntryText != value)
+                {
+                    _summonerNameEntryText = value;
+                    OnPropertyChanged(nameof(SummonerNameEntryText));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is entry enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is entry enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSummonerNameEntryEnable
+        {
+            get { return _isEntryEnabled; }
+            set
+            {
+                if (_isEntryEnabled != value)
+                {
+                    _isEntryEnabled = value;
+                    OnPropertyChanged(nameof(IsSummonerNameEntryEnable));
+                }
+            }
+        }
+
+        /// <summary>
+        /// The role values.
+        /// </summary>
+        public ObservableCollection<string> RoleValues { get; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProfileViewModel"/> class.
+        /// </summary>
+        /// <param name="cacheService">The cache service.</param>
+        /// <param name="firebaseService">The firebase service.</param>
+        /// <param name="navigationService">The navigation service.</param>
+        public ProfileViewModel(ICacheService cacheService, IFirebaseService firebaseService)
+        {
+            _cacheService = cacheService;
+            _firebaseService = firebaseService;
+            LoadScreenData(currentUser);
+            RoleValues = new ObservableCollection<string>(Enum.GetNames(typeof(RoleType)).ToList());
+            SummonerNameEntryTextChangedCommand = new Command(OnSummonerNameTextChanged);
+            SaveCommand = new AsyncRelayCommand(OnSaveClicked);
+            LogoutCommand = new AsyncRelayCommand(OnLogoutClicked);
+            DeleteAccountCommand = new AsyncRelayCommand(OnDeleteAccountClicked);
+            CheckBoxChangedCommand = new AsyncRelayCommand<bool>(OnCheckBoxChanged);
+        }
+
+        /// <summary>
+        /// Called when [navigated to asynchronous].
+        /// </summary>
+        public async Task OnNavigatedToAsync()
+        {
+            userCredentials = await _cacheService.GetCurrentUserCredentialAsync();
+            if (userCredentials != null)
+            {
+                EmailLabelText = userCredentials.Info.Email;
+                currentUser = await _cacheService.GetCurrentUserAsync();
+                LoadScreenData(currentUser);
+                await Shell.Current.GoToAsync($"//{nameof(ProfilePage)}");
+            }
+            else
+            {
+                await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+                await Toast.Make("You must Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            }
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:SummonerNameTextChanged" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="TextChangedEventArgs"/> instance containing the event data.</param>
+        private void OnSummonerNameTextChanged()
+        {
+            if (IsValidationMessageVisible)
+            {
+                IsValidationMessageVisible = false;
+            }
+        }
+
+        /// <summary>
+        /// Called when [save clicked].
+        /// </summary>
+        private async Task OnSaveClicked()
+        {
+            try
+            {
+                var entryText = SummonerNameEntryText;
+                if (string.IsNullOrEmpty(entryText))
+                {
+                    await Toast.Make("Insert a value.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                }
+                else
+                {
+                    if (!ModifyNameChecked)
+                    {
+                        var role = Enum.Parse<RoleType>(SelectedItem.ToString(), true);
+                        if (Validations.SummonerName(entryText))
+                        {
+                            if (currentUser == null)
+                            {
+                                currentUser = new UserDto()
+                                {
+                                    Role = role,
+                                    SummonerName = entryText,
+                                    Uid = userCredentials.Uid,
+                                    Email = userCredentials.Info.Email,
+                                    Tournaments = new List<TournamentDto>()
+                                };
+
+                                await _firebaseService.UpsertUserAsync(currentUser);
+                                await _cacheService.SetCurrentUserAsync(currentUser);
+                                LoadScreenData(currentUser);
+                            }
+                            else
+                            {
+                                await Toast.Make("Error: User already exists in the database..", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                            }
+                        }
+                        else
+                        {
+                            ValidationMessage = Globals.SUMMONERNAME_VALIDATION_ERROR_MESSAGE;
+                            IsValidationMessageVisible = true;
+                            await Toast.Make($"SummonerName invalid: {entryText}", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                        }
+                    }
+                    else
+                    {
+                        if (entryText.Equals(currentUser.SummonerName, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            await Toast.Make("Modify the name.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                        }
+                        else
+                        {
+                            currentUser.SummonerName = entryText;
+                            if (await Shell.Current.DisplayAlert("WARNING", "Do you confirm that you want to modify the summonerName?", "YES", "NO")
+                                    && await _firebaseService.UpsertUserAsync(currentUser) != null)
+                            {
+                                await _cacheService.SetCurrentUserAsync(currentUser);
+                                await Toast.Make("Updated successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                            }
+                            else
+                            {
+                                currentUser = await _cacheService.GetCurrentUserAsync();
+                            }
+
+                            LoadScreenData(currentUser);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                await Toast.Make("Failed to load profile. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+                await Toast.Make(ex.Message, CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+            }
+        }
+
+        /// <summary>
+        /// Called when [logout clicked].
+        /// </summary>
+        private async Task OnLogoutClicked()
+        {
+            _cacheService.Logout();
+            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+            await Toast.Make("Goodbye!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+        }
+
+        /// <summary>
+        /// Called when [delete account clicked].
+        /// </summary>
+        private async Task OnDeleteAccountClicked()
+        {
+            var navigation = App.Current.MainPage.Navigation;
+            await navigation.PushModalAsync(new PromptPage(_cacheService, _firebaseService, MethodType.Profile));
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:EnableSummonerNameCheckedChanged" /> event.
+        /// </summary>
+        /// <param name="e">The <see cref="CheckedChangedEventArgs"/> instance containing the event data.</param>
+        private async Task OnCheckBoxChanged(bool isChecked)
+        {
+            if (isChecked && await Shell.Current.DisplayAlert("WARNING", "If the summoner name is modified, the assigned tournaments will change to the new name.", "Ok", "Cancel"))
+            {
+                IsSummonerNameEntryEnable = true;
+                IsSaveButtonVisible = true;
+            }
+            else
+            {
+                ModifyNameChecked = false;
+                IsSummonerNameEntryEnable = false;
+                IsSaveButtonVisible = false;
+            }
+        }
+
+        /// <summary>
+        /// Loads the screen data.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        private void LoadScreenData(UserDto user)
+        {
+            if (user != null)
+            {
+                currentUser = user;
+                SummonerNameEntryText = user.SummonerName;
+                IsSummonerNameEntryEnable = false;
+                SelectedItem = user.Role.ToString();
+                IsRolePickerEnable = false;
+                IsSaveButtonVisible = false;
+                IsLabelEnableEntryVisible = true;
+                IsCheckBoxVisible = true;
+                IsCheckBoxEnable = true;
+                ModifyNameChecked = false;
+            }
+            else
+            {
+                SelectedItem = default(RoleType).ToString();
+                SummonerNameEntryText = null;
+                IsSummonerNameEntryEnable = true;
+                IsRolePickerEnable = true;
+                IsSaveButtonVisible = true;
+                IsCheckBoxVisible = true;
+            }
+        }
+
+        /// <summary>
         /// The user credentials.
         /// </summary>
-        private FirebaseUserDto userCredentials;
+        private FirebaseUserCredentialDto userCredentials;
 
         /// <summary>
         /// The current user.
@@ -89,281 +368,6 @@ namespace EgoTournament.ViewModels
         /// The is button visible.
         /// </summary>
         private bool _isButtonVisible;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProfileViewModel"/> class.
-        /// </summary>
-        /// <param name="cacheService">The cache service.</param>
-        /// <param name="firebaseService">The firebase service.</param>
-        /// <param name="navigationService">The navigation service.</param>
-        public ProfileViewModel(ICacheService cacheService, IFirebaseService firebaseService)
-        {
-            _cacheService = cacheService;
-            _firebaseService = firebaseService;
-            LoadScreenData(currentUser);
-            RoleValues = new ObservableCollection<string>(Enum.GetNames(typeof(RoleType)).ToList());
-            SummonerNameEntryTextChangedCommand = new Command(OnSummonerNameTextChanged);
-            SaveCommand = new RelayCommand(OnSaveClicked);
-            LogoutCommand = new RelayCommand(OnLogoutClicked);
-            DeleteAccountCommand = new RelayCommand(OnDeleteAccountClicked);
-            CheckBoxChangedCommand = new Command<bool>(OnCheckBoxChanged);
-        }
-
-        /// <summary>
-        /// Called when [navigated to asynchronous].
-        /// </summary>
-        public async Task OnNavigatedToAsync()
-        {
-            userCredentials = await _cacheService.GetCurrentUserCredentialAsync();
-            if (userCredentials != null)
-            {
-                currentUser = await _cacheService.GetCurrentUserAsync();
-                LoadScreenData(currentUser);
-                await Shell.Current.GoToAsync($"//{nameof(ProfilePage)}");
-            }
-            else
-            {
-                await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-                await Toast.Make("You must Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-            }
-        }
-
-        /// <summary>
-        /// Raises the <see cref="E:SummonerNameTextChanged" /> event.
-        /// </summary>
-        /// <param name="e">The <see cref="TextChangedEventArgs"/> instance containing the event data.</param>
-        private void OnSummonerNameTextChanged()
-        {
-            if (IsValidationMessageVisible)
-            {
-                IsValidationMessageVisible = false;
-            }
-        }
-
-        /// <summary>
-        /// Called when [save clicked].
-        /// </summary>
-        private async void OnSaveClicked()
-        {
-            try
-            {
-                var entryText = SummonerNameEntryText;
-                if (string.IsNullOrEmpty(entryText)) 
-                {
-                    await Toast.Make("Insert a value.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                }
-                else if (entryText.Equals(currentUser.SummonerName, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    await Toast.Make("Modify the name.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                }
-                else
-                {
-                    if (!ModifyNameChecked)
-                    {
-                        var role = Enum.Parse<RoleType>(SelectedItem.ToString(), true);
-                        if (Validations.SummonerName(entryText))
-                        {
-                            if (currentUser == null)
-                            {
-                                currentUser = new UserDto()
-                                {
-                                    Role = role,
-                                    SummonerName = entryText,
-                                    Uid = userCredentials.Uid,
-                                    Email = userCredentials.Info.Email,
-                                };
-
-                                await _firebaseService.CreateUser(currentUser);
-                                await _cacheService.SetCurrentUserAsync(currentUser);
-                                LoadScreenData(currentUser);
-                            }
-                            else
-                            {
-                                await Toast.Make("Error: User already exists in the database..", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                            }
-                        }
-                        else
-                        {
-                            ValidationMessage = Globals.SUMMONERNAME_VALIDATION_ERROR_MESSAGE;
-                            IsValidationMessageVisible = true;
-                            await Toast.Make($"SummonerName invalid: {entryText}", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                        }
-                    }
-                    else
-                    {
-                        currentUser.SummonerName = entryText;
-                        if (await Shell.Current.DisplayAlert("WARNING", "Do you confirm that you want to modify the summonerName?", "YES", "NO")
-                                && await _firebaseService.PutUser(currentUser) != null)
-                        {
-                            await _cacheService.SetCurrentUserAsync(currentUser);
-                            await Toast.Make("Updated successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                        }
-                        else
-                        {
-                            currentUser = await _cacheService.GetCurrentUserAsync();
-                        }
-
-                        LoadScreenData(currentUser);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                await Toast.Make("Failed to load profile. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-                await Toast.Make(ex.Message, CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
-            }
-        }
-
-        /// <summary>
-        /// Called when [logout clicked].
-        /// </summary>
-        private async void OnLogoutClicked()
-        {
-            _cacheService.Logout();
-            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
-            await Toast.Make("Goodbye!", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-        }
-
-        /// <summary>
-        /// Called when [delete account clicked].
-        /// </summary>
-        private async void OnDeleteAccountClicked()
-        {
-            var navigation = App.Current.MainPage.Navigation;
-            await navigation.PushModalAsync(new PromptPage(_cacheService, _firebaseService, MethodType.Profile));
-        }
-
-        /// <summary>
-        /// Raises the <see cref="E:EnableSummonerNameCheckedChanged" /> event.
-        /// </summary>
-        /// <param name="e">The <see cref="CheckedChangedEventArgs"/> instance containing the event data.</param>
-        private async void OnCheckBoxChanged(bool isChecked)
-        {
-            if (isChecked && await Shell.Current.DisplayAlert("WARNING", "If the summoner name is modified, the assigned tournaments will change to the new name.", "Ok", "Cancel"))
-            {
-                IsSummonerNameEntryEnable = true;
-                IsSaveButtonVisible = true;
-            }
-            else
-            {
-                ModifyNameChecked = false;
-                IsSummonerNameEntryEnable = false;
-                IsSaveButtonVisible = false;
-            }
-        }
-
-        /// <summary>
-        /// Loads the screen data.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        private void LoadScreenData(UserDto user)
-        {
-            if (user != null)
-            {
-                currentUser = user;
-                SummonerNameEntryText = user.SummonerName;
-                IsSummonerNameEntryEnable = false;
-                SelectedItem = user.Role.ToString();
-                IsRolePickerEnable = false;
-                IsSaveButtonVisible = false;
-                IsLabelEnableEntryVisible = true;
-                IsCheckBoxVisible = true;
-                IsCheckBoxEnable = true;
-                ModifyNameChecked = false;
-            }
-            else
-            {
-                SelectedItem = default(RoleType).ToString();
-                SummonerNameEntryText = null;
-                IsSummonerNameEntryEnable = true;
-                IsRolePickerEnable = true;
-                IsSaveButtonVisible = true;
-                IsCheckBoxVisible = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets the CheckBox changed command.
-        /// </summary>
-        /// <value>
-        /// The CheckBox changed command.
-        /// </value>
-        public ICommand CheckBoxChangedCommand { get; }
-
-        /// <summary>
-        /// Gets the summoner name entry text changed command.
-        /// </summary>
-        /// <value>
-        /// The summoner name entry text changed command.
-        /// </value>
-        public ICommand SummonerNameEntryTextChangedCommand { get; }
-
-        /// <summary>
-        /// Gets the save command.
-        /// </summary>
-        /// <value>
-        /// The save command.
-        /// </value>
-        public IRelayCommand SaveCommand { get; }
-
-        /// <summary>
-        /// Gets the logout command.
-        /// </summary>
-        /// <value>
-        /// The logout command.
-        /// </value>
-        public IRelayCommand LogoutCommand { get; }
-
-        /// <summary>
-        /// Gets the delete account command.
-        /// </summary>
-        /// <value>
-        /// The delete account command.
-        /// </value>
-        public IRelayCommand DeleteAccountCommand { get; }
-
-        /// <summary>
-        /// Gets or sets the summoner name entry text.
-        /// </summary>
-        /// <value>
-        /// The summoner name entry text.
-        /// </value>
-        public string SummonerNameEntryText
-        {
-            get { return _summonerNameEntryText; }
-            set
-            {
-                if (_summonerNameEntryText != value)
-                {
-                    _summonerNameEntryText = value;
-                    OnPropertyChanged(nameof(SummonerNameEntryText));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is entry enabled.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this instance is entry enabled; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsSummonerNameEntryEnable
-        {
-            get { return _isEntryEnabled; }
-            set
-            {
-                if (_isEntryEnabled != value)
-                {
-                    _isEntryEnabled = value;
-                    OnPropertyChanged(nameof(IsSummonerNameEntryEnable));
-                }
-            }
-        }
-
-        /// <summary>
-        /// The role values.
-        /// </summary>
-        public ObservableCollection<string> RoleValues { get; }
 
         public bool IsValidationMessageVisible
         {
@@ -503,6 +507,21 @@ namespace EgoTournament.ViewModels
                     _isButtonVisible = value;
                     OnPropertyChanged(nameof(IsSaveButtonVisible));
                 }
+            }
+        }
+
+        /// <summary>
+        /// The email label.
+        /// </summary>
+        private string _emailLabelText;
+
+        public string EmailLabelText
+        {
+            get => _emailLabelText;
+            set
+            {
+                _emailLabelText = value;
+                OnPropertyChanged();
             }
         }
     }

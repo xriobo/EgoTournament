@@ -86,7 +86,6 @@ public partial class ManageListPage : ContentPage, IQueryAttributable
         }
     }
 
-
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         _tournament = query[nameof(TournamentDto)] as TournamentDto;

@@ -2,6 +2,7 @@
 using EgoTournament.Models.Enums;
 using EgoTournament.Models.Riot;
 using EgoTournament.Models.Riot.RawData;
+using System.Collections.Concurrent;
 
 namespace EgoTournament.Services.Implementations
 {
@@ -35,7 +36,9 @@ namespace EgoTournament.Services.Implementations
         public IEnumerable<PuuidDto> GetPuuidByParticipantsNameAndTagName(List<string> participants)
         {
             List<PuuidDto> puuids = new List<PuuidDto>();
-            foreach (var participant in participants)
+            ConcurrentBag<PuuidDto> concurrentPuuids = new ConcurrentBag<PuuidDto>();
+
+            Parallel.ForEach(participants, participant =>
             {
                 var participantSplit = participant.Split("#");
                 if (participantSplit.Any())
@@ -45,31 +48,36 @@ namespace EgoTournament.Services.Implementations
                                         "GetPuuidByParticipantsNameAndTagName=" + participantSplit[0] + "/" + participantSplit[1], 60);
                     if (summoner != null)
                     {
-                        puuids.Add(summoner);
+                        concurrentPuuids.Add(summoner);
                     }
                 }
-            }
+            });
 
+            puuids = concurrentPuuids.ToList();
             return puuids;
         }
 
         public IEnumerable<SummonerDto> SetParticipantRanks(IEnumerable<SummonerDto> summonersRiot)
         {
-            List<RankDto> ranksDto = new List<RankDto>();
-            foreach (var summonerRiot in summonersRiot)
+            ConcurrentBag<SummonerDto> concurrentSummoners = new ConcurrentBag<SummonerDto>(summonersRiot);
+
+            Parallel.ForEach(concurrentSummoners, summonerRiot =>
             {
                 if (summonerRiot != null)
                 {
-                    ranksDto = GenericService.GetAsync<List<RankDto>>(
+                    var ranksDto = GenericService.GetAsync<List<RankDto>>(
                                         RiotConstants.EuwRiotUri + RiotConstants.EntriesBySummonerResource + summonerRiot.Id,
                                         "SetParticipantRanks=" + summonerRiot.Id, 1);
-                    summonerRiot.Ranks = ranksDto;
-                    summonerRiot.RankSoloQ = summonerRiot.Ranks.FirstOrDefault(x => x.QueueType.Equals(QueueType.RANKED_SOLO_5x5.ToString(), StringComparison.OrdinalIgnoreCase));
-                    summonerRiot.SetPropertiesRankDtoBySummonerDto();
+                    if (ranksDto != null)
+                    {
+                        summonerRiot.Ranks = ranksDto;
+                        summonerRiot.RankSoloQ = summonerRiot.Ranks.FirstOrDefault(x => x.QueueType.Equals(QueueType.RANKED_SOLO_5x5.ToString(), StringComparison.OrdinalIgnoreCase));
+                        summonerRiot.SetPropertiesRankDtoBySummonerDto();
+                    }
                 }
-            }
+            });
 
-            return summonersRiot;
+            return concurrentSummoners;
         }
 
         public List<string> GetMatchIdListByPuuid(string puuid, int countMatches, bool rankeds = false) =>

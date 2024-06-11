@@ -21,8 +21,9 @@
                  HorizontalOptions="Center"
                  VerticalOptions="Start"/>
             <Frame Grid.Row="1">
-                <Grid RowSpacing="20">
+                <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
@@ -37,27 +38,31 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Row="0" Grid.Column="0" Text="Summoner Name:"/>
+                    <Label Grid.Row="0" Grid.Column="0" Text="Summoner Name:" FontSize="13"/>
                     <Entry  Placeholder="Summoner Name..." IsEnabled="{Binding IsSummonerNameEntryEnable}" Text="{Binding SummonerNameEntryText}" TextChanged="summonerNameEntry_TextChanged"
                            Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2">
                         <Entry.Behaviors>
                             <local:SummonerNameValidationBehavior />
                         </Entry.Behaviors>
                     </Entry>
-                    <Label Text="Sign in with your account from account.riotgames.com and your Riot ID will appear at the top." FontSize="Body" Margin="10,-50,0,0" FontAttributes="None"
-                                             Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" TextColor="Black"/>
+                    <Label Text="Sign in with your account from account.riotgames.com and your Riot ID will appear at the top." FontSize="11" Margin="5,-30,0,10"
+                                             Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" TextColor="Black"/>
                     <Label Text="{Binding ValidationMessage}"  IsVisible="{Binding IsValidationMessageVisible}" FontSize="Micro"
                            Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" TextColor="DarkRed" />
-                    <Label Grid.Row="3" Grid.Column="0" Text="Role" />
-                    <Picker Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"
+                    <Label Grid.Row="3" Grid.Column="0" Text="Email" Margin="0,0,0,0" FontSize="13"/>
+                    <Label Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Text="{Binding EmailLabelText}" HorizontalOptions="StartAndExpand" Margin="0,0,10,0" />
+                    <Label Grid.Row="4" Grid.Column="0" Text="Role" Margin="0,0,0,15"/>
+                    <Picker Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
                            Title="Select a role" ItemsSource="{Binding RoleValues}" SelectedItem="{Binding SelectedItem}" IsEnabled="{Binding IsRolePickerEnable}">
                     </Picker>
-                    <Label Grid.Row="4" Grid.Column="0" Text="Change SummonerName" IsVisible="{Binding IsLabelEnableEntryVisible}" />
-                    <CheckBox Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2" VerticalOptions="Center"  CheckedChanged="CheckBox_CheckedChanged"
+                    <HorizontalStackLayout Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="3">
+                        <Label Text="Change SummonerName" IsVisible="{Binding IsLabelEnableEntryVisible}" FontSize="13" HorizontalOptions="CenterAndExpand"/>
+                        <CheckBox VerticalOptions="Center"  CheckedChanged="CheckBox_CheckedChanged" HorizontalOptions="CenterAndExpand"
                               IsEnabled="{Binding IsCheckBoxEnable}"  IsVisible="{Binding IsCheckBoxVisible}" IsChecked="{Binding ModifyNameChecked}"/>
-                    <Button Grid.Row="5" Grid.Column="1" Text="Save" Command="{Binding SaveCommand}" IsVisible="{Binding IsSaveButtonVisible}" />
-                    <Button Grid.Row="6" Grid.Column="1" Text="Logout" Command="{Binding LogoutCommand}" />
-                    <Button Grid.Row="7" Grid.Column="2" Text="Delete Account" BackgroundColor="Transparent" BorderWidth="0" TextColor="DarkRed" HorizontalOptions="Center"
+                    </HorizontalStackLayout>
+                    <Button Grid.Row="6" Grid.Column="1" Text="Save" Command="{Binding SaveCommand}" IsVisible="{Binding IsSaveButtonVisible}" />
+                    <Button Grid.Row="7" Grid.Column="1" Text="Logout" Command="{Binding LogoutCommand}" />
+                    <Button Grid.Row="8" Grid.Column="2" Text="Delete Account" BackgroundColor="Transparent" BorderWidth="0" TextColor="DarkRed" HorizontalOptions="Center"
                             Command="{Binding DeleteAccountCommand}" />
 
                 </Grid>

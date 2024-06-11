@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Views;
 using EgoTournament.Models.Firebase;
 using EgoTournament.Services;
 using Firebase.Auth;
@@ -7,19 +6,19 @@ using Newtonsoft.Json;
 
 namespace EgoTournament.ViewModels
 {
-    public class SignUpViewModel : INotifyPropertyChanged
+    public class SignUpViewModel : BaseViewModel, INotifyPropertyChanged
     {
         private readonly IFirebaseService _firebaseService;
         private string email;
         private string password;
-        public Command SignInBtn { get; }
-        public event PropertyChangedEventHandler PropertyChanged;
+        public IAsyncRelayCommand SignInBtn { get; }
+        public IAsyncRelayCommand SignUpUser { get; }
 
         public SignUpViewModel(IFirebaseService firebaseService)
         {
             _firebaseService = firebaseService;
-            SignUpUser = new Command(SignUpTappedAsync);
-            SignInBtn = new Command(SignInBtnTappedAsync);
+            SignUpUser = new AsyncRelayCommand(SignUpTappedAsync);
+            SignInBtn = new AsyncRelayCommand(SignInBtnTappedAsync);
         }
 
         public string Email
@@ -41,19 +40,17 @@ namespace EgoTournament.ViewModels
             }
         }
 
-        public Command SignUpUser { get; }
-
         private void RaisePropertyChanged(string v)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(v));
         }
 
-        private async void SignUpTappedAsync(object obj)
+        private async Task SignUpTappedAsync()
         {
             try
             {
-                await _firebaseService.SignUp(Email, Password);
-                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+                await _firebaseService.SignUpAsync(Email, Password);
+                await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
                 await Toast.Make("Welcome! Sign in.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
             }
             catch (FirebaseAuthHttpException ex)
@@ -64,7 +61,6 @@ namespace EgoTournament.ViewModels
             catch (Exception ex)
             {
                 await Toast.Make("Failed to sign up. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                Console.WriteLine(ex.Message.ToString());
             }
             finally
             {
@@ -73,9 +69,11 @@ namespace EgoTournament.ViewModels
             }
         }
 
-        private async void SignInBtnTappedAsync(object obj)
+        private async Task SignInBtnTappedAsync()
         {
             await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

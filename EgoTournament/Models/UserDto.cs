@@ -5,9 +5,9 @@ namespace EgoTournament.Models
 {
     public class UserDto
     {
-        public UserDto()
+        public UserDto() 
         {
-            Tournaments = [];
+            Uid = Guid.NewGuid().ToString();
         }
 
         [JsonProperty("uid")]
@@ -21,6 +21,9 @@ namespace EgoTournament.Models
 
         [JsonProperty("role")]
         public RoleType Role { get; set; }
+
+        [JsonProperty("tournamentUids")]
+        public List<string> TournamentUids { get; set; }
 
         [JsonProperty("tournaments")]
         public List<TournamentDto> Tournaments { get; set; }

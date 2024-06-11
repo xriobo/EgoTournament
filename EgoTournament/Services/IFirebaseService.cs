@@ -5,16 +5,20 @@ namespace EgoTournament.Services
 {
     public interface IFirebaseService
     {
-        Task<UserCredential> SignIn(string email, string password);
+        Task<UserCredential> SignInAsync(string email, string password);
 
-        Task<UserCredential> SignUp(string email, string password);
+        Task<UserCredential> SignUpAsync(string email, string password);
 
-        Task<UserDto> GetUserByUid(string userUid);
+        Task DeleteUserAndUserCredentialAsync(string userUid);
 
-        Task<UserDto> PutUser(UserDto userDto);
+        Task<UserDto> UpsertUserAsync(UserDto userDto);
 
-        Task DeleteUserAndUserCredential(string userUid);
+        Task<UserDto> GetUserByUidAsync(string userUid);
 
-        Task CreateUser(UserDto user);
+        Task<TournamentDto> UpsertTournamentAsync(TournamentDto tournament, bool updateSummonerTournamentsRelation = true);
+
+        Task<List<TournamentDto>> GetTournamentsByUidsAsync(List<Guid> tournamentUids);
+
+        Task<List<TournamentDto>> GetTournamentsBySummonerNameAsync(string summonerName);
     }
 }

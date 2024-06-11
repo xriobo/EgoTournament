@@ -1,13 +1,15 @@
-﻿using EgoTournament.Models;
+﻿namespace EgoTournament.Views;
 
-namespace EgoTournament.Views;
-
+/// <summary>
+/// Main page class.
+/// </summary>
+/// <seealso cref="ContentPage" />
 public partial class MainPage : ContentPage
 {
     /// <summary>
-    /// The <see cref="MainViewModel"/>.
+    /// The main view model.
     /// </summary>
-    private readonly MainViewModel _viewModel;
+    MainViewModel _viewModel;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MainPage"/> class.
@@ -26,19 +28,6 @@ public partial class MainPage : ContentPage
     {
         base.OnAppearing();
         
-        await _viewModel.OnNavigatedToAsync();
-    }
-
-    /// <summary>
-    /// Called when [selection changed].
-    /// </summary>
-    /// <param name="sender">The sender.</param>
-    /// <param name="e">The <see cref="SelectionChangedEventArgs"/> instance containing the event data.</param>
-    private void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (e.CurrentSelection.FirstOrDefault() is TournamentDto selectedItem)
-        {
-            _viewModel?.TournamentSelectedCommand.Execute(selectedItem);
-        }
+        await _viewModel.OnNavigatedTo();
     }
 }

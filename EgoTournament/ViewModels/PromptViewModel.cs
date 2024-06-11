@@ -26,7 +26,7 @@ namespace EgoTournament.ViewModels
         /// <value>
         /// The accept command.
         /// </value>
-        public IRelayCommand AcceptCommand { get; }
+        public IAsyncRelayCommand AcceptCommand { get; }
 
         /// <summary>
         /// Gets the cancel command.
@@ -34,7 +34,7 @@ namespace EgoTournament.ViewModels
         /// <value>
         /// The cancel command.
         /// </value>
-        public IRelayCommand CancelCommand { get; }
+        public IAsyncRelayCommand CancelCommand { get; }
 
         /// <summary>
         /// The firebase service.
@@ -70,8 +70,8 @@ namespace EgoTournament.ViewModels
             _methodType = methodType;
             _tournaments = tournaments;
 
-            AcceptCommand = new RelayCommand(OnAcceptClicked);
-            CancelCommand = new RelayCommand(OnCancelClicked);
+            AcceptCommand = new AsyncRelayCommand(OnAcceptClicked);
+            CancelCommand = new AsyncRelayCommand(OnCancelClicked);
         }
 
         /// <summary>
@@ -79,21 +79,21 @@ namespace EgoTournament.ViewModels
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnAcceptClicked()
+        private async Task OnAcceptClicked()
         {
             try
             {
                 if (!string.IsNullOrEmpty(PromptEntry))
                 {
                     var cacheUser = await _cacheService.GetCurrentUserCredentialAsync();
-                    var userCredential = await _firebaseService.SignIn(cacheUser.Info.Email, PromptEntry);
+                    var userCredential = await _firebaseService.SignInAsync(cacheUser.Info.Email, PromptEntry);
                     switch (_methodType)
                     {
                         case MethodType.Profile:
-                            DeleteProfile(userCredential);
+                            await DeleteProfile(userCredential);
                             break;
                         case MethodType.Main:
-                            DeleteTournament(userCredential, _tournaments);
+                            await DeleteTournament(userCredential, _tournaments);
                             break;
                     }
                 }
@@ -121,7 +121,7 @@ namespace EgoTournament.ViewModels
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private async void OnCancelClicked()
+        private async Task OnCancelClicked()
         {
             await App.Current.MainPage.Navigation.PopModalAsync();
         }
@@ -130,9 +130,9 @@ namespace EgoTournament.ViewModels
         /// Deletes the profile.
         /// </summary>
         /// <param name="userCredential">The user credential.</param>
-        private async void DeleteProfile(UserCredential userCredential)
+        private async Task DeleteProfile(UserCredential userCredential)
         {
-            await _firebaseService.DeleteUserAndUserCredential(userCredential.User.Uid);
+            await _firebaseService.DeleteUserAndUserCredentialAsync(userCredential.User.Uid);
             await userCredential.User.DeleteAsync();
             await Shell.Current.DisplayAlert("Removed", "The account has been successfully deleted.", "OK");
             _cacheService.Logout();
@@ -145,13 +145,13 @@ namespace EgoTournament.ViewModels
         /// </summary>
         /// <param name="userCredential">The user credential.</param>
         /// <param name="tournaments">The tournaments.</param>
-        private async void DeleteTournament(UserCredential userCredential, List<TournamentDto> tournaments)
+        private async Task DeleteTournament(UserCredential userCredential, List<TournamentDto> tournaments)
         {
             if (tournaments != null)
             {
-                var currentUser = await _firebaseService.GetUserByUid(userCredential.User.Uid);
+                var currentUser = await _firebaseService.GetUserByUidAsync(userCredential.User.Uid);
                 currentUser.Tournaments = tournaments;
-                var userUpdated = await _firebaseService.PutUser(currentUser);
+                var userUpdated = await _firebaseService.UpsertUserAsync(currentUser);
                 if (userUpdated != null)
                 {
                     await _cacheService.SetCurrentUserAsync(userUpdated);

@@ -6,7 +6,6 @@
 	xmlns:views="clr-namespace:EgoTournament.Views"
 	xmlns:local="clr-namespace:EgoTournament"
     Shell.FlyoutBehavior="Flyout">
-
     <ShellContent
         Title="Loading"
         ContentTemplate="{DataTemplate views:LoadingPage}"
@@ -22,33 +21,29 @@
         Shell.FlyoutItemIsVisible="False"/>
 
     <ShellContent
-        Title="Sign Up"
+        Title="SignUp"
         ContentTemplate="{DataTemplate views:SignUpPage}"
         Route="SignUpPage"
         Shell.FlyoutBehavior="Disabled"
-        Shell.FlyoutItemIsVisible="False" />
+        Shell.FlyoutItemIsVisible="False"/>
 
     <TabBar FlyoutDisplayOptions="AsMultipleItems">
-
-        <ShellContent
-        Title="Tournaments"
-        ContentTemplate="{DataTemplate views:MainPage}"
-        Route="MainPage" />
-
-        <ShellContent
-        Title="SchedulePage"
-        ContentTemplate="{DataTemplate views:SchedulePage}"
-        Route="SchedulePage" />
-
-        <ShellContent
-        Title="SearchSummoner"
-        ContentTemplate="{DataTemplate views:SearchSummonerPage}"
-        Route="SearchSummonerPage" />
 
         <ShellContent
         Title="Profile"
         ContentTemplate="{DataTemplate views:ProfilePage}"
         Route="ProfilePage" />
+
+        <ShellContent
+        Title="Ego Tournament"
+        ContentTemplate="{DataTemplate views:MainPage}"
+        Route="MainPage" />
+
+        <ShellContent
+        Title="Search Summoner"
+        ContentTemplate="{DataTemplate views:SearchSummonerPage}"
+        Route="SearchSummonerPage" />
+        
     </TabBar>
 
 

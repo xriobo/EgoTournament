@@ -1,0 +1,112 @@
+{
+  "users": {
+    "MZctOh7rKKSUZFeNxAfmy77ROtR2": {
+      "email": "test01@gmail.com",
+      "role": 1,
+      "summonerName": "mrvb6#mrvb5",
+      "tournaments": [
+        {
+          "hasReward": true,
+          "name": "Primer torneo!!!!!",
+          "rules": [
+            "1. Comienzo el 12/06/2024 a las 14:00. Fecha fin 23/07/2024 a las 00:00.",
+            "2. No podrá jugarse con ningún conocido en la misma partida, de hacerlo descalificación."
+          ],
+          "summonerNames": [
+            "MRVB6#MRVB6",
+            "YAGOFORTHEWIN#EUW",
+            "VELONIDAS#EUW",
+            "KAIURO#EUW",
+            "MULAN#00000"
+          ],
+          "uid": "f962a0a8-00ec-47a7-a5bb-274c939fa715"
+        },
+        {
+          "hasReward": true,
+          "name": "Raquel Torneo",
+          "rules": [
+            "1023oisdhnfñklahd92hoñfsd",
+            "dkljsfhaioludf89324q7590",
+            "cxzlkjñhviolaesdy89423570"
+          ],
+          "summonerNames": [
+            "RAQUEL#123",
+            "XABI#345",
+            "PEPITO#123",
+            "MULA#00000"
+          ],
+          "uid": "bf24ae0c-06a5-4c4f-9de3-4a5cbed92a42"
+        },
+        {
+          "hasReward": true,
+          "name": "Primer torneo",
+          "rules": [
+            "asdasdasdasd",
+            "asdasdasd"
+          ],
+          "summonerNames": [
+            "FDGDFGASDASD#ASDASD",
+            "SDF#ASDASD"
+          ],
+          "uid": "4ef5539d-2914-45dc-82db-b20e919169d6"
+        },
+        {
+          "hasReward": false,
+          "name": "Torneo Pimpollos",
+          "rules": [
+            "regla1",
+            "regla2"
+          ],
+          "summonerNames": [
+            "MEUPAI#PAI",
+            "MINANAI#NAI"
+          ],
+          "uid": "e0a78d3f-19f8-4db6-9189-88754b1f26e2"
+        }
+      ],
+      "uid": "MZctOh7rKKSUZFeNxAfmy77ROtR2"
+    },
+    "RlGjycgf7eYT6OFfpBE9NWgiLaG2": {
+      "email": "yagoforthewin@gmail.com",
+      "role": 0,
+      "summonerName": "yagoforthewin#euw",
+      "uid": "RlGjycgf7eYT6OFfpBE9NWgiLaG2"
+    },
+    "Y5Sl0VKzOuYBecnvfCbHkJJB5Cf2": {
+      "email": "xabirlspam@gmail.com",
+      "role": 0,
+      "summonerName": "xabirlspam#spam",
+      "tournaments": [
+        {
+          "hasReward": true,
+          "name": "XabiRlMemory2",
+          "rules": [
+            "esta es la primera regla",
+            "esta es la segunda"
+          ],
+          "summonerNames": [
+            "MRVB6#MRVB6",
+            "QUIPASA#TU",
+            "TEST01#02",
+            "ASDOIHASD#POAISJDIOASD"
+          ],
+          "uid": "7d857387-cfa2-4fcf-bdbd-29c0d018122c"
+        },
+        {
+          "hasReward": false,
+          "name": "torneo2",
+          "rules": [
+            "asdasdpoiahjuspdoia",
+            "adsfasd0f98asdf"
+          ],
+          "summonerNames": [
+            "ASD23#ASDA",
+            "ZXCOPJ8#POASJD9"
+          ],
+          "uid": "9fdea118-9dd2-47e3-a065-64236161f058"
+        }
+      ],
+      "uid": "Y5Sl0VKzOuYBecnvfCbHkJJB5Cf2"
+    }
+  }
+}

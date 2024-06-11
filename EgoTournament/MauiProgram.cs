@@ -37,7 +37,6 @@ public static class MauiProgram
 
         // Pages
         builder.Services.AddTransient<MainPage>();
-        builder.Services.AddTransient<ListingPage>();
         builder.Services.AddTransient<LoadingPage>();
         builder.Services.AddTransient<LoginPage>();
         builder.Services.AddTransient<ProfilePage>();
@@ -47,6 +46,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ManageListPage>();
         builder.Services.AddTransient<SchedulePage>();
         builder.Services.AddTransient<SearchSummonerPage>();
+        builder.Services.AddTransient<RulesPage>();
 
 
         // ViewModels
@@ -58,6 +58,7 @@ public static class MauiProgram
         builder.Services.AddTransient<TournamentViewModel>();
         builder.Services.AddTransient<ScheduleViewModel>();
         builder.Services.AddTransient<SearchSummonerViewModel>();
+        builder.Services.AddTransient<RulesViewModel>();
 
         // Authentication
         builder.Services.AddSingleton(SecureStorage.Default);

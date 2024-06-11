@@ -1,24 +1,77 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using EgoTournament.Common;
 using EgoTournament.Models;
+using EgoTournament.Models.Enums;
 using EgoTournament.Services;
-using System.Windows.Input;
 
 namespace EgoTournament.ViewModels
 {
-    public partial class MainViewModel : BindableObject
+    /// <summary>
+    /// Main View Model class.
+    /// </summary>
+    /// <seealso cref="BaseViewModel" />
+    /// <seealso cref="INotifyPropertyChanged" />
+    public partial class MainViewModel : BaseViewModel, INotifyPropertyChanged
     {
+        /// <summary>
+        /// The firebase service.
+        /// </summary>
         private readonly IFirebaseService _firebaseService;
+
+        /// <summary>
+        /// The cache service.
+        /// </summary>
         private readonly ICacheService _cacheService;
 
+        /// <summary>
+        /// The visible by role.
+        /// </summary>
+        [ObservableProperty]
+        public bool canManageTournaments = false;
+
+        /// <summary>
+        /// Gets the delete command.
+        /// </summary>
+        /// <value>
+        /// The delete command.
+        /// </value>
         public IRelayCommand DeleteCommand { get; }
 
+        /// <summary>
+        /// Gets the update command.
+        /// </summary>
+        /// <value>
+        /// The update command.
+        /// </value>
         public IRelayCommand UpdateCommand { get; }
 
+        /// <summary>
+        /// Gets the tournament selected command.
+        /// </summary>
+        /// <value>
+        /// The tournament selected command.
+        /// </value>
         public IRelayCommand TournamentSelectedCommand { get; }
 
+        /// <summary>
+        /// Gets the add command.
+        /// </summary>
+        /// <value>
+        /// The add command.
+        /// </value>
         public IRelayCommand AddCommand { get; }
 
+        /// <summary>
+        /// Gets or sets the tournaments.
+        /// </summary>
+        /// <value>
+        /// The tournaments.
+        /// </value>
+        public ObservableCollection<TournamentDto> Tournaments { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainViewModel"/> class.
+        /// </summary>
         public MainViewModel()
         {
             _firebaseService = App.Services.GetService<IFirebaseService>();
@@ -32,18 +85,25 @@ namespace EgoTournament.ViewModels
             AddCommand = new AsyncRelayCommand(AddTournament);
         }
 
-        public async Task OnNavigatedToAsync()
+        public async Task OnNavigatedTo()
         {
-            if (await _cacheService.GetCurrentUserCredentialAsync() != null)
-            {
-                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
-                Tournaments.Clear();
-                await LoadTournaments();
-            }
-            else
+            var userCredentials = await _cacheService.GetCurrentUserCredentialAsync();
+            var cacheUser = await _cacheService.GetCurrentUserAsync();
+            if (userCredentials == null)
             {
                 await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
                 await Toast.Make("You must Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+            }
+
+            if (cacheUser != null)
+            {
+                await LoadTournamentsAndSetVisibleByCacheUser(cacheUser);
+                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("PROFILE", "Set up your profile to continue.", "OK");
+                await Shell.Current.GoToAsync($"//{nameof(ProfilePage)}");
             }
         }
 
@@ -58,10 +118,23 @@ namespace EgoTournament.ViewModels
                 });
         }
 
-        private async Task LoadTournaments()
+        private async Task LoadTournamentsAndSetVisibleByCacheUser(UserDto cacheUser)
         {
-            var cacheUser = await _cacheService.GetCurrentUserAsync();
-            if (cacheUser?.Tournaments != null)
+            Tournaments.Clear();
+            if (cacheUser.Role == RoleType.Basic) 
+            {
+                var basicUserTournaments = await _firebaseService.GetTournamentsBySummonerNameAsync(cacheUser.SummonerName);
+                foreach (var tournament in basicUserTournaments)
+                {
+                    Tournaments.Add(tournament);
+                }
+            }
+            else
+            {
+                CanManageTournaments = true;
+            }
+
+            if (cacheUser.Tournaments != null && cacheUser.Tournaments.Count() > 0)
             {
                 foreach (var tournament in cacheUser.Tournaments)
                 {
@@ -99,7 +172,5 @@ namespace EgoTournament.ViewModels
         {
             await Shell.Current.GoToAsync(nameof(TournamentPage));
         }
-
-        public ObservableCollection<TournamentDto> Tournaments { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace EgoTournament.Services
 {
     public interface ICacheService
     {
-        Task<FirebaseUserDto> GetCurrentUserCredentialAsync();
+        Task<FirebaseUserCredentialDto> GetCurrentUserCredentialAsync();
 
         Task<UserDto> GetCurrentUserAsync();
 

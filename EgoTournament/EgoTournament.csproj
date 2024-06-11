@@ -65,6 +65,7 @@
 	  <None Remove="Resources\Images\ice.png" />
 	  <None Remove="Resources\Images\jungle.png" />
 	  <None Remove="Resources\Images\login.png" />
+	  <None Remove="Resources\Images\lolrules.gif" />
 	  <None Remove="Resources\Images\mid.png" />
 	  <None Remove="Resources\Images\profile.png" />
 	  <None Remove="Resources\Images\rules.png" />
@@ -99,35 +100,35 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\ListingPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Views\LoadingPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
+	    <Generator></Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\LoginPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
+	    <Generator></Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ManageListPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
+	    <Generator></Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\ProfilePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
+	    <Generator></Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\PromptPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
+	    <Generator></Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\RulesPage.xaml">
+	    <Generator></Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SchedulePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
+	    <Generator></Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SearchSummonerPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
+	    <Generator></Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SignUpPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
+	    <Generator></Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\TournamentPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
+	    <Generator></Generator>
 	  </MauiXaml>
 	</ItemGroup>
 

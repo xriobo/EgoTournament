@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:EgoTournament.ViewModels"
+             xmlns:m="clr-namespace:EgoTournament.Models.Views"
+             xmlns:local="clr-namespace:EgoTournament.Behaviors"
+             x:Class="EgoTournament.Views.SearchSummonerPage"
+			 x:DataType="vm:SearchSummonerViewModel"
+             Title="SEARCH"
+             BackgroundColor="#000000"
+             BackgroundImageSource="heimer.png">
+    <ContentPage.BindingContext>
+        <vm:SearchSummonerViewModel />
+    </ContentPage.BindingContext>
+    <ContentPage.Resources>
+        <DataTemplate x:DataType="m:MatchView" x:Key="searchedMatchesTemplate">
+            <Grid VerticalOptions="StartAndExpand" HeightRequest="100" Margin="10,0,10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25*" />
+                    <ColumnDefinition Width="9*" />
+                    <ColumnDefinition Width="9*" />
+                    <ColumnDefinition Width="9*" />
+                    <ColumnDefinition Width="20*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="15*" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Row="0" Grid.Column="0" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" SizeChanged="Image_SizeChanged">
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image"
+                                                     Binding="{Binding Win}"
+                                                     Value="true">
+                            <Setter Property="Source" Value="victory.gif" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                     Binding="{Binding Win}"
+                                                     Value="false">
+                            <Setter Property="Source" Value="defeat.gif" />
+                        </DataTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Kills}" TextColor="White" FontAttributes="Bold"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="2" Text="{Binding Deaths}" TextColor="White"  FontAttributes="Bold"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="3" Text="{Binding Assists}" TextColor="White" FontAttributes="Bold"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="4" Text="{Binding Champion}" TextColor="White" FontAttributes="Bold"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Image Grid.Row="0" Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center">
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image"
+                                                     Binding="{Binding Lane}"
+                                                     Value="TOP">
+                            <Setter Property="Source" Value="top.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                     Binding="{Binding Lane}"
+                                                     Value="MIDDLE">
+                            <Setter Property="Source" Value="mid.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                     Binding="{Binding Lane}"
+                                                     Value="JUNGLE">
+                            <Setter Property="Source" Value="jungle.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                     Binding="{Binding Lane}"
+                                                     Value="BOTTOM">
+                            <Setter Property="Source" Value="bottom.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                     Binding="{Binding Lane}"
+                                                     Value="UTILITY">
+                            <Setter Property="Source" Value="support.png" />
+                        </DataTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="0" Grid.Column="6" Text="{Binding MatchMode}" TextColor="White" TextDecorations="None"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
+            </Grid>
+        </DataTemplate>
+    </ContentPage.Resources>
+    <ScrollView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="20*"/>
+                <RowDefinition Height="65*"/>
+            </Grid.RowDefinitions>
+            <SearchBar Grid.Row="0" Placeholder="Summoner#Tagline..." SearchCommand="{Binding SearchCommand}" Text="{Binding SummonerNameEntryText}" TextChanged="summonerNameEntry_TextChanged"
+                                       VerticalOptions="Center" CancelButtonColor="DarkRed" PlaceholderColor="DarkGray" BackgroundColor="WhiteSmoke" TextColor="Black" Margin="10,0,10,0">
+                <SearchBar.Behaviors>
+                    <local:SummonerNameValidationSearchBarBehavior />
+                </SearchBar.Behaviors>
+            </SearchBar>
+            <Label Text="{Binding ValidationMessage}"  IsVisible="{Binding IsValidationMessageVisible}" FontSize="Micro"
+                           Grid.Row="1" TextColor="DarkRed" />
+            <Grid Grid.Row="2" VerticalOptions="StartAndExpand" HeightRequest="120" Margin="20,0,20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="30*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="10*" />
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="15*" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Row="0" Grid.Column="0" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand">
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                                                  Value="1">
+                            <Setter Property="Source" Value="emblem_wood.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                                                  Value="2">
+                            <Setter Property="Source" Value="emblem_iron.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                                                  Value="3">
+                            <Setter Property="Source" Value="emblem_bronze.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                                                  Value="4">
+                            <Setter Property="Source" Value="emblem_silver.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                                                  Value="5">
+                            <Setter Property="Source" Value="emblem_gold.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                                                  Value="6">
+                            <Setter Property="Source" Value="emblem_platinum.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                              Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                              Value="7">
+                            <Setter Property="Source" Value="emblem_emerald.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                                                  Value="8">
+                            <Setter Property="Source" Value="emblem_diamond.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                                                  Value="9">
+                            <Setter Property="Source" Value="emblem_master.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                                                  Value="10">
+                            <Setter Property="Source" Value="emblem_grandmaster.png" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                                  Binding="{Binding SummonerView.RankSoloQ.TierType}"
+                                                  Value="11">
+                            <Setter Property="Source" Value="emblem_challenger.png" />
+                        </DataTrigger>
+                    </Image.Triggers>
+                </Image>
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding SummonerView.RankSoloQ.Rank}" TextColor="White" TextDecorations="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="2" Text="{Binding SummonerView.RankSoloQ.LeaguePoints}" TextColor="White" FontAttributes="Bold"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="3" Text="{Binding SummonerView.RankSoloQ.SummonerName}" TextColor="White" FontAttributes="Bold"  FontSize="Small" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="4" Text="{Binding SummonerView.RankSoloQ.Wins}" TextColor="White" TextDecorations="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="5" Text="{Binding SummonerView.RankSoloQ.Losses}" TextColor="White" TextDecorations="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="6" Text="{Binding SummonerView.RankSoloQ.Winrate}" TextColor="White" FontAttributes="Bold"  FontSize="Small" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" />
+                <Image Grid.Row="0" Grid.Column="7" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" SizeChanged="Image_SizeChanged">
+                    <Image.Triggers>
+                        <DataTrigger TargetType="Image"
+                                     Binding="{Binding SummonerView.RankSoloQ.HotStreak}"
+                                     Value="true">
+                            <Setter Property="Source" Value="fireStrike.gif" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Image"
+                                     Binding="{Binding SummonerView.RankSoloQ.HotStreak}"
+                                     Value="false">
+                            <Setter Property="Source" Value="coldStrike.gif" />
+                        </DataTrigger>
+                    </Image.Triggers>
+                </Image>
+            </Grid>
+            <CollectionView Grid.Row="3" ItemsSource="{Binding MatchesViewModel}" ItemTemplate="{StaticResource searchedMatchesTemplate}"/>
+        </Grid>
+    </ScrollView>
+</ContentPage>

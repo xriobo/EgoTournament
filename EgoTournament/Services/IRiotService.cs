@@ -1,7 +1,7 @@
 ﻿using EgoTournament.Models.Riot;
 using EgoTournament.Models.Riot.RawData;
 
-namespace EgoQ.Services
+namespace EgoTournament.Services
 {
     public interface IRiotService
     {

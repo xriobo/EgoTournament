@@ -44,6 +44,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\bottom.png" />
+	  <None Remove="Resources\Images\coldstrike.gif" />
+	  <None Remove="Resources\Images\defeat.gif" />
 	  <None Remove="Resources\Images\egoqmainicon.png" />
 	  <None Remove="Resources\Images\emblem_bronze.png" />
 	  <None Remove="Resources\Images\emblem_challenger.png" />
@@ -57,12 +60,19 @@
 	  <None Remove="Resources\Images\emblem_silver.png" />
 	  <None Remove="Resources\Images\emblem_wood.png" />
 	  <None Remove="Resources\Images\fire.png" />
+	  <None Remove="Resources\Images\firestrike.gif" />
+	  <None Remove="Resources\Images\heimer.png" />
 	  <None Remove="Resources\Images\ice.png" />
+	  <None Remove="Resources\Images\jungle.png" />
 	  <None Remove="Resources\Images\login.png" />
+	  <None Remove="Resources\Images\mid.png" />
 	  <None Remove="Resources\Images\profile.png" />
 	  <None Remove="Resources\Images\rules.png" />
 	  <None Remove="Resources\Images\ruleswallpaper.jpg" />
+	  <None Remove="Resources\Images\support.png" />
+	  <None Remove="Resources\Images\top.png" />
 	  <None Remove="Resources\Images\trophy.png" />
+	  <None Remove="Resources\Images\victory.gif" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -108,6 +118,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SchedulePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SearchSummonerPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SignUpPage.xaml">

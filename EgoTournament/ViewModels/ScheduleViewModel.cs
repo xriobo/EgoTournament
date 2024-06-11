@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Maui.Alerts;
-using EgoQ.Services;
-using EgoTournament.Models;
+﻿using EgoTournament.Models;
 using EgoTournament.Models.Riot;
 using EgoTournament.Services;
 

@@ -1,13 +1,7 @@
-﻿using EgoQ.Services;
-using EgoTournament.Models;
+﻿using EgoTournament.Models;
 using EgoTournament.Models.Enums;
 using EgoTournament.Models.Riot;
 using EgoTournament.Models.Riot.RawData;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EgoTournament.Services.Implementations
 {
@@ -112,18 +106,10 @@ namespace EgoTournament.Services.Implementations
             List<Match> matches = new List<Match>();
             try
             {
-                var summonerParticipant = ScheduleViewModel.SummonerDtos.FirstOrDefault(x => x.Name.Trim().Equals(summonerName.Trim(), StringComparison.InvariantCultureIgnoreCase));
-                if (summonerParticipant != null)
+                var account = GetPuuidBySummonerNameAndTagLine(summonerName, tagLine);
+                if (account != null)
                 {
-                    summonerDto = summonerParticipant;
-                }
-                else
-                {
-                    var account = GetPuuidBySummonerNameAndTagLine(summonerName, tagLine);
-                    if (account != null)
-                    {
-                        summonerDto = GetSummonersByPuuid(new List<PuuidDto>() { new PuuidDto() { Puuid = account.Puuid, GameName = account.GameName } }).FirstOrDefault();
-                    }
+                    summonerDto = GetSummonersByPuuid(new List<PuuidDto>() { new PuuidDto() { Puuid = account.Puuid, GameName = account.GameName } }).FirstOrDefault();
                 }
 
                 if (string.IsNullOrEmpty(summonerDto?.Id))

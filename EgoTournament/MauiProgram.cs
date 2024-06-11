@@ -1,9 +1,7 @@
-﻿using EgoQ.Services;
-using EgoTournament.Services;
+﻿using EgoTournament.Services;
 using EgoTournament.Services.Implementations;
 using Firebase.Auth;
 using Firebase.Auth.Providers;
-using Firebase.Auth.Repository;
 using Microsoft.Extensions.Logging;
 
 namespace EgoTournament;
@@ -48,6 +46,7 @@ public static class MauiProgram
         builder.Services.AddTransient<PromptPage>();
         builder.Services.AddTransient<ManageListPage>();
         builder.Services.AddTransient<SchedulePage>();
+        builder.Services.AddTransient<SearchSummonerPage>();
 
 
         // ViewModels
@@ -58,6 +57,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ProfileViewModel>();
         builder.Services.AddTransient<TournamentViewModel>();
         builder.Services.AddTransient<ScheduleViewModel>();
+        builder.Services.AddTransient<SearchSummonerViewModel>();
 
         // Authentication
         builder.Services.AddSingleton(SecureStorage.Default);

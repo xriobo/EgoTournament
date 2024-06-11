@@ -41,9 +41,9 @@
         Route="SchedulePage" />
 
         <ShellContent
-        Title="Listing"
-        ContentTemplate="{DataTemplate views:ListingPage}"
-        Route="ListingPage" />
+        Title="SearchSummoner"
+        ContentTemplate="{DataTemplate views:SearchSummonerPage}"
+        Route="SearchSummonerPage" />
 
         <ShellContent
         Title="Profile"

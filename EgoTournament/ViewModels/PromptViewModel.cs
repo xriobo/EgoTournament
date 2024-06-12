@@ -12,7 +12,7 @@ namespace EgoTournament.ViewModels
     /// Prompt view model class.
     /// </summary>
     /// <seealso cref="BaseViewModel" />
-    public partial class PromptViewModel : BaseViewModel
+    public partial class PromptViewModel : BaseViewModel, IQueryAttributable
     {
         /// <summary>
         /// The PromptEntry binding.
@@ -49,26 +49,25 @@ namespace EgoTournament.ViewModels
         /// <summary>
         /// The method type.
         /// </summary>
-        private readonly MethodType _methodType;
+        private MethodType _methodType;
 
         /// <summary>
-        /// List of <see cref="TournamentDto"/> without the tournament to be updated.
+        /// The tournament uid to delete.
         /// </summary>
-        private readonly List<TournamentDto> _tournaments;
+        private Guid _tournamentUidToDelete;
+
+        /// <summary>
+        /// The tournament dto.
+        /// </summary>
+        private TournamentDto _tournamentDto;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PromptViewModel" /> class.
         /// </summary>
-        /// <param name="cacheService">The cache service.</param>
-        /// <param name="firebaseService">The firebase service.</param>
-        /// <param name="methodType">The method type.</param>
-        /// <param name="tournaments">List of <see cref="TournamentDto" /> without the tournament to be updated.</param>
-        public PromptViewModel(ICacheService cacheService, IFirebaseService firebaseService, MethodType methodType, List<TournamentDto> tournaments = null)
+        public PromptViewModel()
         {
-            _cacheService = cacheService;
-            _firebaseService = firebaseService;
-            _methodType = methodType;
-            _tournaments = tournaments;
+            _cacheService = App.Services.GetService<ICacheService>();
+            _firebaseService = App.Services.GetService<IFirebaseService>();
 
             AcceptCommand = new AsyncRelayCommand(OnAcceptClicked);
             CancelCommand = new AsyncRelayCommand(OnCancelClicked);
@@ -85,15 +84,15 @@ namespace EgoTournament.ViewModels
             {
                 if (!string.IsNullOrEmpty(PromptEntry))
                 {
-                    var cacheUser = await _cacheService.GetCurrentUserCredentialAsync();
-                    var userCredential = await _firebaseService.SignInAsync(cacheUser.Info.Email, PromptEntry);
+                    var cacheUserCredential = await _cacheService.GetCurrentUserCredentialAsync();
+                    var userCredential = await _firebaseService.SignInAsync(cacheUserCredential.Info.Email, PromptEntry);
                     switch (_methodType)
                     {
                         case MethodType.Profile:
                             await DeleteProfile(userCredential);
                             break;
                         case MethodType.Main:
-                            await DeleteTournament(userCredential, _tournaments);
+                            await DeleteTournament(userCredential, _tournamentUidToDelete);
                             break;
                     }
                 }
@@ -136,7 +135,6 @@ namespace EgoTournament.ViewModels
             await userCredential.User.DeleteAsync();
             await Shell.Current.DisplayAlert("Removed", "The account has been successfully deleted.", "OK");
             _cacheService.Logout();
-            await App.Current.MainPage.Navigation.PopModalAsync();
             await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
 
@@ -145,26 +143,69 @@ namespace EgoTournament.ViewModels
         /// </summary>
         /// <param name="userCredential">The user credential.</param>
         /// <param name="tournaments">The tournaments.</param>
-        private async Task DeleteTournament(UserCredential userCredential, List<TournamentDto> tournaments)
+        private async Task DeleteTournament(UserCredential userCredential, Guid tournamentUidToDelete)
         {
-            if (tournaments != null)
+            if (tournamentUidToDelete != Guid.Empty)
             {
                 var currentUser = await _firebaseService.GetUserByUidAsync(userCredential.User.Uid);
-                currentUser.Tournaments = tournaments;
-                var userUpdated = await _firebaseService.UpsertUserAsync(currentUser);
-                if (userUpdated != null)
+                if (currentUser != null) 
                 {
-                    await _cacheService.SetCurrentUserAsync(userUpdated);
-                    await Toast.Make("Tournament deleted.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                }
-                else
-                {
-                    await Toast.Make("Elimination tournament error. Try again later...", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                    var tournamentDeleted = await _firebaseService.DeleteTournamentAsync(tournamentUidToDelete);
+                    if (tournamentDeleted)
+                    {
+                        currentUser = this.DeleteUserCacheTournament(currentUser, tournamentUidToDelete);
+                        var userUpdated = await _firebaseService.UpsertUserAsync(currentUser);
+                        await _cacheService.SetCurrentUserAsync(userUpdated);
+                        await Toast.Make("Tournament deleted.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                    }
+                    else
+                    {
+                        await Toast.Make("Elimination tournament error. Try again later...", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                    }
                 }
 
-
-                await App.Current.MainPage.Navigation.PopModalAsync();
                 await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+            }
+        }
+
+        /// <summary>
+        /// Deletes the user cache tournament.
+        /// </summary>
+        /// <param name="userToUpdate">The user to update.</param>
+        /// <param name="tournamentUidToDelete">The tournament uid to delete.</param>
+        /// <returns>A <see cref="UserDto"/>.</returns>
+        private UserDto DeleteUserCacheTournament(UserDto userToUpdate, Guid tournamentUidToDelete)
+        {
+            if (userToUpdate.Tournaments != null && userToUpdate.Tournaments.Any(x => x.Uid == tournamentUidToDelete))
+            {
+                userToUpdate.Tournaments.Remove(userToUpdate.Tournaments.First(x => x.Uid == tournamentUidToDelete));
+            }
+
+            if (userToUpdate.TournamentUids != null && userToUpdate.TournamentUids.Contains(tournamentUidToDelete.ToString()))
+            {
+                userToUpdate.TournamentUids.Remove(tournamentUidToDelete.ToString());
+            }
+
+            return userToUpdate;
+        }
+
+        /// <summary>
+        /// Applies the query attributes.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            if (!query.Any()) return;
+            _tournamentDto = query[nameof(TournamentDto)] as TournamentDto;
+            var methodType = query[nameof(MethodType)] as MethodType?;
+            if (methodType != null)
+            {
+                _methodType = methodType.Value;
+            }
+
+            if (_tournamentDto.Uid != Guid.Empty)
+            {
+                _tournamentUidToDelete = _tournamentDto.Uid;
             }
         }
     }

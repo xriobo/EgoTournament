@@ -172,6 +172,7 @@ namespace EgoTournament.ViewModels
                 }
                 else
                 {
+                    entryText = entryText.ToUpperInvariant();
                     if (!ModifyNameChecked)
                     {
                         var role = Enum.Parse<RoleType>(SelectedItem.ToString(), true);
@@ -251,8 +252,11 @@ namespace EgoTournament.ViewModels
         /// </summary>
         private async Task OnDeleteAccountClicked()
         {
-            var navigation = App.Current.MainPage.Navigation;
-            await navigation.PushModalAsync(new PromptPage(_cacheService, _firebaseService, MethodType.Profile));
+            await Shell.Current.GoToAsync(nameof(PromptPage), true, new Dictionary<string, object>
+                {
+                    { nameof(MethodType), MethodType.Profile },
+                    { nameof(TournamentDto), new TournamentDto() }
+                });
         }
 
         /// <summary>
@@ -300,7 +304,8 @@ namespace EgoTournament.ViewModels
                 IsSummonerNameEntryEnable = true;
                 IsRolePickerEnable = true;
                 IsSaveButtonVisible = true;
-                IsCheckBoxVisible = true;
+                IsCheckBoxVisible = false;
+                IsLabelEnableEntryVisible = false;
             }
         }
 

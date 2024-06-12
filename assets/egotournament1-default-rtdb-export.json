@@ -1,112 +1,102 @@
 {
+  "summonerTournaments": {
+    "ASDASDASD*ASDASDASD": {
+      "2f276694-6e9e-4fee-afb1-753628494691": true
+    },
+    "MRVB6*MRVB6": {
+      "2f276694-6e9e-4fee-afb1-753628494691": true,
+      "605d8e9c-c711-4c38-8634-73122c001286": true
+    },
+    "YAGOFORTHEWIN*EUW": {
+      "2f276694-6e9e-4fee-afb1-753628494691": true,
+      "605d8e9c-c711-4c38-8634-73122c001286": true
+    }
+  },
+  "tournaments": {
+    "2f276694-6e9e-4fee-afb1-753628494691": {
+      "hasReward": true,
+      "name": "tournetodelte",
+      "ownerId": "3tOtf8qyTPa40NS3dmItjjWx8az2",
+      "rules": [
+        "1. ioñasdj asd 0990sad 90asdlk jaskld jklasd",
+        "2. ioñasdj asd 0990sad 90asdlk jaskld jklasd"
+      ],
+      "summonerNames": [
+        "MRVB6#MRVB6",
+        "YAGOFORTHEWIN#EUW"
+      ],
+      "uid": "2f276694-6e9e-4fee-afb1-753628494691"
+    },
+    "605d8e9c-c711-4c38-8634-73122c001286": {
+      "hasReward": true,
+      "name": "adminTournament1",
+      "ownerId": "3tOtf8qyTPa40NS3dmItjjWx8az2",
+      "rules": [
+        "1. oiashd oiasjd 0923 940e8230klasmdlksad00 asd asd asd as d9012kl mlkasd '0ds0'f sdf ",
+        "2. posadi opsaid09asd 09as8dasdmlñkasd'0as9d 0'as9 d0'9as'0d9 aspdklñasd 0'as9 ed0'9as0'dlñaskdlñasd 0'as9 d'09asdkaspda's0d i'asd "
+      ],
+      "summonerNames": [
+        "MRVB6#MRVB6",
+        "YAGOFORTHEWIN#EUW"
+      ],
+      "uid": "605d8e9c-c711-4c38-8634-73122c001286"
+    },
+    "9c4ffab7-1b81-435f-8289-6bc58ab42a8d": {
+      "hasReward": true,
+      "name": "admin2tournament",
+      "ownerId": "3tOtf8qyTPa40NS3dmItjjWx8az2",
+      "rules": [
+        "1. ruleaposdj apoidsjfpoiasdj fgopijadsfopijadosfipjaspodfopdasfjoa djsf0 4239'024'059ru20'934 dsjfñlsdf mlñksd fñlsdflñsdlf",
+        "2. ruleaposdj apoidsjfpoiasdj fgopijadsfopijadosfipjaspodfopdasfjoa djsf0 4239'024'059ru20'934 dsjfñlsdf mlñksd fñlsdflñsdlf"
+      ],
+      "summonerNames": [
+        "MRVB6#MRVB6",
+        "YAGOFORTHEWIN#EUW"
+      ],
+      "uid": "9c4ffab7-1b81-435f-8289-6bc58ab42a8d"
+    }
+  },
   "users": {
-    "MZctOh7rKKSUZFeNxAfmy77ROtR2": {
-      "email": "test01@gmail.com",
+    "3tOtf8qyTPa40NS3dmItjjWx8az2": {
+      "email": "admin@gmail.com",
       "role": 1,
-      "summonerName": "mrvb6#mrvb5",
+      "summonerName": "admin#admin",
+      "tournamentUids": [
+        "605d8e9c-c711-4c38-8634-73122c001286",
+        "2f276694-6e9e-4fee-afb1-753628494691"
+      ],
       "tournaments": [
         {
           "hasReward": true,
-          "name": "Primer torneo!!!!!",
+          "name": "adminTournament1",
+          "ownerId": "3tOtf8qyTPa40NS3dmItjjWx8az2",
           "rules": [
-            "1. Comienzo el 12/06/2024 a las 14:00. Fecha fin 23/07/2024 a las 00:00.",
-            "2. No podrá jugarse con ningún conocido en la misma partida, de hacerlo descalificación."
+            "1. oiashd oiasjd 0923 940e8230klasmdlksad00 asd asd asd as d9012kl mlkasd '0ds0'f sdf ",
+            "2. posadi opsaid09asd 09as8dasdmlñkasd'0as9d 0'as9 d0'9as'0d9 aspdklñasd 0'as9 ed0'9as0'dlñaskdlñasd 0'as9 d'09asdkaspda's0d i'asd "
           ],
           "summonerNames": [
             "MRVB6#MRVB6",
-            "YAGOFORTHEWIN#EUW",
-            "VELONIDAS#EUW",
-            "KAIURO#EUW",
-            "MULAN#00000"
+            "YAGOFORTHEWIN#EUW"
           ],
-          "uid": "f962a0a8-00ec-47a7-a5bb-274c939fa715"
+          "uid": "605d8e9c-c711-4c38-8634-73122c001286"
         },
         {
           "hasReward": true,
-          "name": "Raquel Torneo",
+          "name": "tournetodelte",
+          "ownerId": "3tOtf8qyTPa40NS3dmItjjWx8az2",
           "rules": [
-            "1023oisdhnfñklahd92hoñfsd",
-            "dkljsfhaioludf89324q7590",
-            "cxzlkjñhviolaesdy89423570"
+            "1. ioñasdj asd 0990sad 90asdlk jaskld jklasd",
+            "2. ioñasdj asd 0990sad 90asdlk jaskld jklasd"
           ],
           "summonerNames": [
-            "RAQUEL#123",
-            "XABI#345",
-            "PEPITO#123",
-            "MULA#00000"
-          ],
-          "uid": "bf24ae0c-06a5-4c4f-9de3-4a5cbed92a42"
-        },
-        {
-          "hasReward": true,
-          "name": "Primer torneo",
-          "rules": [
-            "asdasdasdasd",
-            "asdasdasd"
-          ],
-          "summonerNames": [
-            "FDGDFGASDASD#ASDASD",
-            "SDF#ASDASD"
-          ],
-          "uid": "4ef5539d-2914-45dc-82db-b20e919169d6"
-        },
-        {
-          "hasReward": false,
-          "name": "Torneo Pimpollos",
-          "rules": [
-            "regla1",
-            "regla2"
-          ],
-          "summonerNames": [
-            "MEUPAI#PAI",
-            "MINANAI#NAI"
-          ],
-          "uid": "e0a78d3f-19f8-4db6-9189-88754b1f26e2"
-        }
-      ],
-      "uid": "MZctOh7rKKSUZFeNxAfmy77ROtR2"
-    },
-    "RlGjycgf7eYT6OFfpBE9NWgiLaG2": {
-      "email": "yagoforthewin@gmail.com",
-      "role": 0,
-      "summonerName": "yagoforthewin#euw",
-      "uid": "RlGjycgf7eYT6OFfpBE9NWgiLaG2"
-    },
-    "Y5Sl0VKzOuYBecnvfCbHkJJB5Cf2": {
-      "email": "xabirlspam@gmail.com",
-      "role": 0,
-      "summonerName": "xabirlspam#spam",
-      "tournaments": [
-        {
-          "hasReward": true,
-          "name": "XabiRlMemory2",
-          "rules": [
-            "esta es la primera regla",
-            "esta es la segunda"
-          ],
-          "summonerNames": [
+            "ASDASDASD#ASDASDASD",
             "MRVB6#MRVB6",
-            "QUIPASA#TU",
-            "TEST01#02",
-            "ASDOIHASD#POAISJDIOASD"
+            "YAGOFORTHEWIN#EUW"
           ],
-          "uid": "7d857387-cfa2-4fcf-bdbd-29c0d018122c"
-        },
-        {
-          "hasReward": false,
-          "name": "torneo2",
-          "rules": [
-            "asdasdpoiahjuspdoia",
-            "adsfasd0f98asdf"
-          ],
-          "summonerNames": [
-            "ASD23#ASDA",
-            "ZXCOPJ8#POASJD9"
-          ],
-          "uid": "9fdea118-9dd2-47e3-a065-64236161f058"
+          "uid": "2f276694-6e9e-4fee-afb1-753628494691"
         }
       ],
-      "uid": "Y5Sl0VKzOuYBecnvfCbHkJJB5Cf2"
+      "uid": "3tOtf8qyTPa40NS3dmItjjWx8az2"
     }
   }
 }

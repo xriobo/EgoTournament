@@ -7,21 +7,30 @@
               x:DataType="vm:RulesViewModel"
               Title="RULES"
              BackgroundColor="#000000">
-    <Grid>
-        <!-- both children default to cell (0,0). Overlaid. -->
-        <Image Aspect="AspectFit" Source="lolrules.gif" Loaded="Image_SizeChanged"/>
-        <!-- nested grid. OR StackLayout, etc. -->
+    <ContentPage.Content>
         <Grid>
-            <VerticalStackLayout>
-                <CollectionView ItemsSource="{Binding Rules}">
+            <!-- both children default to cell (0,0). Overlaid. -->
+            <Image Aspect="AspectFit" Source="lolrules.gif" Loaded="Image_SizeChanged"/>
+            <!-- nested grid. OR StackLayout, etc. -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="90*" />
+                    <RowDefinition Height="10*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15*" />
+                    <ColumnDefinition Width="70*" />
+                    <ColumnDefinition Width="15*" />
+                </Grid.ColumnDefinitions>
+                <CollectionView Grid.Row="0" Grid.ColumnSpan="3" ItemsSource="{Binding Rules}" HorizontalOptions="StartAndExpand" VerticalOptions="StartAndExpand">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Label Margin="4" Padding="12" Text="{Binding .}" FontSize="Medium" FontAttributes="Bold" TextColor="White" />
+                            <Label Margin="4" Padding="12" Text="{Binding .}" FontSize="Small" FontAttributes="Bold" TextColor="White" HorizontalOptions="StartAndExpand" VerticalOptions="Center" />
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
-                <Button Text="Back" Command="{Binding BackCommand}" />
-            </VerticalStackLayout>
+                <Button Grid.Row="1" Grid.Column="0"  Text="Back" Command="{Binding BackCommand}" BackgroundColor="#A9A9A9" TextColor="Black"/>
+            </Grid>
         </Grid>
-    </Grid>
+    </ContentPage.Content>
 </ContentPage>

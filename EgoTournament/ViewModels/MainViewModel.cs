@@ -24,6 +24,11 @@ namespace EgoTournament.ViewModels
         private readonly ICacheService _cacheService;
 
         /// <summary>
+        /// The cache user.
+        /// </summary>
+        private UserDto _cacheUser;
+
+        /// <summary>
         /// The visible by role.
         /// </summary>
         [ObservableProperty]
@@ -88,16 +93,16 @@ namespace EgoTournament.ViewModels
         public async Task OnNavigatedTo()
         {
             var userCredentials = await _cacheService.GetCurrentUserCredentialAsync();
-            var cacheUser = await _cacheService.GetCurrentUserAsync();
+            _cacheUser = await _cacheService.GetCurrentUserAsync();
             if (userCredentials == null)
             {
                 await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
                 await Toast.Make("You must Sign In.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
             }
 
-            if (cacheUser != null)
+            if (_cacheUser != null)
             {
-                await LoadTournamentsAndSetVisibleByCacheUser(cacheUser);
+                await LoadTournamentsAndSetVisibleByCacheUser(_cacheUser);
                 await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
             }
             else
@@ -121,13 +126,10 @@ namespace EgoTournament.ViewModels
         private async Task LoadTournamentsAndSetVisibleByCacheUser(UserDto cacheUser)
         {
             Tournaments.Clear();
-            if (cacheUser.Role == RoleType.Basic) 
+            if (cacheUser.Role == RoleType.Basic)
             {
                 var basicUserTournaments = await _firebaseService.GetTournamentsBySummonerNameAsync(cacheUser.SummonerName);
-                foreach (var tournament in basicUserTournaments)
-                {
-                    Tournaments.Add(tournament);
-                }
+                cacheUser.Tournaments = basicUserTournaments;
             }
             else
             {
@@ -145,32 +147,51 @@ namespace EgoTournament.ViewModels
 
         private async Task DeleteTournament(TournamentDto tournament)
         {
-            if (tournament == null)
-                return;
-
-            if (Tournaments.Contains(tournament))
+            if (_cacheUser.Role == RoleType.Basic)
             {
-                Tournaments.Remove(tournament);
+                await Shell.Current.DisplayAlert("Premium", "If u want create, modify and delete tournaments make your account premium.", "OK");
             }
+            else
+            {
+                if (tournament == null)
+                    return;
 
-            var navigation = App.Current.MainPage.Navigation;
-            await navigation.PushModalAsync(new PromptPage(_cacheService, _firebaseService, MethodType.Main, Tournaments.ToList()));
+                await Shell.Current.GoToAsync(nameof(PromptPage), true, new Dictionary<string, object>
+                {
+                    { nameof(MethodType), MethodType.Main },
+                    { nameof(TournamentDto), tournament }
+                });
+            }
         }
 
         private async Task UpdateTournament(TournamentDto tournament)
         {
-            if (tournament == null)
-                return;
+            if (_cacheUser.Role == RoleType.Basic)
+            {
+                await Shell.Current.DisplayAlert("Premium", "If u want create, modify and delete tournaments make your account premium.", "OK");
+            }
+            else
+            {
+                if (tournament == null)
+                    return;
 
-            await Shell.Current.GoToAsync(nameof(TournamentPage), true, new Dictionary<string, object>
+                await Shell.Current.GoToAsync(nameof(TournamentPage), true, new Dictionary<string, object>
                 {
                     { nameof(TournamentDto), tournament }
                 });
+            }
         }
 
         private async Task AddTournament()
         {
-            await Shell.Current.GoToAsync(nameof(TournamentPage));
+            if (_cacheUser.Role == RoleType.Basic)
+            {
+                await Shell.Current.DisplayAlert("Premium", "If u want create, modify and delete tournaments make your account premium.", "OK");
+            }
+            else
+            {
+                await Shell.Current.GoToAsync(nameof(TournamentPage));
+            }
         }
     }
 }

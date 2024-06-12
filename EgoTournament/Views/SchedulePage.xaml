@@ -101,18 +101,27 @@
             </Grid>
         </DataTemplate>
     </ContentPage.Resources>
-    <VerticalStackLayout>
-        <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshingCommand}">
-            <ScrollView>
-                <StackLayout>
-                    <CollectionView ItemsSource="{Binding Summoners}"
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="90*" />
+                <RowDefinition Height="10*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="15*" />
+                <ColumnDefinition Width="70*" />
+                <ColumnDefinition Width="15*" />
+            </Grid.ColumnDefinitions>
+            <RefreshView Grid.Row="0" Grid.ColumnSpan="3" IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshingCommand}">
+                <ScrollView>
+                    <StackLayout>
+                        <CollectionView ItemsSource="{Binding Summoners}"
                         ItemTemplate="{StaticResource summonerTemplate}"/>
-                </StackLayout>
-            </ScrollView>
-        </RefreshView>
-        <HorizontalStackLayout>
-            <Button Text="Back" Command="{Binding BackCommand}" />
-            <Button Text="Rules" Command="{Binding ShowRulesCommand}" />
-        </HorizontalStackLayout>
-    </VerticalStackLayout>
+                    </StackLayout>
+                </ScrollView>
+            </RefreshView>
+            <Button Grid.Row="1" Grid.Column="0" Text="Back" Command="{Binding BackCommand}" BackgroundColor="#A9A9A9" TextColor="Black"/>
+            <Button Grid.Row="1" Grid.Column="2" Text="Rules" Command="{Binding ShowRulesCommand}" BackgroundColor="#A9A9A9" TextColor="Black"/>
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>

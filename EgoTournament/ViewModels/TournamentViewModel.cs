@@ -5,6 +5,7 @@ using EgoTournament.Models.Firebase;
 using EgoTournament.Services;
 using Firebase.Auth;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace EgoTournament.ViewModels
 {
@@ -44,6 +45,37 @@ namespace EgoTournament.ViewModels
             ManageRulesCommand = new AsyncRelayCommand(OpenRulesListModal);
             ManageSummonersCommand = new AsyncRelayCommand(OpenSummonersListModal);
         }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            if (!query.Any()) return;
+            Tournament = query[nameof(TournamentDto)] as TournamentDto;
+            if (Tournament != null)
+            {
+                if (Tournament.SummonerNames.Any())
+                {
+                    foreach (var summonerName in Tournament.SummonerNames)
+                    {
+                        if (!string.IsNullOrEmpty(summonerName))
+                        {
+                            Summoners.Add(summonerName);
+                        }
+                    }
+                }
+
+                if (Tournament.Rules.Any())
+                {
+                    foreach (var rule in Tournament.Rules)
+                    {
+                        if (!string.IsNullOrEmpty(rule))
+                        {
+                            Rules.Add(rule);
+                        }
+                    }
+                }
+            }
+        }
+
 
         private async Task SaveTournament(TournamentDto tournament)
         {
@@ -129,36 +161,6 @@ namespace EgoTournament.ViewModels
             await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
         }
 
-        public void ApplyQueryAttributes(IDictionary<string, object> query)
-        {
-            if (!query.Any()) return;
-            Tournament = query[nameof(TournamentDto)] as TournamentDto;
-            if (Tournament != null)
-            {
-                if (Tournament.SummonerNames.Any())
-                {
-                    foreach (var summonerName in Tournament.SummonerNames)
-                    {
-                        if (!string.IsNullOrEmpty(summonerName))
-                        {
-                            Summoners.Add(summonerName);
-                        }
-                    }
-                }
-
-                if (Tournament.Rules.Any())
-                {
-                    foreach (var rule in Tournament.Rules)
-                    {
-                        if (!string.IsNullOrEmpty(rule))
-                        {
-                            Rules.Add(rule);
-                        }
-                    }
-                }
-            }
-        }
-
         private async Task ManageNewTournament(TournamentDto tournament, UserDto currentUser)
         {
             tournament.Uid = Guid.NewGuid();
@@ -176,16 +178,20 @@ namespace EgoTournament.ViewModels
 
             currentUser.Tournaments.Add(tournament);
             var userUpdated = await _firebaseService.UpsertUserAsync(currentUser);
-            await _firebaseService.UpsertTournamentAsync(tournament);
+            await _firebaseService.UpsertTournamentAsync(tournament: tournament, summonerNamesToAdd: tournament.SummonerNames, new List<string>());
         }
 
         private async Task ManageUpdateTournament(TournamentDto oldTournament, TournamentDto tournamentToUpdate, UserDto currentUser)
         {
-            oldTournament.HasReward = tournamentToUpdate.HasReward;
-            oldTournament.Rules = tournamentToUpdate.Rules;
-            oldTournament.SummonerNames = tournamentToUpdate.SummonerNames;
-            oldTournament.Name = tournamentToUpdate.Name;
-            var tournamentUpdated = await _firebaseService.UpsertTournamentAsync(oldTournament);
+            var oldTournamentUpdated = oldTournament;
+            var summonersToAdd = tournamentToUpdate.SummonerNames.Except(oldTournament.SummonerNames).ToList();
+            var summonersToDelete = oldTournament.SummonerNames.Except(tournamentToUpdate.SummonerNames).ToList();
+            oldTournamentUpdated.HasReward = tournamentToUpdate.HasReward;
+            oldTournamentUpdated.Rules = tournamentToUpdate.Rules;
+            oldTournamentUpdated.SummonerNames = tournamentToUpdate.SummonerNames;
+            oldTournamentUpdated.Name = tournamentToUpdate.Name;
+
+            var tournamentUpdated = await _firebaseService.UpsertTournamentAsync(tournament: oldTournamentUpdated, summonerNamesToAdd: summonersToAdd, summonerNamesToDelete: summonersToDelete);
         }
     }
 }

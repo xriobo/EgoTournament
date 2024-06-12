@@ -55,7 +55,7 @@
                         <CheckBox Grid.Column="1" x:Name="HasRewardCheckBox" HorizontalOptions="Center" IsChecked="{Binding Tournament.HasReward}"/>
                     </Grid>
 
-                    <Button Grid.Row="5" Grid.ColumnSpan="2" x:Name="CancelButton" Text="Cancel" IsVisible="False" Command="{Binding CancelCommand}" />
+                    <Button Grid.Row="5" Grid.ColumnSpan="2" x:Name="CancelButton" Text="Cancel" Command="{Binding CancelCommand}" />
                     <Button Grid.Row="6" Grid.ColumnSpan="2" Text="Save Tournament" Command="{Binding SaveCommand}" CommandParameter="{Binding Tournament}" />
                 </Grid>
             </Frame>

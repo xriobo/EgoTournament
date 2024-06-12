@@ -8,11 +8,6 @@ namespace EgoTournament.Common
     public static class Validations
     {
         /// <summary>
-        /// The summoner name reg ex pattern.
-        /// </summary>
-        private const string RegExPattern = @"^[a-zA-Z0-9]+#[a-zA-Z0-9]+$";
-
-        /// <summary>
         /// Summoners the name.
         /// </summary>
         /// <param name="summonerName">Name of the summoner.</param>
@@ -20,12 +15,12 @@ namespace EgoTournament.Common
         public static bool SummonerName(string summonerName)
         {
             bool isValid = true;
-            if (isValid && (summonerName.Length < Globals.MIN_SUMMONERNAME_LENGTH || summonerName.Length > Globals.MAX_SUMMONERNAME_LENGTH))
+            if (isValid && summonerName.Length < Globals.MIN_SUMMONERNAME_LENGTH && summonerName.Length > Globals.MAX_SUMMONERNAME_LENGTH)
             {
                 isValid = false;
             }
 
-            if (isValid && !Regex.IsMatch(summonerName, RegExPattern))
+            if (isValid && !Regex.IsMatch(summonerName, Globals.SUMMONERNAME_REGEX_PATTERN))
             {
                 isValid = false;
             }

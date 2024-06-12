@@ -20,7 +20,7 @@
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">27.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 	</PropertyGroup>
@@ -29,7 +29,7 @@
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\egoqmainicon.png" Color="#000000" />
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\loadingpage.jpg" Color="#000000" BaseSize="1080,1920" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -61,6 +61,7 @@
 	  <None Remove="Resources\Images\fire.png" />
 	  <None Remove="Resources\Images\firestrike.gif" />
 	  <None Remove="Resources\Images\heimer.png" />
+	  <None Remove="Resources\Images\heimer_gray.jpg" />
 	  <None Remove="Resources\Images\ice.png" />
 	  <None Remove="Resources\Images\jungle.png" />
 	  <None Remove="Resources\Images\login.png" />
@@ -140,6 +141,7 @@
 	<PropertyGroup>
 	  <TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net8.0-windows10.0.19041.0</TargetFrameworks>
 	  <DefaultLanguage>es-ES</DefaultLanguage>
+	  <PackageIcon>egoqmainicon.png</PackageIcon>
 	</PropertyGroup>
 
 </Project>

@@ -5,7 +5,9 @@
              xmlns:viewModels="clr-namespace:EgoTournament.ViewModels"
              x:Class="EgoTournament.Views.TournamentPage"
              xmlns:model="clr-namespace:EgoTournament.Models"
-             Title="Manage Tournament">
+             Title="Manage Tournament"
+             NavigationPage.HasBackButton="False"
+             NavigationPage.HasNavigationBar="False">
     <ContentPage.BindingContext>
         <viewModels:TournamentViewModel />
     </ContentPage.BindingContext>

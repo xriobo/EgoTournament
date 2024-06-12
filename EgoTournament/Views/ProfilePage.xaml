@@ -5,7 +5,9 @@
              xmlns:local="clr-namespace:EgoTournament.Behaviors"
              xmlns:vm="clr-namespace:EgoTournament.ViewModels"
              x:DataType="vm:ProfileViewModel"
-             Title="ProfilePage">
+             Title="ProfilePage"
+             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasBackButton="False">
     <ContentPage.Content>
         <Grid Padding="20"
          BackgroundColor="#A9A9A9">

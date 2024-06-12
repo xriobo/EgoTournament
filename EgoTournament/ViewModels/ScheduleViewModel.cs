@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Alerts;
+using EgoTournament.Common;
 using EgoTournament.Models;
 using EgoTournament.Models.Riot;
 using EgoTournament.Services;
@@ -23,13 +24,15 @@ namespace EgoTournament.ViewModels
         public static List<string> Participants;
 
         public static List<SummonerDto> SummonerDtos;
-        public IRelayCommand RefreshingCommand { get; }
+        public IAsyncRelayCommand RefreshingCommand { get; }
 
         public IAsyncRelayCommand BackCommand { get; }
 
         public IAsyncRelayCommand ShowRulesCommand { get; }
 
         private UserDto _cacheUser;
+
+        private DateTime _lastRefresh;
 
         public ScheduleViewModel()
         {
@@ -38,12 +41,12 @@ namespace EgoTournament.ViewModels
             Participants = new List<string>();
             Summoners = new ObservableCollection<SummonerDto>();
 
-            RefreshingCommand = new RelayCommand(Refreshing);
+            RefreshingCommand = new AsyncRelayCommand(Refreshing);
             BackCommand = new AsyncRelayCommand(BackToMain);
             ShowRulesCommand = new AsyncRelayCommand(ShowRules);
         }
 
-        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (!query.Any()) return;
             Tournament = query[nameof(TournamentDto)] as TournamentDto;
@@ -61,29 +64,35 @@ namespace EgoTournament.ViewModels
                 }
             }
 
-            LoadSchedule();
+            await LoadSchedule();
         }
 
-        public async void LoadSchedule()
+        public async Task LoadSchedule(bool isRefresh = false)
         {
             try
             {
-                _cacheUser = await _cacheService.GetCurrentUserAsync();
-                List<SummonerDto> summonerDtos = new List<SummonerDto>();
-                var tuple = _riotService.GetPuuidByParticipantsNameAndTagName(Participants);
-                var summonersRiot = _riotService.GetSummonersByPuuid(tuple.Item1);
-                summonerDtos = _riotService.SetParticipantRanks(summonersRiot).ToList();
-                summonerDtos = GetOrdererSummoners(summonerDtos);
-                foreach (var summonerDto in summonerDtos)
+                var timeNow = DateTime.Now;
+                if (!isRefresh || (isRefresh && timeNow.Subtract(_lastRefresh).TotalSeconds > Globals.SECONDS_TO_REFRESH))
                 {
-                    Summoners.Add(summonerDto);
-                }
+                    Summoners.Clear();
+                    _cacheUser = await _cacheService.GetCurrentUserAsync();
+                    List<SummonerDto> summonerDtos = new List<SummonerDto>();
+                    var tuple = _riotService.GetPuuidByParticipantsNameAndTagName(Participants);
+                    var summonersRiot = _riotService.GetSummonersByPuuid(tuple.Item1);
+                    summonerDtos = _riotService.SetParticipantRanks(summonersRiot).ToList();
+                    summonerDtos = GetOrdererSummoners(summonerDtos);
+                    foreach (var summonerDto in summonerDtos)
+                    {
+                        Summoners.Add(summonerDto);
+                    }
 
-                Summoners = new ObservableCollection<SummonerDto>(summonerDtos);
-                SummonerDtos = summonerDtos;
-                if (_cacheUser.Role > Models.Enums.RoleType.Basic)
-                {
-                    await Toast.Make("Participants not found: " + string.Join(", ", tuple.Item2), CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                    Summoners = new ObservableCollection<SummonerDto>(summonerDtos);
+                    SummonerDtos = summonerDtos;
+                    var notFoundList = tuple.Item2;
+                    if (_cacheUser.Role > Models.Enums.RoleType.Basic && notFoundList.Count > 0)
+                    {
+                        await Shell.Current.DisplayAlert("Not Found", "Participants not found: " + string.Join(", ", notFoundList), "Ok");
+                    }
                 }
             }
             catch (Exception ex)
@@ -97,13 +106,13 @@ namespace EgoTournament.ViewModels
             return summonerDtos.OrderByDescending(x => (int)x.RankSoloQ.TierType).ThenByDescending(x => (int)x.RankSoloQ.Division).ThenByDescending(x => x.RankSoloQ.LeaguePoints).ToList();
         }
 
-        private void Refreshing()
+        private async Task Refreshing()
         {
             IsRefreshing = true;
 
             try
             {
-                LoadSchedule();
+                await LoadSchedule(isRefresh: true);
             }
             finally
             {

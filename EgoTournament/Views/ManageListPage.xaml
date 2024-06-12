@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:EgoTournament.Behaviors"
              x:Class="EgoTournament.Views.ManageListPage"
-             NavigationPage.HasNavigationBar="False">
+             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasBackButton="False">
     <ContentPage.Content>
         <Grid Padding="20" BackgroundColor="#A9A9A9">
             <Grid.RowDefinitions>
@@ -38,7 +39,7 @@
                     </Entry>
                     <Button Grid.Row="0" Grid.Column="1" Text="Add" Clicked="OnAddItemButtonClicked" 
                             HorizontalOptions="FillAndExpand" VerticalOptions="CenterAndExpand" />
-                    <Label x:Name="validationMessage" FontSize="10" Margin="10,-10,10,30"
+                    <Label x:Name="validationMessage" FontSize="12" Margin="15,-10,10,30"
                            Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" TextColor="DarkRed" IsVisible="False" HorizontalOptions="FillAndExpand"/>
                     <ScrollView Grid.Row="2" Grid.RowSpan="5" Grid.Column="0" Grid.ColumnSpan="2">
                         <CollectionView x:Name="EntriesCollectionView" ItemsSource="{Binding Items}">

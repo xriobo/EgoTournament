@@ -8,8 +8,6 @@ namespace EgoTournament.Behaviors
         public static readonly BindableProperty IsValidProperty =
                 BindableProperty.Create(nameof(IsValid), typeof(bool), typeof(SummonerNameValidationSearchBarBehavior), false);
 
-        private const string RegExPattern = @"^[a-zA-Z0-9]+#[a-zA-Z0-9]+$";
-
         public bool IsValid
         {
             get => (bool)GetValue(IsValidProperty);
@@ -38,7 +36,7 @@ namespace EgoTournament.Behaviors
                 IsValid = false;
             }
 
-            if (IsValid && !Regex.IsMatch(entry.Text, RegExPattern))
+            if (IsValid && !Regex.IsMatch(entry.Text, Globals.SUMMONERNAME_REGEX_PATTERN))
             {
                 IsValid = false;
             }

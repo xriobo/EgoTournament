@@ -6,9 +6,10 @@
              xmlns:local="clr-namespace:EgoTournament.Behaviors"
              x:Class="EgoTournament.Views.SearchSummonerPage"
 			 x:DataType="vm:SearchSummonerViewModel"
-             Title="SEARCH"
-             BackgroundColor="#000000"
-             BackgroundImageSource="heimer.png">
+             Title="Search Last 20 games"
+             BackgroundImageSource="heimer_gray.jpg"
+             NavigationPage.HasBackButton="False"
+             NavigationPage.HasNavigationBar="False">
     <ContentPage.BindingContext>
         <vm:SearchSummonerViewModel />
     </ContentPage.BindingContext>
@@ -38,10 +39,10 @@
                         </DataTrigger>
                     </Image.Triggers>
                 </Image>
-                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Kills}" TextColor="White" FontAttributes="Bold"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
-                <Label Grid.Row="0" Grid.Column="2" Text="{Binding Deaths}" TextColor="White"  FontAttributes="Bold"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
-                <Label Grid.Row="0" Grid.Column="3" Text="{Binding Assists}" TextColor="White" FontAttributes="Bold"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
-                <Label Grid.Row="0" Grid.Column="4" Text="{Binding Champion}" TextColor="White" FontAttributes="Bold"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding Kills}" TextColor="WhiteSmoke" FontAttributes="Bold"  FontSize="11" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="2" Text="{Binding Deaths}" TextColor="WhiteSmoke"  FontAttributes="Bold"  FontSize="11" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="3" Text="{Binding Assists}" TextColor="WhiteSmoke" FontAttributes="Bold"  FontSize="11" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="4" Text="{Binding Champion}" TextColor="WhiteSmoke" FontAttributes="Bold"  FontSize="11" HorizontalOptions="Center" VerticalOptions="Center" />
                 <Image Grid.Row="0" Grid.Column="5" HorizontalOptions="Center" VerticalOptions="Center">
                     <Image.Triggers>
                         <DataTrigger TargetType="Image"
@@ -71,7 +72,7 @@
                         </DataTrigger>
                     </Image.Triggers>
                 </Image>
-                <Label Grid.Row="0" Grid.Column="6" Text="{Binding MatchMode}" TextColor="White" TextDecorations="None"  FontSize="Micro" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="6" Text="{Binding MatchMode}" TextColor="WhiteSmoke" TextDecorations="None"  FontSize="11" HorizontalOptions="Center" VerticalOptions="Center" />
             </Grid>
         </DataTemplate>
     </ContentPage.Resources>
@@ -89,7 +90,7 @@
                     <local:SummonerNameValidationSearchBarBehavior />
                 </SearchBar.Behaviors>
             </SearchBar>
-            <Label Text="{Binding ValidationMessage}"  IsVisible="{Binding IsValidationMessageVisible}" FontSize="Micro"
+            <Label Text="{Binding ValidationMessage}"  IsVisible="{Binding IsValidationMessageVisible}" FontSize="11"
                            Grid.Row="1" TextColor="DarkRed" />
             <Grid Grid.Row="2" VerticalOptions="StartAndExpand" HeightRequest="120" Margin="20,0,20,0">
                 <Grid.ColumnDefinitions>
@@ -161,12 +162,12 @@
                         </DataTrigger>
                     </Image.Triggers>
                 </Image>
-                <Label Grid.Row="0" Grid.Column="1" Text="{Binding SummonerView.RankSoloQ.Rank}" TextColor="White" TextDecorations="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
-                <Label Grid.Row="0" Grid.Column="2" Text="{Binding SummonerView.RankSoloQ.LeaguePoints}" TextColor="White" FontAttributes="Bold"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
-                <Label Grid.Row="0" Grid.Column="3" Text="{Binding SummonerView.RankSoloQ.SummonerName}" TextColor="White" FontAttributes="Bold"  FontSize="Small" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" />
-                <Label Grid.Row="0" Grid.Column="4" Text="{Binding SummonerView.RankSoloQ.Wins}" TextColor="White" TextDecorations="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
-                <Label Grid.Row="0" Grid.Column="5" Text="{Binding SummonerView.RankSoloQ.Losses}" TextColor="White" TextDecorations="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
-                <Label Grid.Row="0" Grid.Column="6" Text="{Binding SummonerView.RankSoloQ.Winrate}" TextColor="White" FontAttributes="Bold"  FontSize="Small" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="1" Text="{Binding SummonerView.RankSoloQ.Rank}" TextColor="WhiteSmoke" TextDecorations="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="2" Text="{Binding SummonerView.RankSoloQ.LeaguePoints}" TextColor="WhiteSmoke" FontAttributes="Bold"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="3" Text="{Binding SummonerView.RankSoloQ.SummonerName}" TextColor="WhiteSmoke" FontAttributes="Bold"  FontSize="Small" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="4" Text="{Binding SummonerView.RankSoloQ.Wins}" TextColor="WhiteSmoke" TextDecorations="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="5" Text="{Binding SummonerView.RankSoloQ.Losses}" TextColor="WhiteSmoke" TextDecorations="None"  FontSize="Small" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Grid.Row="0" Grid.Column="6" Text="{Binding SummonerView.RankSoloQ.Winrate}" TextColor="WhiteSmoke" FontAttributes="Bold"  FontSize="Small" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" />
                 <Image Grid.Row="0" Grid.Column="7" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" SizeChanged="Image_SizeChanged">
                     <Image.Triggers>
                         <DataTrigger TargetType="Image"

@@ -4,7 +4,9 @@
              xmlns:viewModels="clr-namespace:EgoTournament.ViewModels"
              xmlns:behaviors="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
              x:Class="EgoTournament.Views.PromptPage"
-             x:DataType="viewModels:PromptViewModel">
+             x:DataType="viewModels:PromptViewModel"
+              NavigationPage.HasNavigationBar="False"
+              NavigationPage.HasBackButton="False">
     <Grid Padding="40"
           BackgroundColor="#A9A9A9"
           HorizontalOptions="FillAndExpand"

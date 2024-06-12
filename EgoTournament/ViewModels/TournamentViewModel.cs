@@ -76,7 +76,6 @@ namespace EgoTournament.ViewModels
             }
         }
 
-
         private async Task SaveTournament(TournamentDto tournament)
         {
             try

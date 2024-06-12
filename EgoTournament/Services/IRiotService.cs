@@ -5,11 +5,7 @@ namespace EgoTournament.Services
 {
     public interface IRiotService
     {
-        IEnumerable<SummonerDto> GetSummonersByParticipantsName(List<ParticipantDto> participantsDto);
-
         IEnumerable<SummonerDto> SetParticipantRanks(IEnumerable<SummonerDto> summonersRiot);
-
-        List<string> GetMatchIdListByPuuid(string puuid, int countMacthes);
 
         List<Match> GetMatchesInfoByMatchIdList(List<string> matchIds);
 
@@ -28,7 +24,7 @@ namespace EgoTournament.Services
         /// Gets the name of the puuid by participants name and tag.
         /// </summary>
         /// <param name="participants">The participants.</param>
-        /// <returns>A list of <see cref="PuuidDto"/>.</returns>
-        IEnumerable<PuuidDto> GetPuuidByParticipantsNameAndTagName(List<string> participants);
+        /// <returns>A tuple list of <see cref="PuuidDto"/> and list of string.</returns>
+        Tuple<IEnumerable<PuuidDto>, List<string>> GetPuuidByParticipantsNameAndTagName(List<string> participants);
     }
 }

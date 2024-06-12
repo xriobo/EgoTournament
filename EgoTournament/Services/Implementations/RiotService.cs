@@ -13,31 +13,12 @@ namespace EgoTournament.Services.Implementations
                                         RiotConstants.EuwRiotUri + RiotConstants.EntriesBySummonerResource + summonerId,
                                         "SetSummonerRanksBySummonerId=" + summonerId, 1);
 
-        public IEnumerable<SummonerDto> GetSummonersByParticipantsName(List<ParticipantDto> participantsDto)
-        {
-            List<SummonerDto> summonerDtos = new List<SummonerDto>();
-            foreach (var participant in participantsDto)
-            {
-                if (participant != null)
-                {
-                    var summoner = GenericService.GetAsync<SummonerDto>(
-                                        RiotConstants.EuwRiotUri + RiotConstants.SummonerByNameResource + participant.SummonerName,
-                                        "GetParticipantSummonerDto=" + participant.SummonerName, 60);
-                    if (summoner != null)
-                    {
-                        summonerDtos.Add(summoner);
-                    }
-                }
-            }
-
-            return summonerDtos;
-        }
-
-        public IEnumerable<PuuidDto> GetPuuidByParticipantsNameAndTagName(List<string> participants)
+        public Tuple<IEnumerable<PuuidDto>, List<string>> GetPuuidByParticipantsNameAndTagName(List<string> participants)
         {
             List<PuuidDto> puuids = new List<PuuidDto>();
+            List<string> participantsNotFound = new List<string>();
             ConcurrentBag<PuuidDto> concurrentPuuids = new ConcurrentBag<PuuidDto>();
-
+            ConcurrentBag<string> concurrentParticipantsNotFound = new ConcurrentBag<string>();
             Parallel.ForEach(participants, participant =>
             {
                 var participantSplit = participant.Split("#");
@@ -50,11 +31,16 @@ namespace EgoTournament.Services.Implementations
                     {
                         concurrentPuuids.Add(summoner);
                     }
+                    else
+                    {
+                        concurrentParticipantsNotFound.Add(participantSplit[0] + "#" + participantSplit[1]);
+                    }
                 }
             });
 
             puuids = concurrentPuuids.ToList();
-            return puuids;
+            participantsNotFound = concurrentParticipantsNotFound.ToList();
+            return new Tuple<IEnumerable<PuuidDto>, List<string>>(puuids, participantsNotFound);
         }
 
         public IEnumerable<SummonerDto> SetParticipantRanks(IEnumerable<SummonerDto> summonersRiot)
@@ -84,11 +70,6 @@ namespace EgoTournament.Services.Implementations
             GenericService.GetAsync<List<string>>(rankeds ? RiotConstants.EuropeApi + RiotConstants.MatchesByPuuid + puuid + RiotConstants.ParameterCount + countMatches :
                                                                 RiotConstants.EuropeApi + RiotConstants.MatchesByPuuid + puuid + RiotConstants.ParameterRankedWithCount + countMatches,
                                         "GetMatchIdListByPuuid=" + puuid, 1);
-
-        public List<string> GetMatchIdListByPuuid(string puuid, int countMatches) =>
-           GenericService.GetAsync<List<string>>(
-                                       RiotConstants.EuropeApi + RiotConstants.MatchesByPuuid + puuid + RiotConstants.ParameterCount + countMatches,
-                                       "GetMatchIdListByPuuid=" + puuid, 1);
 
         public List<Match> GetMatchesInfoByMatchIdList(List<string> matchIds)
         {

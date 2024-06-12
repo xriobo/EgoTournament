@@ -10,10 +10,10 @@
 
         public const string OK_VALIDATION_TEXT_COLOR = "#1c2b67";
 
-        public const int MIN_SUMMONERNAME_LENGTH = 5;
+        public const int MIN_SUMMONERNAME_LENGTH = 7;
 
-        public const int MAX_SUMMONERNAME_LENGTH = 30;
+        public const int MAX_SUMMONERNAME_LENGTH = 21;
 
-        public static string SUMMONERNAME_VALIDATION_ERROR_MESSAGE = $"The name must contain a hash in the middle of letters and/or numbers. The length must be between {MIN_SUMMONERNAME_LENGTH} and {MAX_SUMMONERNAME_LENGTH}. Example: a7a#mkx7.";
+        public static string SUMMONERNAME_VALIDATION_ERROR_MESSAGE = $"It must be an existing RiotId, have a hash in the middle of letters and/or numbers. The length must be between {MIN_SUMMONERNAME_LENGTH} - {MAX_SUMMONERNAME_LENGTH}. Example: A7Z#MK7E.";
     }
 }

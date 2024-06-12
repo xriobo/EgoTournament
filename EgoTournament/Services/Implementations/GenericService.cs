@@ -23,14 +23,7 @@ namespace EgoTournament.Services.Implementations
                 }
                 catch (Exception ex)
                 {
-                    if (ex.InnerException.GetType() == typeof(HttpRequestException) && ((HttpRequestException)ex.InnerException).StatusCode == System.Net.HttpStatusCode.NotFound)
-                    {
-                        return default(T);
-                    }
-
-#pragma warning disable CA2200 // Rethrow to preserve stack details
-                    throw ex;
-#pragma warning restore CA2200 // Rethrow to preserve stack details
+                    return default(T);
                 }
             }
 

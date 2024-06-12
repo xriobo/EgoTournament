@@ -1,4 +1,5 @@
-﻿using EgoTournament.Models;
+﻿using CommunityToolkit.Maui.Alerts;
+using EgoTournament.Models;
 using EgoTournament.Models.Riot;
 using EgoTournament.Services;
 
@@ -6,13 +7,8 @@ namespace EgoTournament.ViewModels
 {
     public partial class ScheduleViewModel : BaseViewModel, IQueryAttributable, INotifyPropertyChanged
     {
-        public IRelayCommand RefreshingCommand { get; }
-
-        public IAsyncRelayCommand BackCommand { get; }
-
-        public IAsyncRelayCommand ShowRulesCommand { get; }
-
         private readonly IRiotService _riotService;
+
         private readonly ICacheService _cacheService;
 
         [ObservableProperty]
@@ -25,7 +21,15 @@ namespace EgoTournament.ViewModels
         TournamentDto tournament;
 
         public static List<string> Participants;
+
         public static List<SummonerDto> SummonerDtos;
+        public IRelayCommand RefreshingCommand { get; }
+
+        public IAsyncRelayCommand BackCommand { get; }
+
+        public IAsyncRelayCommand ShowRulesCommand { get; }
+
+        private UserDto _cacheUser;
 
         public ScheduleViewModel()
         {
@@ -60,21 +64,27 @@ namespace EgoTournament.ViewModels
             LoadSchedule();
         }
 
-        public void LoadSchedule()
+        public async void LoadSchedule()
         {
             try
             {
+                _cacheUser = await _cacheService.GetCurrentUserAsync();
                 List<SummonerDto> summonerDtos = new List<SummonerDto>();
-                var puuidDtos = _riotService.GetPuuidByParticipantsNameAndTagName(Participants);
-                var summonersRiot = _riotService.GetSummonersByPuuid(puuidDtos);
+                var tuple = _riotService.GetPuuidByParticipantsNameAndTagName(Participants);
+                var summonersRiot = _riotService.GetSummonersByPuuid(tuple.Item1);
                 summonerDtos = _riotService.SetParticipantRanks(summonersRiot).ToList();
                 summonerDtos = GetOrdererSummoners(summonerDtos);
                 foreach (var summonerDto in summonerDtos)
                 {
                     Summoners.Add(summonerDto);
                 }
+
                 Summoners = new ObservableCollection<SummonerDto>(summonerDtos);
                 SummonerDtos = summonerDtos;
+                if (_cacheUser.Role > Models.Enums.RoleType.Basic)
+                {
+                    await Toast.Make("Participants not found: " + string.Join(", ", tuple.Item2), CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                }
             }
             catch (Exception ex)
             {

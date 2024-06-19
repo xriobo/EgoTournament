@@ -118,7 +118,7 @@ namespace EgoTournament.ViewModels
             }
             catch (Exception)
             {
-                await Toast.Make("Failed to create newTournament. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                await Toast.Make("Failed to manage tournament. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
             }
         }
 
@@ -166,10 +166,10 @@ namespace EgoTournament.ViewModels
             tournament.OwnerId = currentUser.Uid;
             if (currentUser.TournamentUids == null)
             {
-                currentUser.TournamentUids = new List<string>();
+                currentUser.TournamentUids = new List<Guid>();
             }
 
-            currentUser.TournamentUids.Add(tournament.Uid.ToString());
+            currentUser.TournamentUids.Add(tournament.Uid);
             if (currentUser.Tournaments == null)
             {
                 currentUser.Tournaments = new List<TournamentDto>();
@@ -177,7 +177,7 @@ namespace EgoTournament.ViewModels
 
             currentUser.Tournaments.Add(tournament);
             var userUpdated = await _firebaseService.UpsertUserAsync(currentUser);
-            await _firebaseService.UpsertTournamentAsync(tournament: tournament, summonerNamesToAdd: tournament.SummonerNames, new List<string>());
+            await _firebaseService.UpsertTournamentAsync(tournament: tournament, summonersToAssign: tournament.SummonerNames, summonersToUnassign: new List<string>());
         }
 
         private async Task ManageUpdateTournament(TournamentDto oldTournament, TournamentDto tournamentToUpdate, UserDto currentUser)
@@ -190,7 +190,8 @@ namespace EgoTournament.ViewModels
             oldTournamentUpdated.SummonerNames = tournamentToUpdate.SummonerNames;
             oldTournamentUpdated.Name = tournamentToUpdate.Name;
 
-            var tournamentUpdated = await _firebaseService.UpsertTournamentAsync(tournament: oldTournamentUpdated, summonerNamesToAdd: summonersToAdd, summonerNamesToDelete: summonersToDelete);
+            var userUpdated = await _firebaseService.UpsertUserAsync(currentUser);
+            var tournamentUpdated = await _firebaseService.UpsertTournamentAsync(tournament: oldTournamentUpdated, summonersToAssign: summonersToAdd, summonersToUnassign: summonersToDelete);
         }
     }
 }

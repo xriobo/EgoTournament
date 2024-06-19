@@ -28,15 +28,16 @@
                         <CollectionView.Header>
                             <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="37*" />
-                                    <ColumnDefinition Width="9*" />
-                                    <ColumnDefinition Width="9*" />
-                                    <ColumnDefinition Width="15*" />
-                                    <ColumnDefinition Width="20*" />
+                                    <ColumnDefinition Width="39*" />
+                                    <ColumnDefinition Width="8*" />
+                                    <ColumnDefinition Width="8*" />
                                     <ColumnDefinition Width="10*" />
+                                    <ColumnDefinition Width="15*" />
+                                    <ColumnDefinition Width="15*" />
+                                    <ColumnDefinition Width="5*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0" Text="Name" FontSize="9" HorizontalOptions="StartAndExpand" TextDecorations="Underline" />
-                                <Label Grid.Column="1" Text="Players" FontSize="9" FontAttributes="Bold" HorizontalOptions="Center" TextDecorations="Underline"/>
+                                <Label Grid.Column="1" Text="Players" FontSize="8" FontAttributes="Bold" HorizontalOptions="Center" TextDecorations="Underline"/>
                                 <Label Grid.Column="2" Text="Rules" FontSize="9" HorizontalOptions="Center" TextDecorations="Underline"/>
                                 <Label Grid.Column="3" Text="Reward?" FontSize="9" HorizontalOptions="Center" TextDecorations="Underline"/>
                             </Grid>
@@ -45,26 +46,31 @@
                             <DataTemplate>
                                 <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="37*" />
-                                        <ColumnDefinition Width="9*" />
-                                        <ColumnDefinition Width="9*" />
-                                        <ColumnDefinition Width="15*" />
-                                        <ColumnDefinition Width="20*" />
+                                        <ColumnDefinition Width="39*" />
+                                        <ColumnDefinition Width="8*" />
+                                        <ColumnDefinition Width="8*" />
                                         <ColumnDefinition Width="10*" />
+                                        <ColumnDefinition Width="15*" />
+                                        <ColumnDefinition Width="15*" />
+                                        <ColumnDefinition Width="5*" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Text="{Binding Name}" FontSize="11" HorizontalOptions="StartAndExpand" Margin="0,0,0,0"/>
-                                    <Label Grid.Column="1" Text="{Binding SummonerNames.Count}" FontSize="9" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,0,0" />
-                                    <Label Grid.Column="2" Text="{Binding Rules.Count}" FontSize="9" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,0,0" />
+                                    <Label Grid.Column="0" Text="{Binding Name}" FontSize="10" HorizontalOptions="Start" Margin="0,0,0,0"/>
+                                    <Label Grid.Column="1" Text="{Binding SummonerNames.Count}" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,0,0" />
+                                    <Label Grid.Column="2" Text="{Binding Rules.Count}" FontSize="10" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,0,0" />
                                     <CheckBox Grid.Column="3" IsChecked="{Binding HasReward}" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,0,0" Scale="0.7" IsEnabled="False" />
-                                    <Button Grid.Column="4" Text="Update" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainViewModel}}, Path=UpdateCommand}" CommandParameter="{Binding .}"  IsVisible="{Binding CanManageTournaments}"
-                                            FontSize="8" Margin="10,0,0,0" HorizontalOptions="EndAndExpand" VerticalOptions="Center"/>
-                                    <Button Grid.Column="5" Text="X" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding .}"  
-                                            BackgroundColor="Transparent"  FontSize="10" Margin="0,0,0,0" TextColor="DarkRed" HorizontalOptions="EndAndExpand" VerticalOptions="Center" IsVisible="{Binding CanManageTournaments}"/>
+                                    <Button Grid.Column="4" Text="Update" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainViewModel}}, Path=UpdateCommand}"
+                                            CommandParameter="{Binding .}" FontSize="9" Margin="0,0,0,0" HorizontalOptions="FillAndExpand" VerticalOptions="Center" IsVisible="{Binding Finished, Converter={StaticResource InverseBooleanConverter}}" Padding="3"/>
+                                    <Button Grid.Column="5" Text="Finish" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainViewModel}}, Path=FinishCommand}" 
+                                            CommandParameter="{Binding .}" FontSize="9" Margin="0,0,0,0" HorizontalOptions="FillAndExpand" VerticalOptions="Center" IsVisible="{Binding Finished, Converter={StaticResource InverseBooleanConverter}}"  Padding="3" />
+                                    <Button Grid.Column="4" Grid.ColumnSpan="2" Text="Results" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainViewModel}}, Path=ResultsCommand}" 
+                                                                                CommandParameter="{Binding .}" FontSize="9" Margin="0,0,0,0" HorizontalOptions="FillAndExpand" VerticalOptions="Center" IsVisible="{Binding Finished}" Padding="2"/>
+                                    <Button Grid.Column="6" Text="X" Command="{Binding Source={RelativeSource AncestorType={x:Type viewModels:MainViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding .}"
+                                            BackgroundColor="Transparent"  FontSize="12" Margin="0,0,0,0" TextColor="DarkRed" HorizontalOptions="End" VerticalOptions="Center" Padding="0" />
                                 </Grid>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    <Button  Grid.Row="1" Text="Add" Command="{Binding AddCommand}" IsVisible="{Binding CanManageTournaments}"/>
+                    <Button  Grid.Row="1" Text="Add" Command="{Binding AddCommand}"/>
                 </Grid>
             </Frame>
         </Grid>

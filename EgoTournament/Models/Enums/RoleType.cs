@@ -4,6 +4,6 @@
     {
         Basic,
         Admin,
-        SuperAdmin
+        Premium
     }
 }

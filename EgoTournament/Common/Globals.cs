@@ -25,5 +25,27 @@
         public const string SUMMONERNAME_REGEX_PATTERN = @"^(?=[a-zA-Z0-9 ]{3,16}#[a-zA-Z0-9]{3,5}$)[a-zA-Z0-9 ]{3,16}#[a-zA-Z0-9]{3,5}$";
 
         public const int SECONDS_TO_REFRESH = 10;
+
+        public const string UPGRADE_ACCOUNT_MESSAGE = "Enjoy exclusive features by upgrading to a Admin or Premium account. Would you like to upgrade now?";
+
+        public const string UPGRADE_PREMIUM_MESSAGE = "Enjoy exclusive features by upgrading to a Premium account. Would you like to upgrade now?";
+
+        public const string WINDOW_PAYMENTS_MESSAGE = "Window for managing account upgrades and payments.";
+
+        public const string UPGRADE_PREMIUM_TITLE = "UPGRADE TO PREMIUM";
+
+        public const string UPGRADE_ACCOUNT_TITLE = "UPGRADE ACCOUNT";
+
+        public const string MANAGE_PAYMENT_TITLE = "MANAGE PAYMENTS";
+
+        public const string NOT_OWNER_TITLE = "NOT OWNER";
+
+        public const string CHAMPION_POSITION = "Champion";
+
+        public const string SECOND_POSITION = "Second";
+
+        public const string THIRD_POSITION = "Third";
+
+        public const string CURRENCY = "EUR";
     }
 }

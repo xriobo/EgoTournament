@@ -21,13 +21,13 @@
             <Frame Grid.Row="1">
                 <Grid HorizontalOptions="FillAndExpand" RowSpacing="20" VerticalOptions="FillAndExpand">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="16*" />
+                        <RowDefinition Height="14*" />
+                        <RowDefinition Height="14*" />
+                        <RowDefinition Height="14*" />
+                        <RowDefinition Height="14*" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50*" />
@@ -53,12 +53,12 @@
                             <ColumnDefinition Width="70*" />
                             <ColumnDefinition Width="30*" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Column="0" Text="¿Rewards?" FontSize="Medium" VerticalOptions="Center" HorizontalOptions="Center" />
+                        <Label Grid.Column="0" Text="¿Rewards?" FontSize="Medium" VerticalOptions="Center" HorizontalOptions="End" />
                         <CheckBox Grid.Column="1" x:Name="HasRewardCheckBox" HorizontalOptions="Center" IsChecked="{Binding Tournament.HasReward}"/>
                     </Grid>
 
-                    <Button Grid.Row="5" Grid.ColumnSpan="2" x:Name="CancelButton" Text="Cancel" Command="{Binding CancelCommand}" />
-                    <Button Grid.Row="6" Grid.ColumnSpan="2" Text="Save Tournament" Command="{Binding SaveCommand}" CommandParameter="{Binding Tournament}" />
+                    <Button Grid.Row="5" Grid.ColumnSpan="2" Text="Save Tournament" Command="{Binding SaveCommand}" CommandParameter="{Binding Tournament}" />
+                    <Button Grid.Row="6" Grid.ColumnSpan="2" x:Name="CancelButton" Text="Cancel" Command="{Binding CancelCommand}" Background="#636061"/>
                 </Grid>
             </Frame>
         </Grid>

@@ -11,9 +11,7 @@
               Title="RULES">
     <ContentPage.Content>
         <Grid>
-            <!-- both children default to cell (0,0). Overlaid. -->
             <Image Aspect="AspectFit" Source="lolrules.gif" Loaded="Image_SizeChanged"/>
-            <!-- nested grid. OR StackLayout, etc. -->
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="90*" />

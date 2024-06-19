@@ -1,18 +1,13 @@
 ﻿using EgoTournament.Models;
-using EgoTournament.Models.Firebase;
 using Firebase.Auth;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Net.Mime;
-using System.Text;
 
 namespace EgoTournament.Services.Implementations
 {
-    internal class FirebaseService : IFirebaseService
+    public class FirebaseService : IFirebaseService
     {
         private readonly FirebaseAuthClient _authClient;
         private readonly HttpClient _httpClient;
@@ -20,6 +15,7 @@ namespace EgoTournament.Services.Implementations
         private const string UsersNode = "/users/";
         private const string TournamentsNode = "/tournaments/";
         private const string SummonerTournamentsNode = "/summonerTournaments/";
+        private const string TournamentsHistory = "/tournamentsHistory/";
         private const string NullResponse = "null";
 
         public FirebaseService(FirebaseAuthClient authClient)
@@ -47,6 +43,11 @@ namespace EgoTournament.Services.Implementations
         public async Task<UserDto> UpsertUserAsync(UserDto userDto)
         {
             UserDto userUpdated = null;
+            if (userDto.Tournaments != null && userDto.Tournaments.Count() > 0)
+            {
+                userDto.Tournaments = userDto.Tournaments.Where(x => userDto.TournamentUids.Contains(x.Uid)).ToList();
+            }
+            
             var response = await _httpClient.PutAsJsonAsync($"{DatabaseConnection}{UsersNode}{userDto.Uid}.json", userDto);
 
             if (response.IsSuccessStatusCode)
@@ -70,7 +71,7 @@ namespace EgoTournament.Services.Implementations
             return userDto;
         }
 
-        public async Task<TournamentDto> UpsertTournamentAsync(TournamentDto tournament, List<string> summonerNameToAdd, List<string> summonerNameToDelete)
+        public async Task<TournamentDto> UpsertTournamentAsync(TournamentDto tournament, List<string> summonersToAssign, List<string> summonersToUnassign)
         {
             TournamentDto tournamentUpdated = null;
             var response = await _httpClient.PutAsJsonAsync($"{DatabaseConnection}{TournamentsNode}{tournament.Uid}.json", tournament);
@@ -80,29 +81,17 @@ namespace EgoTournament.Services.Implementations
                 tournamentUpdated = JsonConvert.DeserializeObject<TournamentDto>(await response.Content.ReadAsStringAsync());
             }
 
-            if (summonerNameToAdd.Count() > 0)
+            if (summonersToAssign.Count() > 0)
             {
-                await UpsertSummonerTournamentsAsync(tournament.Uid, summonerNameToAdd);
+                await UpsertSummonerTournamentsAsync(tournament.Uid, summonersToAssign);
             }
 
-            if (summonerNameToDelete.Count() > 0)
+            if (summonersToUnassign.Count() > 0)
             {
-                await DeleteTournamentByUidAndNullableListOfSummonerNamesInSummonerTournaments(tournament.Uid, summonerNameToDelete);
+                await DeleteTournamentByUidAndNullableListOfSummonerNamesInSummonerTournaments(tournament.Uid, summonersToUnassign);
             }
 
             return tournamentUpdated;
-        }
-
-        private async Task<TournamentDto> GetTournamentByUidAsync(Guid tournamentUid)
-        {
-            TournamentDto tournament = null;
-            var response = await _httpClient.GetAsync($"{DatabaseConnection}{TournamentsNode}{tournamentUid}.json");
-            if (response.IsSuccessStatusCode && await response.Content.ReadAsStringAsync() != NullResponse)
-            {
-                tournament = JsonConvert.DeserializeObject<TournamentDto>(await response.Content.ReadAsStringAsync());
-            }
-
-            return tournament;
         }
 
         public async Task<List<TournamentDto>> GetTournamentsByUidsAsync(List<Guid> tournamentUids)
@@ -122,27 +111,6 @@ namespace EgoTournament.Services.Implementations
             });
 
             return tournaments.ToList();
-        }
-
-        private async Task UpsertSummonerTournamentsAsync(Guid tournamentUid, List<string> summonerNames)
-        {
-            try
-            {
-                foreach (var summonerName in summonerNames)
-                {
-                    var summonerNameDatabase = summonerName.Replace("#", "*");
-                    var response = await _httpClient.PutAsJsonAsync($"{DatabaseConnection}{SummonerTournamentsNode}{summonerNameDatabase}/{tournamentUid}.json", true);
-
-                    response.EnsureSuccessStatusCode();
-
-                    var sumonerTournamets = await response.Content.ReadAsStringAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
         }
 
         public async Task<List<TournamentDto>> GetTournamentsBySummonerNameAsync(string summonerName)
@@ -185,6 +153,57 @@ namespace EgoTournament.Services.Implementations
             }
         }
 
+        public async Task<TournamentResultDto> UpsertTournamentsHistoryAsync(TournamentResultDto tournamentResult)
+        {
+            TournamentResultDto tournamentResultUpdated = null;
+            var response = await _httpClient.PutAsJsonAsync($"{DatabaseConnection}{TournamentsHistory}{tournamentResult.Uid}.json", tournamentResult);
+
+            if (response.IsSuccessStatusCode)
+            {
+                tournamentResultUpdated = JsonConvert.DeserializeObject<TournamentResultDto>(await response.Content.ReadAsStringAsync());
+            }
+
+            return tournamentResultUpdated;
+        }
+
+        public async Task<bool> DeleteTournamentsHistoryAsync(Guid tournamentResultUid)
+        {
+            bool sucessfully = false;
+            var response = await _httpClient.DeleteAsync($"{DatabaseConnection}{TournamentsHistory}{tournamentResultUid}.json");
+
+            if (response.IsSuccessStatusCode)
+            {
+                sucessfully = true;
+            }
+
+            return sucessfully;
+        }
+
+        public async Task<TournamentResultDto> GetTournamentsHistoryAsync(Guid tournamentResultUid)
+        {
+            TournamentResultDto tournamentResultUpdated = null;
+            var response = await _httpClient.GetAsync($"{DatabaseConnection}{TournamentsHistory}{tournamentResultUid}.json");
+
+            if (response.IsSuccessStatusCode && await response.Content.ReadAsStringAsync() != NullResponse)
+            {
+                tournamentResultUpdated = JsonConvert.DeserializeObject<TournamentResultDto>(await response.Content.ReadAsStringAsync());
+            }
+
+            return tournamentResultUpdated;
+        }
+
+        private async Task<TournamentDto> GetTournamentByUidAsync(Guid tournamentUid)
+        {
+            TournamentDto tournament = null;
+            var response = await _httpClient.GetAsync($"{DatabaseConnection}{TournamentsNode}{tournamentUid}.json");
+            if (response.IsSuccessStatusCode && await response.Content.ReadAsStringAsync() != NullResponse)
+            {
+                tournament = JsonConvert.DeserializeObject<TournamentDto>(await response.Content.ReadAsStringAsync());
+            }
+
+            return tournament;
+        }
+
         private async Task<bool> DeleteTournamentByUidAndNullableListOfSummonerNamesInSummonerTournaments(Guid tournamentUid, List<string> summonerNames)
         {
             try
@@ -194,8 +213,7 @@ namespace EgoTournament.Services.Implementations
                     foreach (var summonerName in summonerNames)
                     {
                         var summonerNameDatabase = summonerName.Replace("#", "*");
-                        string deleteUrl = $"{DatabaseConnection}/summonerTournaments/{summonerNameDatabase}/{tournamentUid}.json";
-                        HttpResponseMessage response = await _httpClient.DeleteAsync(deleteUrl);
+                        HttpResponseMessage response = await _httpClient.DeleteAsync($"{DatabaseConnection}/summonerTournaments/{summonerNameDatabase}/{tournamentUid}.json");
                         response.EnsureSuccessStatusCode();
                     }
                 }
@@ -228,5 +246,27 @@ namespace EgoTournament.Services.Implementations
                 return false;
             }
         }
+
+        private async Task UpsertSummonerTournamentsAsync(Guid tournamentUid, List<string> summonerNames)
+        {
+            try
+            {
+                foreach (var summonerName in summonerNames)
+                {
+                    var summonerNameDatabase = summonerName.Replace("#", "*");
+                    var response = await _httpClient.PutAsJsonAsync($"{DatabaseConnection}{SummonerTournamentsNode}{summonerNameDatabase}/{tournamentUid}.json", true);
+
+                    response.EnsureSuccessStatusCode();
+
+                    var sumonerTournamets = await response.Content.ReadAsStringAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+
+        }
+
     }
 }

@@ -21,6 +21,13 @@
         Shell.FlyoutItemIsVisible="False"/>
 
     <ShellContent
+        Title="Prompt"
+        ContentTemplate="{DataTemplate views:PromptPage}"
+        Route="PromptPage"
+        Shell.FlyoutBehavior="Disabled"
+        Shell.FlyoutItemIsVisible="False"/>
+
+    <ShellContent
         Title="SignUp"
         ContentTemplate="{DataTemplate views:SignUpPage}"
         Route="SignUpPage"
@@ -30,19 +37,19 @@
     <TabBar FlyoutDisplayOptions="AsMultipleItems">
 
         <ShellContent
-        Title="Profile"
-        ContentTemplate="{DataTemplate views:ProfilePage}"
-        Route="ProfilePage" />
-
-        <ShellContent
         Title="Ego Tournament"
         ContentTemplate="{DataTemplate views:MainPage}"
         Route="MainPage" />
-
+        
         <ShellContent
         Title="Search Summoner"
         ContentTemplate="{DataTemplate views:SearchSummonerPage}"
         Route="SearchSummonerPage" />
+
+        <ShellContent
+        Title="Profile"
+        ContentTemplate="{DataTemplate views:ProfilePage}"
+        Route="ProfilePage" />
         
     </TabBar>
 

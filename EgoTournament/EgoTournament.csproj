@@ -60,6 +60,7 @@
 	  <None Remove="Resources\Images\emblem_wood.png" />
 	  <None Remove="Resources\Images\fire.png" />
 	  <None Remove="Resources\Images\firestrike.gif" />
+	  <None Remove="Resources\Images\firework.gif" />
 	  <None Remove="Resources\Images\heimer.png" />
 	  <None Remove="Resources\Images\heimer_gray.jpg" />
 	  <None Remove="Resources\Images\ice.png" />
@@ -80,14 +81,15 @@
 		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.1" />
 		<PackageReference Include="CommunityToolkit.MVVM" Version="8.2.2" />
 		<PackageReference Include="FirebaseAuthentication.net" Version="4.1.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.40" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.40" />
-		<PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.40" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.60" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.60" />
+		<PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.60" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="SimpleToolkit.Core" Version="4.0.0" />
+		<PackageReference Include="SimpleToolkit.Core" Version="5.0.0" />
 		<PackageReference Include="SkiaSharp" Version="2.88.8" />
 		<PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="2.0.0" />
+		<PackageReference Include="PayPalCheckoutSdk" Version="1.0.4" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -96,6 +98,9 @@
 	  </Compile>
 	  <Compile Update="Views\SignUpPage.xaml.cs">
 	    <DependentUpon>SignUpPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\TournamentResultPage.xaml.cs">
+	    <DependentUpon>TournamentResultPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 
@@ -129,6 +134,9 @@
 	  </MauiXaml>
 	  <MauiXaml Update="Views\TournamentPage.xaml">
 	    <Generator></Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\TournamentResultPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
 

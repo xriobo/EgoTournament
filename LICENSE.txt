@@ -1,0 +1,23 @@
+# Licencia de Uso Personalizada
+
+## Uso Gratuito
+
+Este software se ofrece de manera gratuita para uso personal y no comercial bajo los siguientes términos:
+
+1. **Uso Personal y No Comercial**: Puedes usar, copiar y distribuir el software sin modificaciones para fines personales y no comerciales.
+2. **Modificaciones**: No se permite modificar el software para ningún propósito, incluyendo el uso personal.
+3. **Redistribución**: Puedes redistribuir el software, siempre y cuando no se cobre por ello y se incluya este aviso de copyright y los términos de esta licencia.
+
+## Uso Comercial
+
+Queda estrictamente prohibido el uso comercial, la distribución con fines comerciales, o la modificación para fines comerciales del software sin la autorización expresa por escrito del propietario del copyright.
+
+Para obtener una licencia comercial, por favor contacta a xabirl1991@gmail.com.
+
+## Contribuciones
+
+Las contribuciones al software (por ejemplo, a través de pull requests) se consideran donaciones y, por lo tanto, se otorgan bajo los términos de esta licencia. El propietario del software tiene el derecho de incorporar, modificar o distribuir estas contribuciones.
+
+## Exoneración de Responsabilidad
+
+Este software se proporciona "tal cual", sin garantía de ningún tipo, expresa o implícita, incluidas, entre otras, las garantías de comerciabilidad, idoneidad para un propósito particular y no infracción. En ningún caso los autores serán responsables por cualquier reclamo, daño o responsabilidad, ya sea en una acción contractual, extracontractual o de otro tipo, que surja de, o en conexión con el software o el uso u otros tratos en el software.

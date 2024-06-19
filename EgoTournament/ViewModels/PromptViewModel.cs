@@ -95,6 +95,8 @@ namespace EgoTournament.ViewModels
                             await DeleteTournament(userCredential, _tournamentUidToDelete);
                             break;
                     }
+
+                    await Redirect();
                 }
                 else
                 {
@@ -104,14 +106,12 @@ namespace EgoTournament.ViewModels
             catch (FirebaseAuthHttpException ex)
             {
                 await Toast.Make(JsonConvert.DeserializeObject<FirebaseErrorDto>(ex.ResponseData).Error.Message.Replace("_", " "), CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-
-                var navigation = App.Current.MainPage.Navigation;
-                await App.Current.MainPage.Navigation.PopModalAsync();
+                await Redirect();
             }
             catch (Exception)
             {
                 await Toast.Make("Failed to load profile. Please try again later.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
-                await App.Current.MainPage.Navigation.PopModalAsync();
+                await Redirect();
             }
         }
 
@@ -122,7 +122,7 @@ namespace EgoTournament.ViewModels
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         private async Task OnCancelClicked()
         {
-            await App.Current.MainPage.Navigation.PopModalAsync();
+            await Redirect();
         }
 
         /// <summary>
@@ -133,9 +133,8 @@ namespace EgoTournament.ViewModels
         {
             await _firebaseService.DeleteUserAndUserCredentialAsync(userCredential.User.Uid);
             await userCredential.User.DeleteAsync();
-            await Shell.Current.DisplayAlert("Removed", "The account has been successfully deleted.", "OK");
             _cacheService.Logout();
-            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+            await Shell.Current.DisplayAlert("Removed", "The account has been successfully deleted.", "OK");
         }
 
         /// <summary>
@@ -163,8 +162,6 @@ namespace EgoTournament.ViewModels
                         await Toast.Make("Elimination tournament error. Try again later...", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                     }
                 }
-
-                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
             }
         }
 
@@ -181,9 +178,9 @@ namespace EgoTournament.ViewModels
                 userToUpdate.Tournaments.Remove(userToUpdate.Tournaments.First(x => x.Uid == tournamentUidToDelete));
             }
 
-            if (userToUpdate.TournamentUids != null && userToUpdate.TournamentUids.Contains(tournamentUidToDelete.ToString()))
+            if (userToUpdate.TournamentUids != null && userToUpdate.TournamentUids.Contains(tournamentUidToDelete))
             {
-                userToUpdate.TournamentUids.Remove(tournamentUidToDelete.ToString());
+                userToUpdate.TournamentUids.Remove(tournamentUidToDelete);
             }
 
             return userToUpdate;
@@ -206,6 +203,22 @@ namespace EgoTournament.ViewModels
             if (_tournamentDto.Uid != Guid.Empty)
             {
                 _tournamentUidToDelete = _tournamentDto.Uid;
+            }
+        }
+
+        /// <summary>
+        /// Redirects this instance.
+        /// </summary>
+        private async Task Redirect()
+        {
+            PromptEntry = null;
+            if (_methodType == MethodType.Main)
+            {
+                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
+            }
+            else if (_methodType == MethodType.Profile)
+            {
+                await Shell.Current.GoToAsync($"//{nameof(ProfilePage)}");
             }
         }
     }

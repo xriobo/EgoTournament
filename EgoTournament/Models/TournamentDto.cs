@@ -28,5 +28,11 @@ namespace EgoTournament.Models
 
         [JsonProperty("hasReward")]
         public bool HasReward { get; set; }
+
+        [JsonProperty("finished")]
+        public bool Finished { get; set; }
+
+        [JsonProperty("finishDate")]
+        public DateTime FinishDate { get; set; }
     }
 }

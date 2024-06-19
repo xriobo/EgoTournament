@@ -71,6 +71,8 @@ namespace EgoTournament.ViewModels
 
         private async Task SignInBtnTappedAsync()
         {
+            Password = null;
+            Email = null;
             await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
 

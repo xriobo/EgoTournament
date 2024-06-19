@@ -77,39 +77,5 @@ namespace EgoTournament.Models
                 Name = "NOT FOUND"
             };
         }
-
-        public static RankDto SetPropertiesRankDtoBySummonerDto(this SummonerDto summonerDto)
-        {
-            if (summonerDto.RankSoloQ == null)
-            {
-                summonerDto.RankSoloQ = Mocks.GetDefaultRankDto(summonerDto);
-            }
-            else
-            {// SI NO SE PONE ESTE SET APARECE EL NOMBRE ORIGINAL NO EL CAMBIADO.
-                summonerDto.RankSoloQ.SummonerName = summonerDto.Name;
-                if (!string.IsNullOrEmpty(summonerDto.RankSoloQ.QueueType))
-                {
-                    summonerDto.RankSoloQ.QueueEnum = (QueueType)Enum.Parse(typeof(QueueType), summonerDto.RankSoloQ.QueueType);
-                }
-
-                if (!string.IsNullOrEmpty(summonerDto.RankSoloQ?.Tier))
-                {
-                    summonerDto.RankSoloQ.TierType = (TierEnum)Enum.Parse(typeof(TierEnum), summonerDto.RankSoloQ.Tier);
-                }
-
-                if (!string.IsNullOrEmpty(summonerDto.RankSoloQ?.Rank))
-                {
-                    summonerDto.RankSoloQ.Division = (RomanNumberEnum)Enum.Parse(typeof(RomanNumberEnum), summonerDto.RankSoloQ.Rank);
-                }
-
-                if (summonerDto.RankSoloQ.Wins != 0)
-                {
-                    summonerDto.RankSoloQ.WinrateNum = Math.Round((Convert.ToDecimal(summonerDto.RankSoloQ.Wins) / Convert.ToDecimal(summonerDto.RankSoloQ.Wins + summonerDto.RankSoloQ.Losses) * 100), MidpointRounding.ToEven);
-                    summonerDto.RankSoloQ.Winrate = summonerDto.RankSoloQ.WinrateNum + "%";
-                }
-            }
-
-            return summonerDto.RankSoloQ;
-        }
     }
 }

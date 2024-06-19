@@ -23,7 +23,7 @@ namespace EgoTournament.Models
         public RoleType Role { get; set; }
 
         [JsonProperty("tournamentUids")]
-        public List<string> TournamentUids { get; set; }
+        public List<Guid> TournamentUids { get; set; }
 
         [JsonProperty("tournaments")]
         public List<TournamentDto> Tournaments { get; set; }

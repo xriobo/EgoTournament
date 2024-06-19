@@ -1,4 +1,6 @@
-﻿using EgoTournament.Models.Enums;
+﻿using EgoTournament.Common;
+using EgoTournament.Models;
+using EgoTournament.Models.Enums;
 using EgoTournament.Models.Riot;
 using EgoTournament.Models.Riot.RawData;
 using EgoTournament.Models.Views;
@@ -98,6 +100,105 @@ namespace EgoTournament.Adapters
                 default:
                     return RomanNumberEnum.VIII;
             }
+        }
+
+        public static TournamentResultDto ToTournamentResult(this TournamentDto tournament)
+        {
+            if (tournament == null) return null;
+
+            return new TournamentResultDto()
+            {
+                FinishDate = tournament.FinishDate,
+                HadReward = tournament.HasReward,
+                Name = tournament.Name,
+                OwnerId = tournament.OwnerId,
+                Rules = tournament.Rules,
+                Uid = tournament.Uid,
+            };
+        }
+
+        private static ParticipantResultDto ToParticipantResult(this SummonerDto summoner, string position)
+        {
+            if (summoner?.RankSoloQ == null) return null;
+
+            return new ParticipantResultDto()
+            {
+                LeaguePoints = summoner.RankSoloQ.LeaguePoints,
+                Losses = summoner.RankSoloQ.Losses,
+                Wins = summoner.RankSoloQ.Wins,
+                Rank = summoner.RankSoloQ.Rank,
+                SummonerName = summoner.Name,
+                TierType = summoner.RankSoloQ.TierType,
+                Winrate = summoner.RankSoloQ.Winrate,
+                Position = position,
+            };
+        }
+
+        public static IEnumerable<ParticipantResultDto> ToParticipantsResult(this IEnumerable<SummonerDto> summoners)
+        {
+            var participantsResult = new List<ParticipantResultDto>();
+            if (summoners != null && summoners.Count() > 0)
+            {
+                string position;
+                for (int i = 0; i < summoners.Count(); i++)
+                {
+                    var summoner = summoners.ToList()[i];
+                    if (i == 0)
+                    {
+                        position = Globals.CHAMPION_POSITION;
+                    }
+                    else if (i == 1)
+                    {
+                        position = Globals.SECOND_POSITION;
+                    }
+                    else if (i == 2)
+                    {
+                        position = Globals.THIRD_POSITION;
+                    }
+                    else
+                    {
+                        position = string.Empty;
+                    }
+
+                    participantsResult.Add(summoner.ToParticipantResult(position));
+                }
+            }
+
+            return participantsResult;
+        }
+
+        public static RankDto SetPropertiesRankDtoBySummonerDto(this SummonerDto summonerDto)
+        {
+            if (summonerDto.RankSoloQ == null)
+            {
+                summonerDto.RankSoloQ = Mocks.GetDefaultRankDto(summonerDto);
+            }
+            else
+            {// SI NO SE PONE ESTE SET APARECE EL NOMBRE ORIGINAL NO EL CAMBIADO.
+                summonerDto.RankSoloQ.SummonerName = summonerDto.Name;
+                if (!string.IsNullOrEmpty(summonerDto.RankSoloQ.QueueType))
+                {
+                    summonerDto.RankSoloQ.QueueEnum = (QueueType)Enum.Parse(typeof(QueueType), summonerDto.RankSoloQ.QueueType);
+                }
+
+                if (!string.IsNullOrEmpty(summonerDto.RankSoloQ?.Tier))
+                {
+                    summonerDto.RankSoloQ.TierType = (TierEnum)Enum.Parse(typeof(TierEnum), summonerDto.RankSoloQ.Tier);
+                }
+
+                if (!string.IsNullOrEmpty(summonerDto.RankSoloQ?.Rank))
+                {
+                    summonerDto.RankSoloQ.Division = (RomanNumberEnum)Enum.Parse(typeof(RomanNumberEnum), summonerDto.RankSoloQ.Rank);
+                }
+
+                if (summonerDto.RankSoloQ.Wins != 0)
+                {
+                    summonerDto.RankSoloQ.WinrateNum = Math.Round((Convert.ToDecimal(summonerDto.RankSoloQ.Wins) / Convert.ToDecimal(summonerDto.RankSoloQ.Wins + summonerDto.RankSoloQ.Losses) * 100), MidpointRounding.ToEven);
+                    summonerDto.RankSoloQ.Winrate = summonerDto.RankSoloQ.WinrateNum + "%";
+                }
+            }
+
+            return summonerDto.RankSoloQ;
         }
     }
 }

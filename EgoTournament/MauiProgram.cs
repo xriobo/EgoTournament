@@ -34,6 +34,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ICacheService, CacheService>();
         builder.Services.AddTransient<IFirebaseService, FirebaseService>();
         builder.Services.AddTransient<IRiotService, RiotService>();
+        builder.Services.AddTransient<IPaymentService, PaymentService>();
 
         // Pages
         builder.Services.AddTransient<MainPage>();
@@ -47,6 +48,7 @@ public static class MauiProgram
         builder.Services.AddTransient<SchedulePage>();
         builder.Services.AddTransient<SearchSummonerPage>();
         builder.Services.AddTransient<RulesPage>();
+        builder.Services.AddTransient<TournamentResultPage>(); 
 
 
         // ViewModels
@@ -59,6 +61,7 @@ public static class MauiProgram
         builder.Services.AddTransient<ScheduleViewModel>();
         builder.Services.AddTransient<SearchSummonerViewModel>();
         builder.Services.AddTransient<RulesViewModel>();
+        builder.Services.AddTransient<TournamentResultViewModel>();
 
         // Authentication
         builder.Services.AddSingleton(SecureStorage.Default);

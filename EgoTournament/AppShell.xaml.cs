@@ -16,5 +16,6 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(SearchSummonerPage), typeof(SearchSummonerPage));
         Routing.RegisterRoute(nameof(RulesPage), typeof(RulesPage));
         Routing.RegisterRoute(nameof(PromptPage), typeof(PromptPage));
+        Routing.RegisterRoute(nameof(TournamentResultPage), typeof(TournamentResultPage));
     }
 }

@@ -32,7 +32,7 @@ namespace EgoTournament.ViewModels
         /// <summary>
         /// The riot service.
         /// </summary>
-        private IRiotService _riotService;
+        private IRiotService  _riotService;
 
         /// <summary>
         /// The summoner view.
@@ -59,14 +59,14 @@ namespace EgoTournament.ViewModels
             SearchCommand = new AsyncRelayCommand(SearchSummonerData);
             SummonerNameEntryTextChangedCommand = new RelayCommand(OnSummonerNameTextChanged);
 
-            _riotService = App.Services.GetService<IRiotService>(); ;
+           _riotService = App.Services.GetService<IRiotService>(); ;
         }
 
         /// <summary>
         /// Gets the summoner data.
         /// </summary>
         /// <param name="summonerName">Name of the summoner.</param>
-        public void GetSummonerData(string summonerName)
+        public async Task GetSummonerData(string summonerName)
         {
             var gameName = summonerName.Split('#')[0];
             var tagLine = summonerName.Split('#')[1];
@@ -74,7 +74,7 @@ namespace EgoTournament.ViewModels
                 || !gameName.Equals(SearchSummonerDto.SummonerWithMatchesDto.SummonerDto.Name, StringComparison.InvariantCultureIgnoreCase)
                 || (DateTime.Now - SearchSummonerDto.ExtractSummonerDateTime) > new TimeSpan(0, 0, 30))
             {
-                SummonerWithMatchesDto info = _riotService.GetSummonerWithMachesBySummonerNameAndTagLine(gameName, tagLine, CountMatches);
+                SummonerWithMatchesDto info = await _riotService.GetSummonerWithMachesBySummonerNameAndTagLine(gameName, tagLine, CountMatches);
                 Tuple<SummonerView, List<MatchView>> tupleSummmonerMatches = info.ToSearchSummonerViewModels();
                 SummonerView = tupleSummmonerMatches.Item1;
                 MatchesViewModel = new ObservableCollection<MatchView>(tupleSummmonerMatches.Item2);
@@ -87,6 +87,8 @@ namespace EgoTournament.ViewModels
         /// <param name="e">The <see cref="TextChangedEventArgs"/> instance containing the event data.</param>
         private void OnSummonerNameTextChanged()
         {
+            SummonerView = null;
+            MatchesViewModel = new ObservableCollection<MatchView>();
             if (IsValidationMessageVisible)
             {
                 IsValidationMessageVisible = false;
@@ -107,7 +109,7 @@ namespace EgoTournament.ViewModels
             {
                 if (Validations.SummonerName(entryText))
                 {
-                    GetSummonerData(entryText);
+                    await GetSummonerData(entryText);
                 }
                 else
                 {

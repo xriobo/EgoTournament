@@ -191,7 +191,8 @@ namespace EgoTournament.ViewModels
 
                                 await _firebaseService.UpsertUserAsync(currentUser);
                                 await _cacheService.SetCurrentUserAsync(currentUser);
-                                LoadScreenData(currentUser);
+                                await Toast.Make("Profile was saved.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
                             }
                             else
                             {
@@ -211,6 +212,12 @@ namespace EgoTournament.ViewModels
                         {
                             await Toast.Make("Modify the name.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
                         }
+                        else if (!Validations.SummonerName(entryText))
+                        {
+                            ValidationMessage = Globals.SUMMONERNAME_VALIDATION_ERROR_MESSAGE;
+                            IsValidationMessageVisible = true;
+                            await Toast.Make($"SummonerName invalid: {entryText}", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                        }
                         else
                         {
                             currentUser.SummonerName = entryText;
@@ -219,13 +226,13 @@ namespace EgoTournament.ViewModels
                             {
                                 await _cacheService.SetCurrentUserAsync(currentUser);
                                 await Toast.Make("Updated successfully.", CommunityToolkit.Maui.Core.ToastDuration.Short).Show();
+                                await Shell.Current.GoToAsync($"//{nameof(MainPage)}");
                             }
                             else
                             {
                                 currentUser = await _cacheService.GetCurrentUserAsync();
+                                LoadScreenData(currentUser);
                             }
-
-                            LoadScreenData(currentUser);
                         }
                     }
                 }
@@ -252,7 +259,7 @@ namespace EgoTournament.ViewModels
         /// </summary>
         private async Task OnDeleteAccountClicked()
         {
-            await Shell.Current.GoToAsync(nameof(PromptPage), true, new Dictionary<string, object>
+            await Shell.Current.GoToAsync($"//{nameof(PromptPage)}", true, new Dictionary<string, object>
                 {
                     { nameof(MethodType), MethodType.Profile },
                     { nameof(TournamentDto), new TournamentDto() }

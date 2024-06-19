@@ -8,7 +8,7 @@ namespace EgoTournament.ViewModels
 {
     public partial class ScheduleViewModel : BaseViewModel, IQueryAttributable, INotifyPropertyChanged
     {
-        private readonly IRiotService _riotService;
+        private readonly IRiotService  _riotService;
 
         private readonly ICacheService _cacheService;
 
@@ -74,13 +74,13 @@ namespace EgoTournament.ViewModels
                 var timeNow = DateTime.Now;
                 if (!isRefresh || (isRefresh && timeNow.Subtract(_lastRefresh).TotalSeconds > Globals.SECONDS_TO_REFRESH))
                 {
+                    _lastRefresh = timeNow;
                     Summoners.Clear();
                     _cacheUser = await _cacheService.GetCurrentUserAsync();
                     List<SummonerDto> summonerDtos = new List<SummonerDto>();
-                    var tuple = _riotService.GetPuuidByParticipantsNameAndTagName(Participants);
-                    var summonersRiot = _riotService.GetSummonersByPuuid(tuple.Item1);
-                    summonerDtos = _riotService.SetParticipantRanks(summonersRiot).ToList();
-                    summonerDtos = GetOrdererSummoners(summonerDtos);
+                    var tuple = await  _riotService.GetPuuidByParticipantsNameAndTagName(Participants);
+                    var summonersRiot = await  _riotService.GetSummonersByPuuid(tuple.Item1);
+                    summonerDtos = (await  _riotService.SetParticipantRanks(summonersRiot)).ToList();
                     foreach (var summonerDto in summonerDtos)
                     {
                         Summoners.Add(summonerDto);
@@ -99,11 +99,6 @@ namespace EgoTournament.ViewModels
             {
                 Summoners = new ObservableCollection<SummonerDto>(Mocks.GetSummonerErrorDto(ex.Message));
             }
-        }
-
-        private List<SummonerDto> GetOrdererSummoners(IEnumerable<SummonerDto> summonerDtos)
-        {
-            return summonerDtos.OrderByDescending(x => (int)x.RankSoloQ.TierType).ThenByDescending(x => (int)x.RankSoloQ.Division).ThenByDescending(x => x.RankSoloQ.LeaguePoints).ToList();
         }
 
         private async Task Refreshing()

@@ -15,12 +15,18 @@ namespace EgoTournament.Services
 
         Task<UserDto> GetUserByUidAsync(string userUid);
 
-        Task<TournamentDto> UpsertTournamentAsync(TournamentDto tournament, List<string> summonerNamesToAdd, List<string> summonerNamesToDelete);
+        Task<TournamentDto> UpsertTournamentAsync(TournamentDto tournament, List<string> summonersToAssign, List<string> summonersToUnassign);
 
         Task<List<TournamentDto>> GetTournamentsByUidsAsync(List<Guid> tournamentUids);
 
         Task<List<TournamentDto>> GetTournamentsBySummonerNameAsync(string summonerName);
 
         Task<bool> DeleteTournamentAsync(Guid tournamentUid);
+
+        Task<TournamentResultDto> UpsertTournamentsHistoryAsync(TournamentResultDto tournamentResult);
+
+        Task<bool> DeleteTournamentsHistoryAsync(Guid tournamentResultUid);
+
+        Task<TournamentResultDto> GetTournamentsHistoryAsync(Guid tournamentResultUid);
     }
 }

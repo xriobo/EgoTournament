@@ -58,21 +58,5 @@ namespace EgoTournament.Models.Riot
 
         [JsonIgnore]
         public decimal WinrateNum { get; set; }
-
-        [JsonIgnore]
-        public decimal AverageKills { get; set; }
-
-        [JsonIgnore]
-        public decimal AverageAssists { get; set; }
-
-        [JsonIgnore]
-        public decimal AverageDeaths { get; set; }
-
-        [JsonIgnore]
-        public string AverageKdaString { get; set; }
-
-        public decimal AverageKda { get; set; }
-
-        public bool AnyPentakill { get; set; }
     }
 }
